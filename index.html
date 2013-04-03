@@ -1,0 +1,86 @@
+<!doctype html>
+<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
+<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen"/>
+  <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/script.js"></script>
+
+  <title>Tdss</title>
+  <meta name="description" content="分布式存储系统">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <header>
+      <h1 class="title">Tdss</h1>
+    </header>
+    <div id="container">
+      <p class="tagline">分布式存储系统</p>
+      <div id="main" role="main">
+        <div class="download-bar">
+        <div class="inner">
+          <a href="https://github.com/c-wind/tdss/tarball/master" class="download-button tar"><span>Download</span></a>
+          <a href="https://github.com/c-wind/tdss/zipball/master" class="download-button zip"><span>Download</span></a>
+          <a href="https://github.com/c-wind/tdss" class="code">View Tdss on GitHub</a>
+        </div>
+        <span class="blc"></span><span class="trc"></span>
+        </div>
+        <article class="markdown-body">
+          <p>TDSS是一个高可扩展、高可用、高性能、面向互联网服务的分布式存储系统，主要针对海量的非结构化数据，它构筑在普通的Linux机器集群上，可为外部提供高可靠和高并发的存储访问。它采用了HA架构和平滑扩容，保证了整个文件系统的可用性和扩展性。同时扁平化的数据组织结构，可将文件名映射到文件的物理地址，简化了文件的访问流程，一定程度上为TDSS提供了良好的读写性能。 </p>
+
+<p>主要特性¶</p>
+
+<p>1.全局单副本 2.扩容简单 3.便于二次开发 </p>
+
+<p>总体结构¶</p>
+
+<p>一个TDSS集群由N个name_server节点（一主一备）和N个data_server节点组成。这些服务程序都是作为一个用户级的程序运行在普通Linux机器上的。 </p>
+
+<p>在TDSS中，name_server维护文件与data_server的关系。数据文件中的实际数据都存储在data_server上。而一台data_server服务器一般会有多个独立data_server进程存在，每个进程负责管理一个挂载点，这个挂载点一般是一个独立磁盘上的文件目录，以降低单个磁盘损坏带来的影响。 </p>
+
+<p>name_server¶</p>
+
+<p>管理维护数据文件和data_server相关信息, 数据文件和data_server的对应关系建立，解除。name_server不负责实际数据的读写，实际数据的读写由data_server完成。 </p>
+
+<p>data_server¶</p>
+
+<p>负责实际数据的存储和读写。 </p>
+
+<p>master¶</p>
+
+<p>管理维护name_server、data_server加入，退出, 心跳信息。 </p>
+
+<p>同时为了考虑容灾，name_server采用了Master和slave结构，即两台机器同时运行，一台为主，一台为从。 </p>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="owner">
+      <p><a href="https://github.com/c-wind" class="avatar"><img src="https://secure.gravatar.com/avatar/31f2d58722b21f01f3f5223f271ba6c8?s=30&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" height="48"/></a> <a href="https://github.com/c-wind">c-wind</a> maintains <a href="https://github.com/c-wind/tdss">Tdss</a></p>
+
+
+      </div>
+      <div class="creds">
+        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br/>theme by <a href="http://twitter.com/jonrohan/">Jon Rohan</a></small>
+      </div>
+    </footer>
+  </div>
+  <div class="current-section">
+    <a href="#top">Scroll to top</a>
+    <a href="https://github.com/c-wind/tdss/tarball/master" class="tar">tar</a><a href="https://github.com/c-wind/tdss/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
+    <p class="name"></p>
+  </div>
+
+  
+</body>
+</html>
