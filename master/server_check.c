@@ -240,6 +240,8 @@ int __server_finish(inet_task_t *it)
 
     __server_report(ss);
 
+    __server_check_loop(pit);
+
     return MRT_SUC;
 
 child_fail_return:
@@ -266,6 +268,7 @@ child_fail_return:
 int __data_server_next(ip4_addr_t *addr)
 {
     int next_id = (ms.data_server.id + 1) % ms.data_server.count;
+    log_info("======= next_id:%d, start:%u time:%u", next_id, ms.data_server.start,time(NULL));
     if(next_id == 0)
     {
         if(ms.data_server.start == time(NULL))

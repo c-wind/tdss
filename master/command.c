@@ -115,9 +115,29 @@ int server_find(inet_task_t *it)
 
 int status(inet_task_t *it)
 {
+    string_t res = {0};
+    int i=0;
+    char line[MAX_LINE] = {0};
     session_t *ss = (session_t *)it->data;
 
-    session_return("%d ok", OPERATE_SUCCESS);
+    for(i=0; i<ms.data_server.count; i++)
+    {
+        snprintf(line, sizeof(line) - 1,
+                 "\ndata_server[%d]: \n\tstatus:%d\tdisk size:%uMB free:%uMB\tinode size:%u free:%u",
+                 i, ms.data_server.info[i].state, ms.data_server.info[i].disk_size, ms.data_server.info[i].disk_free,
+                 ms.data_server.info[i].inode_size, ms.data_server.info[i].inode_free);
+        string_cats(&res, line);
+    }
+
+    for(i=0; i<ms.name_server.count; i++)
+    {
+        snprintf(line, sizeof(line) - 1,
+                 "\nname_server[%d]: \n\tstatus:%d\tsize:%u\tused:%u\n",
+                 i, ms.name_server.info[i].state, ms.name_server.info[i].size, ms.name_server.info[i].used);
+        string_cats(&res, line);
+    }
+
+    session_return("%d success%s", OPERATE_SUCCESS, res.str);
 }
 
 
