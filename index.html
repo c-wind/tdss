@@ -32,11 +32,11 @@
       <section id="main_content" class="inner">
         <p>TDSS是一个高可扩展、高可用、高性能、面向互联网服务的分布式存储系统，主要针对海量的非结构化数据，它构筑在普通的Linux机器集群上，可为外部提供高可靠和高并发的存储访问。它采用了HA架构和平滑扩容，保证了整个文件系统的可用性和扩展性。同时扁平化的数据组织结构，可将文件名映射到文件的物理地址，简化了文件的访问流程，一定程度上为TDSS提供了良好的读写性能。 </p>
 
-<p>主要特性¶</p>
+<p>主要特性</p>
 
 <p>1.全局单副本 2.扩容简单 3.便于二次开发 </p>
 
-<p>总体结构¶</p>
+<p>总体结构</p>
 
 <p><img src="http://mailchina.org/tdss.jpg" alt="tdss"></p>
 
@@ -44,15 +44,15 @@
 
 <p>在TDSS中，name_server维护文件与data_server的关系。数据文件中的实际数据都存储在data_server上。而一台data_server服务器一般会有多个独立data_server进程存在，每个进程负责管理一个挂载点，这个挂载点一般是一个独立磁盘上的文件目录，以降低单个磁盘损坏带来的影响。 </p>
 
-<p>name_server¶</p>
+<p>name_server</p>
 
 <p>管理维护数据文件和data_server相关信息, 数据文件和data_server的对应关系建立，解除。name_server不负责实际数据的读写，实际数据的读写由data_server完成。 </p>
 
-<p>data_server¶</p>
+<p>data_server</p>
 
 <p>负责实际数据的存储和读写。 </p>
 
-<p>master¶</p>
+<p>master</p>
 
 <p>管理维护name_server、data_server加入，退出, 心跳信息。 </p>
 
