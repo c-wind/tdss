@@ -1,1 +1,0 @@
-/* none.h.  Generated from none.h.in by configure.  */
