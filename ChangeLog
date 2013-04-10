@@ -1,4 +1,10 @@
+2013-04-10  Mrt <mrt@codecn.org>
+	修复master无法显示status问题
+	修复master轮询服务问题
+
 2013-03-29  Mrt <mrt@codecn.org>
 
 	第一版测试
+
+
 

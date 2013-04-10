@@ -1,3 +1,7 @@
+v0.0.2 2013-04-10 mrt <mrt@codecn.org>
+    修复master处理status问题
+    修复master轮询问题
+
 v0.0.1 2013-03-29 mrt <mrt@codecn.org>
     
     第一版发布
