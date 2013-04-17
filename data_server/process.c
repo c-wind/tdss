@@ -19,6 +19,7 @@ static uint32_t __session_id = 0;
 #define SESSION_ID __session_id++
 
 
+/*
 int request_parse(string_t *src, rq_arg_t *arg, int asize)
 {
     int i = 0, c, state = 0, num = 0, idx = 0, k = 0;
@@ -83,6 +84,7 @@ int request_parse(string_t *src, rq_arg_t *arg, int asize)
     log_error("find argc:%d", num);
     return -1;
 }
+*/
 
 
 

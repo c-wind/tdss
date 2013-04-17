@@ -70,11 +70,11 @@ int parse_args(int argc, char* argv[])
         switch(opt)
         {
         case 'h':
-            snprintf(ds_conf.local.ip, sizeof(ds_conf.local.ip) - 1, "%s", optarg);
+            snprintf(ns_conf.local.ip, sizeof(ns_conf.local.ip) - 1, "%s", optarg);
             break;
 
         case 'p':
-            ds_conf.local.port = atoi(optarg);
+            ns_conf.local.port = atoi(optarg);
             break;
 
         case 'd':
@@ -134,27 +134,27 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    fd = socket_bind_nonblock(ds_conf.local.ip, ds_conf.local.port);
+    fd = socket_bind_nonblock(ns_conf.local.ip, ns_conf.local.port);
     if(fd == -1)
     {
         log_error("socket_bind_nonblock host:(%s:%d) error:%m",
-                  ds_conf.local.ip, ds_conf.local.port);
+                  ns_conf.local.ip, ns_conf.local.port);
         return -1;
     }
 
-    ds_conf.ie = inet_event_init(10240, fd);
-    if(!ds_conf.ie)
+    ns_conf.ie = inet_event_init(10240, fd);
+    if(!ns_conf.ie)
     {
         log_error("inet_event_init error.");
         return -1;
     }
 
 
-    ds_conf.ie->task_init = request_init;
-    ds_conf.ie->task_deinit = request_deinit;
-    ds_conf.ie->timeout = 30;
+    ns_conf.ie->task_init = request_init;
+    ns_conf.ie->task_deinit = request_deinit;
+    ns_conf.ie->timeout = 30;
 
-    inet_event_loop(ds_conf.ie);
+    inet_event_loop(ns_conf.ie);
 
     return 0;
 }

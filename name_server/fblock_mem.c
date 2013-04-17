@@ -43,13 +43,18 @@ int fblock_ref_inc(char *fid)
 {
     fblock_mem_t *fbm = NULL;
 
-    if(hashdb_find(fbdb, fid, strlen(fid), (void **)&fbm) == 0)
+    switch(hashdb_find(fbdb, fid, strlen(fid), (void **)&fbm))
     {
-        log_info("no found file:%s", fid);
+    case HDB_KEY_NOFOUND:
+        log_info("hashdb no found file:%s", fid);
         return 0;
+    case HDB_OK:
+        log_debug("hashdb find %s", fid);
+        break;
+    default:
+        log_error("hashdb find %s error", fid);
+        return MRT_ERR;
     }
-
-    log_debug("find file:%s in mem", fid);
 
     fbm->ref++;
 
@@ -91,12 +96,26 @@ int fblock_ref_dec(char *fid)
 
 int fblock_to_mem(fblock_t *fb, fblock_mem_t *fbm)
 {
+    char str[34] = {0};
 
-    if(sscanf(fb->name, "%jx%jx", &fbm->name[0], &fbm->name[1]) != 2)
+    if(strlen(fb->name) != 32)
     {
-        log_error("fblock name:(%s) error", fb->name);
-        return -1;
+        log_error("fblock name:(%s) len error", fb->name);
+        return MRT_ERR;
     }
+
+    memcpy(str, fb->name, 16);
+    memcpy(str + 17, fb->name + 16, 16);
+    str[16] = ' ';
+
+    if(sscanf(str, "%jx %jx", &fbm->name[0], &fbm->name[1]) != 2)
+    {
+        log_error("fblock name:(%s) format error", fb->name);
+        return MRT_ERR;
+    }
+
+
+    log_debug("fbm name[0]:%x name[1]:%x", fbm->name[0], fbm->name[1]);
 
     fbm->ref = 1;
     fbm->server  = (uint16_t) fb->server;
@@ -119,13 +138,18 @@ int fblock_mem_add(fblock_t *fb)
     }
 
     iret = hashdb_insert(fbdb, fb->name, strlen(fb->name), &fbm, sizeof(fbm));
-    if(iret != HDB_OK)
+    switch(iret)
     {
-        log_error("hashdb_insert error:%s key:%s", hashdb_code_to_string(iret), fb->name);
-        return MRT_ERR;
+    case HDB_KEY_EXIST:
+        log_debug("hashdb exist name:%s, will inc ref", fb->name);
+        return (fblock_ref_inc(fb->name) == 1) ? MRT_OK : MRT_ERR;
+    case HDB_OK:
+        log_debug("hashdb insert ok, name:%s", fb->name);
+        return MRT_OK;
     }
 
-    return MRT_OK;
+    log_error("hashdb_insert error:%s key:%s", hashdb_code_to_string(iret), fb->name);
+    return MRT_ERR;
 }
 
 
@@ -157,16 +181,16 @@ int fblock_mem_set(fblock_t *fb)
 }
 
 /* ns_info_t存放每个name_server当前状态信息
-typedef struct
-{
-    int                 state;
-    ip4_addr_t          server;
-    uint8_t             server_id;
-    uint8_t             server_type;
-    uint32_t            size;           //存储了多少条记录
-    uint32_t            used;           //存储了多少条记录
+   typedef struct
+   {
+   int                 state;
+   ip4_addr_t          server;
+   uint8_t             server_id;
+   uint8_t             server_type;
+   uint32_t            size;           //存储了多少条记录
+   uint32_t            used;           //存储了多少条记录
 
-}name_server_info_t;
+   }name_server_info_t;
 
 */
 

@@ -1,6 +1,7 @@
 #include "global.h"
 #include "macro_const.h"
 #include "macro_func.h"
+#include <openssl/md5.h>
 
 
 int file_size(const char *filename)
@@ -558,6 +559,51 @@ int file_delete(char *fname)
 }
 
 
+
+int file_md5(char *fname, char *res)
+{
+    MD5_CTX mctx;
+    char fbuf[BUFSIZ] = {0}, md[16] = {0};
+    FILE *fp = fopen(fname, "r");
+    size_t rsize = 0, i = 0;
+
+    if(!fp)
+    {
+        log_error("open file:%s error:%m", fname);
+        return MRT_ERR;
+    }
+
+    if(MD5_Init(&mctx) == 0)
+    {
+        log_error("MD5_Init error:%m");
+        fclose(fp);
+        return MRT_ERR;
+    }
+
+    while((rsize = fread(fbuf, sizeof(char), sizeof(fbuf), fp)))
+    {
+        if(MD5_Update(&mctx, fbuf, rsize) == 0)
+        {
+            log_error("MD5_Update error:%m");
+            fclose(fp);
+            return MRT_ERR;
+        }
+    }
+
+    if(MD5_Final(md, &mctx) == 0)
+    {
+        log_error("MD5_Update error:%m");
+        fclose(fp);
+        return MRT_ERR;
+    }
+
+    for(; i< 16; i++)
+        sprintf(res + 2 * i, "%2.2x", (unsigned char)md[i]);
+
+    fclose(fp);
+
+    return MRT_OK;
+}
 
 
 

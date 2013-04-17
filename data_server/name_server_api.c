@@ -127,7 +127,14 @@ int __ns_process_finish(inet_task_t *it)
 
 child_fail_return:
 
-    string_printf(&pss->output, "%d save mid to name server error", ec);
+    if(ec == OPERATE_SUCCESS)
+    {
+        string_printf(&pss->output, "1000 success name:%s", ss->fb.name);
+    }
+    else
+    {
+        string_printf(&pss->output, "%d save to name server error", ec);
+    }
     pit->state = TASK_WAIT_WRITE;
     pss->state = SESSION_REPLY;
     if(inet_event_add(ds_conf.ie, pit) == -1)
@@ -148,10 +155,10 @@ int ns_file_info_add(inet_task_t *it)
     inet_task_t *nit = NULL;
     session_t *nss = NULL, *ss = (session_t *)it->data;
 
-    iret = ns_get_master_addr(ss->fb.name, &ip, &port);
+    iret = ns_get_master_addr(ss->fb.name, strlen(ss->fb.name),  &ip, &port);
     if(iret == MRT_ERR)
     {
-        log_error("can't change mid to addr.");
+        log_error("can't change name:(%s) to addr.", ss->fb.name);
         return MRT_ERR;
     }
 
@@ -177,8 +184,8 @@ int ns_file_info_add(inet_task_t *it)
         nss->parent = it;
         nss->state = SESSION_BEGIN;
 
-        string_printf(&nss->output, "file_add mid=%s server=%d name=%s size=%d",
-                      ss->fb.name,  ss->fb.server, ss->fb.size);
+        string_printf(&nss->output, "file_info_add server=%d name=%s size=%d\r\n",
+                      ss->fb.server, ss->fb.name,  ss->fb.size);
         nit->data = nss;
     }
 
@@ -203,10 +210,10 @@ int ns_file_info_set(inet_task_t *it)
     inet_task_t *nit = NULL;
     session_t *nss = NULL, *ss = (session_t *)it->data;
 
-    iret = ns_get_master_addr(ss->fb.name, &ip, &port);
+    iret = ns_get_master_addr(ss->fb.name, strlen(ss->fb.name), &ip, &port);
     if(iret == MRT_ERR)
     {
-        log_error("can't change mid to addr.");
+        log_error("can't change name:(%s) to addr.", ss->fb.name);
         return MRT_ERR;
     }
 
@@ -232,8 +239,8 @@ int ns_file_info_set(inet_task_t *it)
         nss->parent = it;
         nss->state = SESSION_BEGIN;
 
-        string_printf(&nss->output, "file_add mid=%s server=%d name=%s size=%d",
-                      ss->fb.name,  ss->fb.server, ss->fb.size);
+        string_printf(&nss->output, "file_info_set server=%d name=%s size=%d\r\n",
+                      ss->fb.server, ss->fb.name, ss->fb.size);
         nit->data = nss;
     }
 

@@ -1,8 +1,8 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.63])
-AC_INIT(tdss, 0.0.1, root@codecn.org)
+AC_PREREQ(2.63)
+AC_INIT([tdss],[0.0.1],[root@codecn.org])
 AC_CONFIG_SRCDIR([master/master.c])
 AC_CONFIG_HEADERS([none.h])
 
@@ -54,5 +54,6 @@ AC_CONFIG_FILES([Makefile
                  lib_mrt/Makefile
                  lib_tdss/Makefile
                  master/Makefile
+                 tdss_client/Makefile
                  name_server/Makefile])
 AC_OUTPUT

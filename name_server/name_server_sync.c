@@ -6,6 +6,7 @@
 
 
 extern data_server_conf_t ds_conf;
+extern name_server_conf_t ns_conf;
 
 
 static int __name_server_recv(inet_task_t *it)
@@ -115,6 +116,8 @@ int __name_server_sync_finish(inet_task_t *it)
         goto child_fail_return;
     }
 
+    log_debug("slave return:%s", ss->input.str);
+
     if(strncmp(ss->input.str, "1000", 4))
     {
         log_error("%x sync name:%s to:(%s) recv:%s",
@@ -127,10 +130,18 @@ int __name_server_sync_finish(inet_task_t *it)
 
 child_fail_return:
 
-    string_printf(&pss->output, "%d sync to slave server error", ec);
+    if(ec == OPERATE_SUCCESS)
+    {
+        string_printf(&pss->output, "1000 success"CRLF);
+    }
+    else
+    {
+        string_printf(&pss->output, "%d sync to slave server error"CRLF, ec);
+    }
+
     pit->state = TASK_WAIT_WRITE;
     pss->state = SESSION_REPLY;
-    if(inet_event_add(ds_conf.ie, pit) == -1)
+    if(inet_event_add(ns_conf.ie, pit) == -1)
     {
         log_error("event add task:(%s) error", pit->from);
     }
@@ -150,10 +161,10 @@ int name_server_sync(inet_task_t *it)
     inet_task_t *nit = NULL;
     session_t *nss = NULL, *ss = (session_t *)it->data;
 
-    iret = ns_get_slave_addr(ss->fb.name, &ip, &port);
+    iret = ns_get_slave_addr(ss->fb.name, strlen(ss->fb.name), &ip, &port);
     if(iret == MRT_ERR)
     {
-        log_error("can't change name to addr.");
+        log_error("can't change name:(%s) to addr.", ss->fb.name);
         return MRT_ERR;
     }
 
@@ -182,7 +193,7 @@ int name_server_sync(inet_task_t *it)
         nit->data = nss;
     }
 
-    if(inet_event_add(ds_conf.ie, nit) == -1)
+    if(inet_event_add(ns_conf.ie, nit) == -1)
     {
         log_error("inet_event_add error");
         return MRT_ERR;

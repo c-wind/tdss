@@ -39,7 +39,7 @@ int file_info_add(inet_task_t *it)
         {RQ_TYPE_INT,   "size",     &ss->fb.size,   0}
     };
 
-    if(request_parse(&ss->input, rq, 7) == MRT_ERR)
+    if(request_parse(&ss->input, rq, 3) == MRT_ERR)
     {
         log_error("command error.");
         session_return("%d request parse error", ERR_CMD_ARG);
@@ -51,15 +51,19 @@ int file_info_add(inet_task_t *it)
         session_return("%d mem add error", ERR_FB_ADD);
     }
 
+    log_debug("server_type:%d", ns_conf.server_type);
+
     if(ns_conf.server_type == 2)
     {
         session_return("%d ok", OPERATE_SUCCESS);
     }
-
-    if(name_server_sync(it) == MRT_ERR)
+    else
     {
-        slog_error("name_server_sync error");
-        session_return("%d mem sync error", ERR_FB_ADD);
+        if(name_server_sync(it) == MRT_ERR)
+        {
+            slog_error("name_server_sync error");
+            session_return("%d mem sync error", ERR_FB_ADD);
+        }
     }
 
     return SESSION_WAIT;
@@ -74,7 +78,7 @@ int file_info_set(inet_task_t *it)
         {RQ_TYPE_INT,   "size",     &ss->fb.size,   0}
     };
 
-    if(request_parse(&ss->input, rq, 7) == MRT_ERR)
+    if(request_parse(&ss->input, rq, 3) == MRT_ERR)
     {
         log_error("command error.");
         session_return("%d request parse error", ERR_CMD_ARG);
@@ -146,6 +150,7 @@ int file_ref_inc(inet_task_t *it)
         log_error("command error.");
         session_return("%d request parse error", ERR_CMD_ARG);
     }
+
     if(fblock_ref_inc(ss->fb.name) == MRT_ERR)
     {
         slog_error("fblock_ref_inc error");

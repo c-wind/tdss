@@ -105,42 +105,40 @@ error_return:
  *
  */
 
-int ns_get_master_addr(char *mid, char **ip, int *port)
+int ns_get_master_addr(char *key, int klen, char **ip, int *port)
 {
-    uint64_t idx = 0;
-    int id = 0;
+    uint32_t idx = 0;
 
-    if(sscanf(mid, "%jx", &idx) != 1)
-    {
-        log_error("mid:(%s) error.", mid);
-        return MRT_ERR;
-    }
+    idx = crc32(0L, NULL, 0);
 
-    id = idx & (ns_conf.server_count - 1);
+    idx = crc32(idx, key, klen);
 
-    *ip = ns_conf.server[(uint32_t)id].master.ip;
-    *port = ns_conf.server[(uint32_t)id].master.port;
+    idx &= (ns_conf.server_count - 1);
+
+    log_debug("idx:%d", idx);
+
+    *ip = ns_conf.server[idx].master.ip;
+    *port = ns_conf.server[idx].master.port;
 
     return MRT_SUC;
 }
 
 
 
-int ns_get_slave_addr(char *mid, char **ip, int *port)
+int ns_get_slave_addr(char *key, int klen, char **ip, int *port)
 {
-    uint64_t idx = 0;
-    int id = 0;
+    uint32_t idx = 0;
 
-    if(sscanf(mid, "%jx", &idx) != 1)
-    {
-        log_error("mid:(%s) error.", mid);
-        return MRT_ERR;
-    }
+    idx = crc32(0L, NULL, 0);
 
-    id = idx & (ns_conf.server_count - 1);
+    idx = crc32(idx, key, klen);
 
-    *ip = ns_conf.server[(uint32_t)id].master.ip;
-    *port = ns_conf.server[(uint32_t)id].master.port;
+    idx &= (ns_conf.server_count - 1);
+
+    log_debug("idx:%d", idx);
+
+    *ip = ns_conf.server[idx].slave.ip;
+    *port = ns_conf.server[idx].slave.port;
 
     return MRT_SUC;
 }

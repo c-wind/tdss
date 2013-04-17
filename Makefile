@@ -99,11 +99,11 @@ DIST_ARCHIVES = $(distdir).tar.gz
 GZIP_ENV = --best
 distuninstallcheck_listfiles = find . -type f -print
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /home/tian/work/server/tdss/missing --run aclocal-1.11
-AMTAR = ${SHELL} /home/tian/work/server/tdss/missing --run tar
-AUTOCONF = ${SHELL} /home/tian/work/server/tdss/missing --run autoconf
-AUTOHEADER = ${SHELL} /home/tian/work/server/tdss/missing --run autoheader
-AUTOMAKE = ${SHELL} /home/tian/work/server/tdss/missing --run automake-1.11
+ACLOCAL = ${SHELL} /home/tian/tdss/missing --run aclocal-1.11
+AMTAR = ${SHELL} /home/tian/tdss/missing --run tar
+AUTOCONF = ${SHELL} /home/tian/tdss/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/tian/tdss/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/tian/tdss/missing --run automake-1.11
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -128,7 +128,7 @@ LDFLAGS =
 LIBOBJS = 
 LIBS = -lrt -lm -ldl 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/tian/work/server/tdss/missing --run makeinfo
+MAKEINFO = ${SHELL} /home/tian/tdss/missing --run makeinfo
 MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = tdss
@@ -143,10 +143,10 @@ SET_MAKE =
 SHELL = /bin/sh
 STRIP = 
 VERSION = 0.0.1
-abs_builddir = /home/tian/work/server/tdss
-abs_srcdir = /home/tian/work/server/tdss
-abs_top_builddir = /home/tian/work/server/tdss
-abs_top_srcdir = /home/tian/work/server/tdss
+abs_builddir = /home/tian/tdss
+abs_srcdir = /home/tian/tdss
+abs_top_builddir = /home/tian/tdss
+abs_top_srcdir = /home/tian/tdss
 ac_ct_CC = gcc
 am__include = include
 am__leading_dot = .
@@ -165,7 +165,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/tian/work/server/tdss/install-sh
+install_sh = ${SHELL} /home/tian/tdss/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -174,7 +174,7 @@ mandir = ${datarootdir}/man
 mkdir_p = /bin/mkdir -p
 oldincludedir = /usr/include
 pdfdir = ${docdir}
-prefix = /usr/local
+prefix = /home/tdss
 program_transform_name = s,x,x,
 psdir = ${docdir}
 sbindir = ${exec_prefix}/sbin
@@ -185,7 +185,7 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-SUBDIRS = lib_mrt lib_tdss data_server name_server master
+SUBDIRS = lib_mrt lib_tdss data_server name_server master tdss_client
 all: none.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -497,7 +497,7 @@ distcheck: dist
 	*.zip*) \
 	  unzip $(distdir).zip ;;\
 	esac
-	chmod -R a-w $(distdir); chmod u+w $(distdir)
+	chmod -R a-w $(distdir); chmod a+w $(distdir)
 	mkdir $(distdir)/_build
 	mkdir $(distdir)/_inst
 	chmod a-w $(distdir)

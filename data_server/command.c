@@ -61,9 +61,12 @@ static int __file_save_loop_recv(inet_task_t *it)
     snprintf(line, sizeof(line), "data/%s", ss->fb.name);
     if(link(ss->tmp_file->from, line) == -1)
     {
-        slog_error("link from:%s to:%s error:%m", ss->tmp_file->from, line);
-        ss->next = SESSION_BEGIN;
-        session_return("%d link file error:%m", ERR_LINK_FILE);
+        if(errno != EEXIST)
+        {
+            slog_error("link from:%s to:%s error:%m", ss->tmp_file->from, line);
+            ss->next = SESSION_BEGIN;
+            session_return("%d link file error:%m", ERR_LINK_FILE);
+        }
     }
 
     //删除失败只记录不返回出错
@@ -71,7 +74,6 @@ static int __file_save_loop_recv(inet_task_t *it)
     {
         slog_error("unlink file:%s error:%m", ss->tmp_file->from);
     }
-
 
     ss->next = SESSION_BEGIN;
 
@@ -81,9 +83,9 @@ static int __file_save_loop_recv(inet_task_t *it)
         session_return("%d name server connect error", ERR_NS_CONN);
     }
 
-    ss->state = SESSION_WAIT;
+//    ss->state = SESSION_WAIT;
     //session_return("%d save success", OPERATE_SUCCESS);
-    return 0;
+    return SESSION_WAIT;
 }
 
 static int __file_read_loop_send(inet_task_t *it)
@@ -138,7 +140,7 @@ int cmd_nofound(inet_task_t *it)
 int file_save(inet_task_t *it)
 {
     session_t *ss = (session_t *)it->data;
-    rq_arg_t rq[] = {{RQ_TYPE_STR, "mid", ss->fb.name, 33}, {RQ_TYPE_INT, "size", (void *)&ss->fb.size, 0}};
+    rq_arg_t rq[] = {{RQ_TYPE_STR, "name", ss->fb.name, 33}, {RQ_TYPE_INT, "size", (void *)&ss->fb.size, 0}};
 
     if(ss->state == SESSION_READ)
     {
@@ -152,7 +154,7 @@ int file_save(inet_task_t *it)
         session_return("%d", ERR_CMD_ARG);
     }
 
-    slog_info("%x mid:%s, size:%d", ss->id, ss->fb.name, ss->fb.size);
+    slog_info("%x name:%s, size:%d", ss->id, ss->fb.name, ss->fb.size);
 
     if(ss->tmp_file)
     {
@@ -193,7 +195,7 @@ int file_read(inet_task_t *it)
 {
     session_t *ss = (session_t *)it->data;
     rq_arg_t rq[] = {
-        {RQ_TYPE_STR, "mid", ss->fb.name, 33},
+        {RQ_TYPE_STR, "name", ss->fb.name, 33},
         {RQ_TYPE_INT, "offset", (void *)&ss->offset, 0},
         {RQ_TYPE_INT, "size", (void *)&ss->fb.size, 0}
     };

@@ -119,20 +119,6 @@ int get_eth1_ip(char *addr, int size);
 
 #define ERR_NOMEM       -1111
 
-#define RQ_TYPE_U8  1
-#define RQ_TYPE_U16 2
-#define RQ_TYPE_U32 3
-#define RQ_TYPE_INT RQ_TYPE_U32
-#define RQ_TYPE_U64 4
-#define RQ_TYPE_STR 5
-
-typedef struct
-{
-    int     type;
-    char    *key;
-    void    *val;
-    int     vsize;
-}rq_arg_t;
 
 int request_init(inet_task_t *it);
 

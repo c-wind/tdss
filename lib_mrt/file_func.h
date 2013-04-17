@@ -96,4 +96,6 @@ inline int file_delete(char *fname);
     (file)->add_size = size; \
     (file)->op_size = 1
 
+int file_md5(char *fname, char *res);
+
 #endif

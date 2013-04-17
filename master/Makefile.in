@@ -48,7 +48,7 @@ PROGRAMS = $(bin_PROGRAMS)
 am_master_OBJECTS = command.$(OBJEXT) master.$(OBJEXT) \
 	process.$(OBJEXT) server_check.$(OBJEXT)
 master_OBJECTS = $(am_master_OBJECTS)
-master_DEPENDENCIES = ../lib_mrt/lib_mrt.a ../lib_tdss/lib_tdss.a
+master_DEPENDENCIES = ../lib_tdss/lib_tdss.a ../lib_mrt/lib_mrt.a
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -150,7 +150,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 INCLUDES = -I../lib_mrt/ -I../lib_tdss/
 master_SOURCES = command.c  master.c  process.c  server_check.c
-master_LDADD = ../lib_mrt/lib_mrt.a ../lib_tdss/lib_tdss.a -lssl
+master_LDADD = ../lib_tdss/lib_tdss.a ../lib_mrt/lib_mrt.a -lssl
 AUTOMAKE_OPTIONS = foreign
 all: all-am
 

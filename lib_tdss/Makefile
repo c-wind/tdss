@@ -48,7 +48,7 @@ ARFLAGS = cru
 lib_tdss_a_AR = $(AR) $(ARFLAGS)
 lib_tdss_a_DEPENDENCIES = ../lib_mrt/lib_mrt.a
 am_lib_tdss_a_OBJECTS = config.$(OBJEXT) inet_event.$(OBJEXT) \
-	time_queue.$(OBJEXT)
+	time_queue.$(OBJEXT) request.$(OBJEXT)
 lib_tdss_a_OBJECTS = $(am_lib_tdss_a_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -63,11 +63,11 @@ DIST_SOURCES = $(lib_tdss_a_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /home/tian/work/server/tdss/missing --run aclocal-1.11
-AMTAR = ${SHELL} /home/tian/work/server/tdss/missing --run tar
-AUTOCONF = ${SHELL} /home/tian/work/server/tdss/missing --run autoconf
-AUTOHEADER = ${SHELL} /home/tian/work/server/tdss/missing --run autoheader
-AUTOMAKE = ${SHELL} /home/tian/work/server/tdss/missing --run automake-1.11
+ACLOCAL = ${SHELL} /home/tian/tdss/missing --run aclocal-1.11
+AMTAR = ${SHELL} /home/tian/tdss/missing --run tar
+AUTOCONF = ${SHELL} /home/tian/tdss/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/tian/tdss/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/tian/tdss/missing --run automake-1.11
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -92,7 +92,7 @@ LDFLAGS =
 LIBOBJS = 
 LIBS = -lrt -lm -ldl 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/tian/work/server/tdss/missing --run makeinfo
+MAKEINFO = ${SHELL} /home/tian/tdss/missing --run makeinfo
 MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = tdss
@@ -107,10 +107,10 @@ SET_MAKE =
 SHELL = /bin/sh
 STRIP = 
 VERSION = 0.0.1
-abs_builddir = /home/tian/work/server/tdss/lib_tdss
-abs_srcdir = /home/tian/work/server/tdss/lib_tdss
-abs_top_builddir = /home/tian/work/server/tdss
-abs_top_srcdir = /home/tian/work/server/tdss
+abs_builddir = /home/tian/tdss/lib_tdss
+abs_srcdir = /home/tian/tdss/lib_tdss
+abs_top_builddir = /home/tian/tdss
+abs_top_srcdir = /home/tian/tdss
 ac_ct_CC = gcc
 am__include = include
 am__leading_dot = .
@@ -129,7 +129,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/tian/work/server/tdss/install-sh
+install_sh = ${SHELL} /home/tian/tdss/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -138,7 +138,7 @@ mandir = ${datarootdir}/man
 mkdir_p = /bin/mkdir -p
 oldincludedir = /usr/include
 pdfdir = ${docdir}
-prefix = /usr/local
+prefix = /home/tdss
 program_transform_name = s,x,x,
 psdir = ${docdir}
 sbindir = ${exec_prefix}/sbin
@@ -151,7 +151,7 @@ top_builddir = ..
 top_srcdir = ..
 INCLUDES = -I../lib_mrt
 noinst_LIBRARIES = lib_tdss.a
-lib_tdss_a_SOURCES = config.c  inet_event.c  time_queue.c
+lib_tdss_a_SOURCES = config.c  inet_event.c  time_queue.c request.c
 lib_tdss_a_LIBADD = ../lib_mrt/lib_mrt.a
 AUTOMAKE_OPTIONS = foreign
 all: all-am
@@ -204,6 +204,7 @@ distclean-compile:
 
 include ./$(DEPDIR)/config.Po
 include ./$(DEPDIR)/inet_event.Po
+include ./$(DEPDIR)/request.Po
 include ./$(DEPDIR)/time_queue.Po
 
 .c.o:

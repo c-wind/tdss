@@ -49,7 +49,7 @@ am_data_server_OBJECTS = command.$(OBJEXT) data_file.$(OBJEXT) \
 	data_server.$(OBJEXT) name_server_api.$(OBJEXT) \
 	process.$(OBJEXT)
 data_server_OBJECTS = $(am_data_server_OBJECTS)
-data_server_DEPENDENCIES = ../lib_mrt/lib_mrt.a ../lib_tdss/lib_tdss.a
+data_server_DEPENDENCIES = ../lib_tdss/lib_tdss.a ../lib_mrt/lib_mrt.a
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -151,7 +151,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 INCLUDES = -I../lib_mrt/ -I../lib_tdss/
 data_server_SOURCES = command.c  data_file.c  data_server.c  name_server_api.c  process.c
-data_server_LDADD = ../lib_mrt/lib_mrt.a ../lib_tdss/lib_tdss.a -lssl
+data_server_LDADD = ../lib_tdss/lib_tdss.a ../lib_mrt/lib_mrt.a -lssl
 AUTOMAKE_OPTIONS = foreign
 all: all-am
 

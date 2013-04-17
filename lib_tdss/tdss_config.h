@@ -183,13 +183,32 @@ typedef struct
 #define ERR_NOMEM       -1111
 
 
+//参数解析
+#define RQ_TYPE_U8  1
+#define RQ_TYPE_U16 2
+#define RQ_TYPE_U32 3
+#define RQ_TYPE_INT RQ_TYPE_U32
+#define RQ_TYPE_U64 4
+#define RQ_TYPE_STR 5
+
+typedef struct
+{
+    int     type;
+    char    *key;
+    void    *val;
+    int     vsize;
+}rq_arg_t;
+
+
+
 int data_server_config_load(char *fname);
 
-int ns_get_master_addr(char *mid, char **ip, int *port);
+//根据key返回所在name_server主地址
+int ns_get_master_addr(char *key, int klen, char **ip, int *port);
 
-int ns_get_slave_addr(char *mid, char **ip, int *port);
+//根据key返回所在name_server从地址
+int ns_get_slave_addr(char *key, int klen, char **ip, int *port);
 
-int ns_get_server_id(char *mid, int *id);
 
 int ns_config_load(char *fname);
 

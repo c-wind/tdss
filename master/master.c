@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    if(logger_init("log", "master", MRT_INFO) == MRT_ERR)
+    if(logger_init("log", "master", MRT_DEBUG) == MRT_ERR)
     {
         log_error("logger_init error");
         return -1;
@@ -110,6 +110,40 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+
+    /*
+    char md5[33] = {0};
+    printf("ret:%d\n", file_md5("./test.eml", md5));
+    printf("md5:%s\n", md5);
+
+    _exit(0);
+    */
+
+    /*
+
+    char *ip = NULL;
+    int port = 0;
+    int i=0;
+    char line[1024] = {0};
+
+    for(i=1000; i<1100; i++)
+    {
+
+        sprintf(line, "%.6x%.6x", i*i, i*i%321);
+
+        ns_get_master_addr(line, strlen(line), &ip, &port);
+
+        printf("key:%s\tmaster:%s:%d\t", line, ip, port);
+
+        ns_get_slave_addr(line, strlen(line), &ip, &port);
+
+        printf("slave:%s:%d\n", ip, port);
+
+    }
+
+
+    _exit(0);
+    */
 
     fd = socket_bind_nonblock(ms.local.ip, ms.local.port);
     if(fd == -1)
