@@ -1,7 +1,11 @@
+v0.0.3  2013-04-17  Mrt <mrt@codecn.org>
+	*修改name_server定位算法为crc32
+	*修复data_server调用name_server处理返回结果问题
+	*修复name_server间同步问题
+
 v0.0.2 2013-04-10 mrt <mrt@codecn.org>
-    修复master处理status问题
-    修复master轮询问题
+    *修复master处理status问题
+    *修复master轮询问题
 
 v0.0.1 2013-03-29 mrt <mrt@codecn.org>
-    
-    第一版发布
+    +第一版发布

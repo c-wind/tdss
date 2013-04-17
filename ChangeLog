@@ -1,9 +1,16 @@
+2013-04-17  Mrt <mrt@codecn.org>
+	* lib_tdss :
+		定位算法
+	* data_server :
+		调用name_server处理返回结果问题
+	* name_server :
+		同步问题
+
 2013-04-10  Mrt <mrt@codecn.org>
-	修复master无法显示status问题
-	修复master轮询服务问题
+	* master :
+		修复无法显示status问题, 轮询问题
 
 2013-03-29  Mrt <mrt@codecn.org>
-
 	第一版测试
 
 
