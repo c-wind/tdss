@@ -22,6 +22,7 @@
           <h2 id="project_tagline">分布式存储系统</h2>
 
         </header>
+        <center>
             <section id="main_content">
               <a href="http://c-wind.github.io/tdss/index.html">首页</a>
               &nbsp; &nbsp; &nbsp; &nbsp;
@@ -29,36 +30,40 @@
               &nbsp; &nbsp; &nbsp; &nbsp;
               <a href="http://c-wind.github.io/tdss/download/tdss-0.1.0.tar.gz">TDSS-0.1.0下载</a>
             </section>
+        </center>
     </div>
 
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
       <p>
-2013-06-03  Mrt <mrt@codecn.org>
-	* tdss_client:
-		支持文件上传，下载
-	* data_server:
-		存储方式改为块文件存储，根据data_server.ini中配置的大小，生成块文件
-	* name_server:
-		修改索引文件命名规则，不会出现多进程使用同名文件问题
-		修改索引文件存储格式(服务器ID|引用次数|大小|块文件名|块中位置)
-
-2013-04-17  Mrt <mrt@codecn.org>
-	* lib_tdss :
-		定位算法
-	* data_server :
-		调用name_server处理返回结果问题
-	* name_server :
-		同步问题
-
-2013-04-10  Mrt <mrt@codecn.org>
-	* master :
-		修复无法显示status问题, 轮询问题
-
-2013-03-29  Mrt <mrt@codecn.org>
-	第一版测试
-
+2013-06-03  Mrt <mrt@codecn.org><br />
+	* tdss_client:<br />
+		支持文件上传，下载<br />
+	* data_server:<br />
+		存储方式改为块文件存储，根据data_server.ini中配置的大小，生成块文件<br />
+	* name_server:<br />
+		修改索引文件命名规则，不会出现多进程使用同名文件问题<br />
+		修改索引文件存储格式(服务器ID|引用次数|大小|块文件名|块中位置)<br />
+</p><br />
+<p>
+2013-04-17  Mrt <mrt@codecn.org><br />
+	* lib_tdss :<br />
+		定位算法<br />
+	* data_server :<br />
+		调用name_server处理返回结果问题<br />
+	* name_server :<br />
+		同步问题<br />
+<br />
+</p><br />
+<p>
+2013-04-10  Mrt <mrt@codecn.org><br />
+	* master :<br />
+		修复无法显示status问题, 轮询问题<br />
+<br />
+2013-03-29  Mrt <mrt@codecn.org><br />
+	第一版测试<br />
+<br />
 
       </p>
       </section>
