@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.63)
-AC_INIT([tdss],[0.0.1],[root@codecn.org])
+AC_INIT([tdss],[0.1.0],[root@codecn.org])
 AC_CONFIG_SRCDIR([master_server])
 AC_CONFIG_SRCDIR([data_server])
 AC_CONFIG_SRCDIR([name_server])

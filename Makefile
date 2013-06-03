@@ -134,9 +134,9 @@ OBJEXT = o
 PACKAGE = tdss
 PACKAGE_BUGREPORT = root@codecn.org
 PACKAGE_NAME = tdss
-PACKAGE_STRING = tdss 0.0.1
+PACKAGE_STRING = tdss 0.1.0
 PACKAGE_TARNAME = tdss
-PACKAGE_VERSION = 0.0.1
+PACKAGE_VERSION = 0.1.0
 PATH_SEPARATOR = :
 RANLIB = ranlib
 SET_MAKE = 
@@ -497,7 +497,7 @@ distcheck: dist
 	*.zip*) \
 	  unzip $(distdir).zip ;;\
 	esac
-	chmod -R a-w $(distdir); chmod u+w $(distdir)
+	chmod -R a-w $(distdir); chmod a+w $(distdir)
 	mkdir $(distdir)/_build
 	mkdir $(distdir)/_inst
 	chmod a-w $(distdir)
