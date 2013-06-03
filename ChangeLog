@@ -1,3 +1,12 @@
+2013-06-03  Mrt <mrt@codecn.org>
+	* tdss_client:
+		支持文件上传，下载
+	* data_server:
+		存储方式改为块文件存储，根据data_server.ini中配置的大小，生成块文件
+	* name_server:
+		修改索引文件命名规则，不会出现多进程使用同名文件问题
+		修改索引文件存储格式(服务器ID|引用次数|大小|块文件名|块中位置)
+
 2013-04-17  Mrt <mrt@codecn.org>
 	* lib_tdss :
 		定位算法

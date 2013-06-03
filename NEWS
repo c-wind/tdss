@@ -1,3 +1,10 @@
+v0.1.0  2013-06-03  Mrt <mrt@codecn.org>
+    +tdss_client支持文件上传，下载
+	+master_server支持配置轮询间隔时间
+	+data_server支持块文件存储, 修复保存文件不完整bug,修复读取文件结束后断开链接的bug
+	*name_server修复多进程使用同名文件bug
+
+
 v0.0.3  2013-04-17  Mrt <mrt@codecn.org>
 	*修改name_server定位算法为crc32
 	*修复data_server调用name_server处理返回结果问题
