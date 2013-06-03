@@ -22,6 +22,13 @@
 #include <sys/stat.h>
 #include <openssl/conf.h>
 
+/* ------------ 日志级别 ------------
+*     MRT_DEBUG 1
+*     MRT_INFO 2
+*     MRT_WARNING 3
+*     MRT_ERROR 4
+*     MRT_FATAL 5
+*/
 
 
 //"一主一从"为一组name_server服务
@@ -48,6 +55,7 @@ typedef struct
     int                 timeout;
     int                 daemon;         //运行方式
     ip4_addr_t          local;          //当前服务绑定的IP和端口
+    int                 log_level;
 
     int                 server_id;      //当前服务ID
     int                 server_type;    //当前进程类型是主还是从，根据配置文件中的IP和端口对应出来
@@ -93,12 +101,14 @@ typedef struct
 
 }name_server_info_t;
 
-//master_server_t存放所有data_server和name_server(主)的状态信息
+//存放所有data_server和name_server(主)的状态信息
 typedef struct
 {
-    int                     timeout;
+    int                     timeout;        //socket超时
     int                     daemon;         //运行方式
     ip4_addr_t              local;          //当前服务绑定的IP和端口
+    int                     interval;       //检测各个服务器的间隔时间
+    int                     log_level;      //日志级别
 
     struct
     {
@@ -123,7 +133,7 @@ typedef struct
     inet_event_t            *ie;
 
 
-}master_server_t;
+}master_server_conf_t;
 
 
 //data server由最多255个组构成，每个组由最多255个服务组成（每个服务对应一个硬盘, 并不一定都是一个服务器上的硬盘）
@@ -131,6 +141,7 @@ typedef struct
 {
     int                     timeout;
     int                     daemon;         //运行方式
+    int                     log_level;
 
     ip4_addr_t              local;          //当前服务绑定的IP和端口
 
@@ -142,21 +153,27 @@ typedef struct
 
     inet_event_t            *ie;
 
+    int                     max_block_size;
+    char                    data_path[MAX_PATH];
+
 }data_server_conf_t;
 
+
+//方便操作的文件信息
+typedef struct
+{
+    int     server;
+    int     size;
+    int     offset;
+    int     ref;
+    char    name[33];
+    char    file[33];
+}fblock_t;
 
 #define NSOPT_ADD_FILE  1
 #define NSOPT_MOD_FILE  2
 #define NSOPT_DEL_FILE  3
 
-//方便操作的文件信息
-typedef struct
-{
-    int             server;     //服务器ID, 最多255台服务器
-    char            name[33];   //块文件名由两部分组成一个128位的文件名
-    int             size;       //真实文件大小（不是块文件大小）
-
-}fblock_t;
 
 
 #define OPERATE_SUCCESS 1000

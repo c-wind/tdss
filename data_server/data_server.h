@@ -41,6 +41,19 @@
 #define SESSION_END         7
 
 
+typedef struct
+{
+    int         state;                  //打开为1，其它为关闭
+    int         fd;
+    char        name[MAX_PATH];         //文件全路径
+    int         num;                    //引用次数
+
+    int64_t     size;                   //当前文件的大小
+
+}block_file_t;
+
+
+
 
 typedef struct session_s session_t;
 struct session_s
@@ -50,27 +63,27 @@ struct session_s
     uint32_t        id;             //每个会话对应一个id
     uint32_t        request_id;     //一个新命令到来时重新生成id，以记录当前会话
 
-    fblock_t        fb;             //当前请求操作的文件信息
-    off_t           offset;         //当前文件操作位置
-
-
     /*
-       char            mid[33];       //当前会话要传输的文件所在的块文件名
-       off_t           offset;         //当前会话要传输的文件开始位置
-       int32_t         send_size;      //已发送大小
-       */
-    int             send_size;
-    file_handle_t   *src_file;      //发送文件时为找到的目的文件
-    file_handle_t   *tmp_file;      //接收文件时临时文件
-    /*
-       int32_t         size;
-       */
-
-    //    file_block_t    file;           //当前文件信息
+    char            name[33];       //当前要传输的文件名
+    char            file[33];       //当前要传输的文件所在的块文件名
+    int             size;           //当前要传输的文件大小
+    off_t           begin;          //当前要传输的文件在块中的起始位置
+    off_t           offset;         //当前要传输的文件在块中的位置
+    */
+    fblock_t        fb_info;        //文件在块中的信息
+    off_t           proc_size;      //已发送or已接收大小
 
     int             (*proc)(inet_task_t *);
 
     inet_task_t     *parent;        //父任务;
+
+    string_t        input;          //客户端发送过来的命令
+    string_t        output;         //要给客户端返回的结果
+
+    block_file_t    *bf;            //当前操作的块文件
+    char            bf_buf[BUFSIZ]; //当前操作文件的缓冲区
+    int             bf_size;        //当前缓冲区使用的大小
+
 
     struct {
         int         state;          //调用name_server服务执行状态
@@ -79,8 +92,7 @@ struct session_s
         int         (*finish)(inet_task_t *);
     }name_server;
 
-    string_t        input;          //客户端发送过来的命令
-    string_t        output;         //要给客户端返回的结果
+
 };
 
 typedef struct

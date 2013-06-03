@@ -108,12 +108,6 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    if(logger_init("log", "data_server", MRT_DEBUG) == MRT_ERR)
-    {
-        log_error("logger_init error");
-        return -1;
-    }
-
     if(data_server_config_load("etc/data_server.ini") == MRT_ERR)
     {
         log_error("data_server_config_load error");
@@ -123,6 +117,12 @@ int main(int argc, char *argv[])
     if(name_server_config_load("etc/name_server.ini") == MRT_ERR)
     {
         log_error("name_server_config_init error");
+        return -1;
+    }
+
+    if(logger_init("log", "data_server", ds_conf.log_level) == MRT_ERR)
+    {
+        log_error("logger_init error");
         return -1;
     }
 
@@ -141,10 +141,9 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-
     ds_conf.ie->task_init = request_init;
     ds_conf.ie->task_deinit = request_deinit;
-    ds_conf.ie->timeout = 30;
+    ds_conf.ie->timeout = ds_conf.timeout;
 
     inet_event_loop(ds_conf.ie);
 

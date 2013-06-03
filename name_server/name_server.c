@@ -99,6 +99,7 @@ int parse_args(int argc, char* argv[])
 int main(int argc, char *argv[])
 {
     int fd = -1;
+    char db_file[MAX_PATH] = {0};
 
     parse_args(argc, argv);
 
@@ -107,13 +108,6 @@ int main(int argc, char *argv[])
         log_error("daemon_init error");
         return -1;
     }
-
-    if(logger_init("log", "name_server", MRT_DEBUG) == MRT_ERR)
-    {
-        log_error("logger_init error");
-        return -1;
-    }
-
 
     if(data_server_config_load("etc/data_server.ini") == MRT_ERR)
     {
@@ -127,8 +121,15 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    if(logger_init("log", "name_server", ns_conf.log_level) == MRT_ERR)
+    {
+        log_error("logger_init error");
+        return -1;
+    }
 
-    if(fblock_mem_init(ns_conf.db_path) == MRT_ERR)
+    snprintf(db_file, sizeof(db_file) - 1, "%s/index_%d_%d.db", ns_conf.db_path, ns_conf.server_type, ns_conf.server_id);
+
+    if(fblock_mem_init(db_file) == MRT_ERR)
     {
         log_error("fblock_mem_init error");
         return -1;
@@ -152,7 +153,7 @@ int main(int argc, char *argv[])
 
     ns_conf.ie->task_init = request_init;
     ns_conf.ie->task_deinit = request_deinit;
-    ns_conf.ie->timeout = 30;
+    ns_conf.ie->timeout = ns_conf.timeout;
 
     inet_event_loop(ns_conf.ie);
 

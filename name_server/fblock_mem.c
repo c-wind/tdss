@@ -4,6 +4,7 @@
 #include "inet_event.h"
 #include "tdss_config.h"
 #include "hashdb.h"
+#include "name_server.h"
 #include "fblock_mem.h"
 
 
@@ -13,22 +14,21 @@ static hashdb_t *fbdb = NULL;
 
 
 
-int fblock_mem_delete(fblock_mem_t *fbm, char *fid)
+int fblock_mem_delete(fblock_mem_t *fbm, char *name)
 {
     int iret = 0;
 
-    log_info("Del ref:[%u] server:[%u] fid:[%jx%jx] size:[%u]",
-             fbm->ref, fbm->server, fbm->name[0], fbm->name[1], fbm->size);
+    log_info("Del name:[%s] file:[%x.%x] ref:[%u] server:[%u] offset:[%u] size:[%u]",
+             name, fbm->prefix, fbm->suffix, fbm->ref, fbm->server, fbm->offset, fbm->size);
 
-    iret = hashdb_delete(fbdb, fid, strlen(fid));
+    iret = hashdb_delete(fbdb, name, strlen(name));
     if(iret != HDB_OK)
     {
-        log_error("hashdb delete fid:%s error:%s",
-                  fid, hashdb_code_to_string(iret));
+        log_error("hashdb delete name:%s error:%s",
+                  name, hashdb_code_to_string(iret));
 
         return MRT_ERR;
     }
-
 
     return MRT_SUC;
 }
@@ -37,28 +37,28 @@ int fblock_mem_delete(fblock_mem_t *fbm, char *fid)
 //引用记数+1
 //返回：
 //      -1:系统错误
-//      0:没找到fid
+//      0:没找到文件
 //      1:修改成功
-int fblock_ref_inc(char *fid)
+int fblock_ref_inc(char *name)
 {
     fblock_mem_t *fbm = NULL;
 
-    switch(hashdb_find(fbdb, fid, strlen(fid), (void **)&fbm))
+    switch(hashdb_find(fbdb, name, strlen(name), (void **)&fbm))
     {
     case HDB_KEY_NOFOUND:
-        log_info("hashdb no found file:%s", fid);
+        log_info("hashdb no found file:%s", name);
         return 0;
     case HDB_OK:
-        log_debug("hashdb find %s", fid);
+        log_debug("hashdb find %s", name);
         break;
     default:
-        log_error("hashdb find %s error", fid);
+        log_error("hashdb find %s error", name);
         return MRT_ERR;
     }
 
     fbm->ref++;
 
-    log_debug("file:%s ref:%d.", fid, fbm->ref);
+    log_debug("name:%s ref:%d.", name, fbm->ref);
 
     return 1;
 }
@@ -67,61 +67,50 @@ int fblock_ref_inc(char *fid)
 //引用记数-1
 //返回：
 //      -1:系统错误
-//      0:没找到fid
+//      0:没找到name
 //      1:修改成功
-int fblock_ref_dec(char *fid)
+int fblock_ref_dec(char *name)
 {
     fblock_mem_t *fbm = NULL;
 
-    if(hashdb_find(fbdb, fid, strlen(fid), (void **)&fbm) == 0)
+    if(hashdb_find(fbdb, name, strlen(name), (void **)&fbm) == HDB_KEY_NOFOUND)
     {
-        log_info("no found file:%s", fid);
+        log_info("no found file:%s", name);
         return 0;
     }
 
-    log_debug("find file:%s in mem", fid);
+    log_debug("find file:%s in mem", name);
 
     fbm->ref--;
 
-    log_debug("file:%s ref:%d.", fid, fbm->ref);
+    log_debug("file:%s ref:%d.", name, fbm->ref);
 
     if(fbm->ref < 1)
     {
-        fblock_mem_delete(fbm, fid);
+        fblock_mem_delete(fbm, name);
     }
 
     return 1;
 }
 
 
+
 int fblock_to_mem(fblock_t *fb, fblock_mem_t *fbm)
 {
-    char str[34] = {0};
-
-    if(strlen(fb->name) != 32)
+    if(sscanf(fb->file, "%x.%x", &fbm->prefix, &fbm->suffix) != 2)
     {
-        log_error("fblock name:(%s) len error", fb->name);
+        log_error("fblock name:(%s) format error", fb->file);
         return MRT_ERR;
     }
 
-    memcpy(str, fb->name, 16);
-    memcpy(str + 17, fb->name + 16, 16);
-    str[16] = ' ';
-
-    if(sscanf(str, "%jx %jx", &fbm->name[0], &fbm->name[1]) != 2)
-    {
-        log_error("fblock name:(%s) format error", fb->name);
-        return MRT_ERR;
-    }
-
-
-    log_debug("fbm name[0]:%x name[1]:%x", fbm->name[0], fbm->name[1]);
-
+    fbm->offset = (uint32_t)fb->offset;
+    fbm->server = (uint16_t)fb->server;
+    fbm->size = (uint32_t)fb->size;
     fbm->ref = 1;
-    fbm->server  = (uint16_t) fb->server;
-    fbm->size  = (uint32_t) fb->size;
 
-    return 0;
+    log_debug("fbm name:%s file:%x.%x offset:%d server:%d size:%d",
+              fb->name, fbm->prefix, fbm->suffix, fbm->offset, fbm->server, fbm->size);
+    return MRT_OK;
 }
 
 
@@ -152,6 +141,27 @@ int fblock_mem_add(fblock_t *fb)
     return MRT_ERR;
 }
 
+
+
+int fblock_mem_get(fblock_t *fb)
+{
+    M_cpvril(fb);
+    fblock_mem_t *fbm = NULL;
+
+    if(hashdb_find(fbdb, fb->name, strlen(fb->name), (void **)&fbm) != HDB_OK)
+    {
+        log_info("hashdb no found name:%s", fb->name);
+        return MRT_ERR;
+    }
+
+    snprintf(fb->file, sizeof(fb->file) -1, "%x.%x", fbm->prefix, fbm->suffix);
+    fb->server = fbm->server;
+    fb->offset = fbm->offset;
+    fb->size = fbm->size;
+    fb->ref = fbm->ref;
+
+    return MRT_OK;
+}
 
 int fblock_mem_set(fblock_t *fb)
 {

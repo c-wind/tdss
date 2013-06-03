@@ -3,8 +3,8 @@
 #include "global.h"
 #include "inet_event.h"
 #include "tdss_config.h"
-#include "data_file.h"
 #include "data_server.h"
+#include "data_file.h"
 #include "name_server_api.h"
 
 
@@ -19,17 +19,62 @@ int mail_save(inet_task_t *it);
 #define slog_debug(fmt, ...) log_debug("%x"fmt, ss->id, ##__VA_ARGS__)
 
 
+int session_write_file(session_t *ss, char *str, int size)
+{
+    int lsize, csize;
+
+    if(ss->proc_size + size > ss->fb_info.size)
+    {
+        slog_error("recv size:%jd expect size:%d", ss->proc_size + size, ss->fb_info.size);
+        return MRT_ERR;
+    }
+
+    if(lseek(ss->bf->fd, ss->fb_info.offset + ss->proc_size, SEEK_SET) == -1)
+    {
+        log_error("lseek file:%s offset:%u error:%m", ss->bf->name, ss->proc_size);
+        return MRT_ERR;
+    }
+
+    log_info("+++++ str size:%d, offset:%u", size,  ss->fb_info.offset +ss->proc_size);
+    while(size > 0)
+    {
+        lsize = sizeof(ss->bf_buf) - ss->bf_size;
+        csize = lsize > size ? size : lsize;
+
+        memcpy(ss->bf_buf + ss->bf_size, str, csize);
+
+        ss->bf_size += csize;
+        size -= csize;
+        str += csize;
+//        ss->proc_size += csize;
+
+        //如果当前缓冲满了，或者当前处理的大小加上缓冲的大小正好和文件大小相同
+        if(ss->bf_size == sizeof(ss->bf_buf) || (ss->fb_info.size == (ss->proc_size + ss->bf_size)))
+        {
+            if(write(ss->bf->fd, ss->bf_buf, ss->bf_size) == -1)
+            {
+                log_error("write file:%s error:%m", ss->bf->name);
+                return MRT_ERR;
+            }
+            ss->proc_size += ss->bf_size;
+            ss->bf_size = 0;
+        }
+        log_debug("bf_size:%d, proc_size:%d", ss->bf_size, ss->proc_size);
+    }
+
+    return MRT_OK;
+}
 
 
 
 
-static int __file_save_loop_recv(inet_task_t *it)
+static int __file_add_loop_recv(inet_task_t *it)
 {
     session_t *ss = (session_t *)it->data;
     ssize_t ssize = 0;
     char line[MAX_LINE]  =  {0};
 
-    while(ss->fb.size > ss->tmp_file->size)
+    while(1)
     {
         ssize = read(it->fd, line, sizeof(line));
         if(ssize == -1)
@@ -39,41 +84,30 @@ static int __file_save_loop_recv(inet_task_t *it)
             if(errno == EINTR)
                 continue;
             slog_error("read from fd:%d error:%m", it->fd);
-            return -1;
+            block_file_close(ss->bf, ss->fb_info.offset, ss->fb_info.size, -1);
+            return MRT_ERR;
         }
-        if(file_buffer_write(ss->tmp_file, line, ssize))
+
+        if(session_write_file(ss, line, ssize))
         {
-            slog_error("file_buffer_write error.");
-            return -1;
+            slog_error("session_write_file error.");
+            block_file_close(ss->bf, ss->fb_info.offset, ss->fb_info.size, -1);
+            return MRT_ERR;
         }
-        ss->tmp_file->size += ssize;
     }
 
-    if(ss->fb.size > ss->tmp_file->size)
+    if(ss->fb_info.size != ss->proc_size)
     {
-        slog_debug("recv size:%jd expect size:%d", ss->tmp_file->size, ss->fb.size);
+        log_info("file:%s recv:%u size:%u", ss->fb_info.name, ss->proc_size, ss->fb_info.size);
         return NEXT_READ;
     }
 
-    file_close(ss->tmp_file);
+    block_file_close(ss->bf, 0, 0, 0);
+    ss->proc_size = 0;
+    memset(ss->bf_buf, 0, sizeof(ss->bf_buf));
+    ss->bf_size = 0;
 
-    slog_info("recv mid:%s to:%s over, size:%jd", ss->fb.name, ss->tmp_file->from, ss->tmp_file->size);
-    snprintf(line, sizeof(line), "data/%s", ss->fb.name);
-    if(link(ss->tmp_file->from, line) == -1)
-    {
-        if(errno != EEXIST)
-        {
-            slog_error("link from:%s to:%s error:%m", ss->tmp_file->from, line);
-            ss->next = SESSION_BEGIN;
-            session_return("%d link file error:%m", ERR_LINK_FILE);
-        }
-    }
 
-    //删除失败只记录不返回出错
-    if(unlink(ss->tmp_file->from) == -1)
-    {
-        slog_error("unlink file:%s error:%m", ss->tmp_file->from);
-    }
 
     ss->next = SESSION_BEGIN;
 
@@ -88,37 +122,76 @@ static int __file_save_loop_recv(inet_task_t *it)
     return SESSION_WAIT;
 }
 
-static int __file_read_loop_send(inet_task_t *it)
+static int __file_get_loop_send(inet_task_t *it)
 {
     session_t *ss = (session_t *)it->data;
     ssize_t ssize = 0;
+    off_t of = ss->fb_info.offset;
 
-    while(ss->fb.size > ss->send_size)
+    if(lseek(ss->bf->fd, of, SEEK_SET) == -1)
     {
-        ssize = sendfile(it->fd, ss->src_file->fd, &ss->offset, ss->fb.size - ss->send_size);
+        log_error("lseek file:%s offset:%u error:%m", ss->bf->name, ss->proc_size);
+        return MRT_ERR;
+    }
+
+    while(ss->fb_info.size > ss->proc_size)
+    {
+        log_info("1111111  fd1:%d fd2:%d off:%u size:%u",it->fd, ss->bf->fd, of, ss->fb_info.size - ss->proc_size);
+        ssize = sendfile(it->fd, ss->bf->fd, &of, ss->fb_info.size - ss->proc_size);
         if(ssize == -1)
         {
             if(errno == EAGAIN)
                 break;
             if(errno == EINTR)
                 continue;
-            slog_error("sendfile from fd:%d to fd:%d error:%m", ss->src_file->fd, it->fd);
-            return -1;
+            slog_error("sendfile from fd:%d to fd:%d error:%m", ss->bf->fd, it->fd);
+            session_return("%d sendfile error:%m", ERR_OPEN_FILE);
         }
-        ss->send_size += ssize;
+        log_info("22222 fd1:%d fd2:%d off:%u size:%u, ssize:%d",it->fd, ss->bf->fd, of, ss->fb_info.size - ss->proc_size, ssize);
+        ss->proc_size += ssize;
     }
 
-    if(ss->fb.size > ss->send_size)
+    if(ss->fb_info.size != ss->proc_size)
     {
-        slog_debug("send size:%d expect size:%d", ss->send_size, ss->fb.size);
+        slog_debug("send name:%s to:%s all size:%u send_size:%u",
+                   ss->fb_info.name, it->from, ss->fb_info.size, ss->proc_size);
         return NEXT_WRITE;
     }
 
-    ds_close_file(ss->src_file);
+    slog_info("send over name:%s to:%s size:%d success, will close file", ss->fb_info.name, it->from, ss->proc_size);
 
-    slog_info("send mid:%s to:%s size:%d success", ss->fb.name, it->from, ss->send_size);
+    block_file_close(ss->bf, 0, 0, 0);
 
-    return NEXT_READ;
+    slog_info("send name:%s to:%s size:%d success, close file over", ss->fb_info.name, it->from, ss->proc_size);
+
+    ss->state = SESSION_BEGIN;
+    ss->proc_size = 0;
+    s_zero(ss->fb_info);
+    /////////////////
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    /////
+
+    return SESSION_BEGIN;
 }
 
 
@@ -137,15 +210,15 @@ int cmd_nofound(inet_task_t *it)
 
 
 
-int file_save(inet_task_t *it)
+int file_add(inet_task_t *it)
 {
     session_t *ss = (session_t *)it->data;
-    rq_arg_t rq[] = {{RQ_TYPE_STR, "name", ss->fb.name, 33}, {RQ_TYPE_INT, "size", (void *)&ss->fb.size, 0}};
+    rq_arg_t rq[] = {{RQ_TYPE_STR, "name", ss->fb_info.name, 33}, {RQ_TYPE_INT, "size", (void *)&ss->fb_info.size, 0}};
 
     if(ss->state == SESSION_READ)
     {
         slog_debug("will loop recv mail body.");
-        return __file_save_loop_recv(it);
+        return __file_add_loop_recv(it);
     }
 
     if(request_parse(&ss->input, rq, 2) == -1)
@@ -154,77 +227,64 @@ int file_save(inet_task_t *it)
         session_return("%d", ERR_CMD_ARG);
     }
 
-    slog_info("%x name:%s, size:%d", ss->id, ss->fb.name, ss->fb.size);
 
-    if(ss->tmp_file)
+    if(block_file_append(&ss->bf, ss->fb_info.size, &ss->fb_info.offset) == MRT_ERR)
     {
-        slog_debug("clear old tmp file var.");
-        p_zero(ss->tmp_file);
-    }
-    else
-    {
-        if(!(ss->tmp_file = M_alloc(sizeof(file_handle_t))))
-        {
-            slog_error("M_alloc file handle error:%m");
-            session_return("%d malloc error:%m", ERR_NOMEM);
-        }
+        slog_error("block_file_append error:%m");
+        session_return("%d open file error:%m", ERR_OPEN_FILE);
     }
 
-    if(file_open_temp("./tmp/", ss->tmp_file) == -1)
-    {
-        slog_error("open_tmp_file error.");
-        session_return("%d open temp file error:%m", ERR_OPEN_FILE);
-        return NEXT_WRITE;
-    }
+    snprintf(ss->fb_info.file, sizeof(ss->fb_info.file) - 1, "%s", ss->bf->name);
 
-    if(file_buffer_init(ss->tmp_file, M_8KB))
-    {
-        slog_error("file_buffer_init error.");
-        session_return("%d file buffer init error.", ERR_OPEN_FILE);
-    }
+    memset(ss->bf_buf, 0, sizeof(ss->bf_buf));
 
-    slog_info("create temp file:%s", ss->tmp_file->from);
+    slog_info("%x name:%s file:%s offset:%u size:%d",
+              ss->id, ss->fb_info.name, ss->fb_info.file, ss->fb_info.offset, ss->fb_info.size);
 
     ss->next = SESSION_READ;
 
-    session_return("%d temp file:%s create", OPERATE_SUCCESS, ss->tmp_file->from);
+    session_return("%d file:%s create", OPERATE_SUCCESS, ss->bf->name);
 }
 
 
-int file_read(inet_task_t *it)
+int file_get(inet_task_t *it)
 {
     session_t *ss = (session_t *)it->data;
     rq_arg_t rq[] = {
-        {RQ_TYPE_STR, "name", ss->fb.name, 33},
-        {RQ_TYPE_INT, "offset", (void *)&ss->offset, 0},
-        {RQ_TYPE_INT, "size", (void *)&ss->fb.size, 0}
+        {RQ_TYPE_STR, "name", ss->fb_info.name,     sizeof(ss->fb_info.name)},
+        {RQ_TYPE_STR, "file", ss->fb_info.file,     sizeof(ss->fb_info.file)},
+        {RQ_TYPE_INT, "offset", (void *)&ss->fb_info.offset, 0},
+        {RQ_TYPE_INT, "size", (void *)&ss->fb_info.size, 0}
     };
 
     if(ss->state == SESSION_WRITE)
     {
-        slog_debug("will loop send mail body.");
-        return __file_read_loop_send(it);
+        slog_debug("will loop send file body.");
+        return __file_get_loop_send(it);
     }
 
-    if(request_parse(&ss->input, rq, 3) == -1)
+    if(request_parse(&ss->input, rq, 4) == -1)
     {
         slog_error("request_parse error.");
         session_return("%d", ERR_CMD_ARG);
     }
 
-    slog_info("%x mid:%s, size:%d", ss->id, ss->fb.name, ss->fb.size);
+    slog_info("%x name:%s file:%s offset:%u size:%d",
+              ss->id, ss->fb_info.name, ss->fb_info.file, ss->fb_info.offset, ss->fb_info.size);
 
-    if(ds_open_file(&ss->src_file, ss->fb.name) == -1)
+    if(block_file_open(&ss->bf, ss->fb_info.file) == MRT_ERR)
     {
-        slog_error("open file:%s error:%m", ss->fb.name);
-        session_return("%d open file%s error:%m", ERR_OPEN_FILE, ss->fb.name);
+        slog_error("block_file_open file:%s error:%m", ss->fb_info.name);
+        session_return("%d open file%s error:%m", ERR_OPEN_FILE, ss->fb_info.name);
     }
 
-    slog_info("create temp file:%s", ss->src_file->from);
-
+    ss->proc_size = 0;
+    snprintf(ss->fb_info.file, sizeof(ss->fb_info.file) - 1, "%s", ss->bf->name);
     ss->next = SESSION_WRITE;
 
-    session_return("%d open file:%s success", OPERATE_SUCCESS, ss->src_file->from);
+    log_info("name:%s file:%s offset:%u size:%u", ss->fb_info.name, ss->fb_info.file, ss->fb_info.offset, ss->fb_info.size);
+
+    session_return("%d open file:%s success", OPERATE_SUCCESS, ss->bf->name);
 }
 
 
@@ -244,8 +304,8 @@ int status(inet_task_t *it)
 #define CMD_DEFINE_FLUSH(f1) {#f1, f1}
 
 command_t cmd_list[] = {
-    CMD_DEFINE_FLUSH(file_save),
-    CMD_DEFINE_FLUSH(file_read),
+    CMD_DEFINE_FLUSH(file_add),
+    CMD_DEFINE_FLUSH(file_get),
     CMD_DEFINE_FLUSH(status),
     {NULL, cmd_nofound}
 };

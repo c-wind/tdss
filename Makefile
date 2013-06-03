@@ -126,7 +126,7 @@ INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LDFLAGS = 
 LIBOBJS = 
-LIBS = -lrt -lm -ldl 
+LIBS = -lssl -lrt -lm -ldl 
 LTLIBOBJS = 
 MAKEINFO = ${SHELL} /home/tian/tdss/missing --run makeinfo
 MKDIR_P = /bin/mkdir -p
@@ -185,7 +185,7 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-SUBDIRS = lib_mrt lib_tdss data_server name_server master tdss_client
+SUBDIRS = lib_mrt lib_tdss data_server name_server master_server tdss_client
 all: none.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -497,7 +497,7 @@ distcheck: dist
 	*.zip*) \
 	  unzip $(distdir).zip ;;\
 	esac
-	chmod -R a-w $(distdir); chmod a+w $(distdir)
+	chmod -R a-w $(distdir); chmod u+w $(distdir)
 	mkdir $(distdir)/_build
 	mkdir $(distdir)/_inst
 	chmod a-w $(distdir)

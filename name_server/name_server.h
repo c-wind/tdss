@@ -48,7 +48,6 @@ struct session_s
     fblock_t        fb;             //当前请求操作的文件信息
 
 
-
     int             (*proc)(inet_task_t *);
 
     inet_task_t     *parent;        //父任务;
@@ -57,7 +56,9 @@ struct session_s
         int         state;          //调用name_server服务执行状态
         int         type;           //类型NSOPT_ADD_FILE：保存文件信息, NSOPT_MOD_FILE:修改，NSOPT_DEL_FILE删除
         string_t    cmd;
-        int         (*finish)(inet_task_t *); }name_server; string_t        input;          //客户端发送过来的命令
+        int         (*finish)(inet_task_t *);
+    }name_server;
+    string_t        input;          //客户端发送过来的命令
     string_t        output;         //要给客户端返回的结果
 };
 
@@ -104,12 +105,13 @@ int get_eth1_ip(char *addr, int size);
 #define ERR_DEL_FILE    -1003
 #define ERR_LINK_FILE   -1004
 
-#define ERR_FB_ADD      -1100
-#define ERR_FB_MOD      -1101
-#define ERR_FB_DEL      -1102
-#define ERR_FB_REF_INC  -1103
-#define ERR_FB_REF_DEC  -1104
-#define ERR_FB_STATUS   -1105
+#define ERR_FB_ADD      -1101
+#define ERR_FB_GET      -1102
+#define ERR_FB_MOD      -1103
+#define ERR_FB_DEL      -1104
+#define ERR_FB_REF_INC  -1105
+#define ERR_FB_REF_DEC  -1106
+#define ERR_FB_STATUS   -1107
 
 #define ERR_NS_CONN     -1011
 #define ERR_NS_WRITE    -1012

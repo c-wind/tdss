@@ -322,7 +322,7 @@ on `(hostname || uname -n) 2>/dev/null | sed 1q`
 "
 
 # Files that config.status was made for.
-config_files=" Makefile data_server/Makefile lib_mrt/Makefile lib_tdss/Makefile master/Makefile tdss_client/Makefile name_server/Makefile"
+config_files=" Makefile data_server/Makefile lib_mrt/Makefile lib_tdss/Makefile master_server/Makefile tdss_client/Makefile name_server/Makefile"
 config_headers=" none.h"
 config_commands=" depfiles"
 
@@ -472,7 +472,7 @@ do
     "data_server/Makefile") CONFIG_FILES="$CONFIG_FILES data_server/Makefile" ;;
     "lib_mrt/Makefile") CONFIG_FILES="$CONFIG_FILES lib_mrt/Makefile" ;;
     "lib_tdss/Makefile") CONFIG_FILES="$CONFIG_FILES lib_tdss/Makefile" ;;
-    "master/Makefile") CONFIG_FILES="$CONFIG_FILES master/Makefile" ;;
+    "master_server/Makefile") CONFIG_FILES="$CONFIG_FILES master_server/Makefile" ;;
     "tdss_client/Makefile") CONFIG_FILES="$CONFIG_FILES tdss_client/Makefile" ;;
     "name_server/Makefile") CONFIG_FILES="$CONFIG_FILES name_server/Makefile" ;;
 
@@ -588,7 +588,7 @@ S["CC"]="gcc"
 S["target_alias"]=""
 S["host_alias"]=""
 S["build_alias"]=""
-S["LIBS"]="-lrt -lm -ldl "
+S["LIBS"]="-lssl -lrt -lm -ldl "
 S["ECHO_T"]=""
 S["ECHO_N"]="-n"
 S["ECHO_C"]=""
@@ -673,6 +673,7 @@ D["PACKAGE_BUGREPORT"]=" \"root@codecn.org\""
 D["HAVE_LIBDL"]=" 1"
 D["HAVE_LIBM"]=" 1"
 D["HAVE_LIBRT"]=" 1"
+D["HAVE_LIBSSL"]=" 1"
 D["STDC_HEADERS"]=" 1"
 D["HAVE_SYS_TYPES_H"]=" 1"
 D["HAVE_SYS_STAT_H"]=" 1"

@@ -30,18 +30,22 @@ int cmd_nofound(inet_task_t *it)
     session_return("%d command no found", ERR_CMD_NOFOUND);
 }
 
+
+
 int file_info_add(inet_task_t *it)
 {
     session_t *ss = (session_t *)it->data;
     rq_arg_t rq[] = {
         {RQ_TYPE_INT,   "server",   &ss->fb.server, 0},
-        {RQ_TYPE_STR,   "name",     ss->fb.name,    33},
+        {RQ_TYPE_STR,   "name",     ss->fb.name,    sizeof(ss->fb.name)},
+        {RQ_TYPE_STR,   "file",     ss->fb.file,    sizeof(ss->fb.file)},
+        {RQ_TYPE_INT,   "offset",   &ss->fb.offset, 0},
         {RQ_TYPE_INT,   "size",     &ss->fb.size,   0}
     };
 
-    if(request_parse(&ss->input, rq, 3) == MRT_ERR)
+    if(request_parse(&ss->input, rq, 5) == MRT_ERR)
     {
-        log_error("command error.");
+        log_error("command error, recv:%s.", ss->input.str);
         session_return("%d request parse error", ERR_CMD_ARG);
     }
 
@@ -74,36 +78,68 @@ int file_info_set(inet_task_t *it)
     session_t *ss = (session_t *)it->data;
     rq_arg_t rq[] = {
         {RQ_TYPE_INT,   "server",   &ss->fb.server, 0},
-        {RQ_TYPE_STR,   "name",     ss->fb.name,    33},
+        {RQ_TYPE_STR,   "name",     ss->fb.name,    sizeof(ss->fb.name)},
+        {RQ_TYPE_STR,   "file",     ss->fb.file,    sizeof(ss->fb.file)},
+        {RQ_TYPE_INT,   "offset",   &ss->fb.offset, 0},
         {RQ_TYPE_INT,   "size",     &ss->fb.size,   0}
     };
 
-    if(request_parse(&ss->input, rq, 3) == MRT_ERR)
+    if(request_parse(&ss->input, rq, 5) == MRT_ERR)
     {
-        log_error("command error.");
+        log_error("command error, recv:%s.", ss->input.str);
         session_return("%d request parse error", ERR_CMD_ARG);
     }
 
     if(fblock_mem_set(&ss->fb) == MRT_ERR)
     {
-        slog_error("fblock_mem_set error");
-        session_return("%d mem set error", ERR_FB_ADD);
+        slog_error("fblock_mem_add error");
+        session_return("%d mem add error", ERR_FB_ADD);
     }
+
+    log_debug("server_type:%d", ns_conf.server_type);
 
     if(ns_conf.server_type == 2)
     {
         session_return("%d ok", OPERATE_SUCCESS);
     }
-
-    if(name_server_sync(it) == MRT_ERR)
+    else
     {
-        slog_error("name_server_sync error");
-        session_return("%d mem sync error", ERR_FB_ADD);
+        if(name_server_sync(it) == MRT_ERR)
+        {
+            slog_error("name_server_sync error");
+            session_return("%d mem sync error", ERR_FB_ADD);
+        }
     }
 
     return SESSION_WAIT;
 }
 
+
+
+int file_info_get(inet_task_t *it)
+{
+    session_t *ss = (session_t *)it->data;
+    fblock_mem_t *fbm = NULL;
+    rq_arg_t rq[] = {
+        {RQ_TYPE_STR,   "name",     ss->fb.name,    33}
+    };
+
+    if(request_parse(&ss->input, rq, 1) == MRT_ERR)
+    {
+        log_error("command error.");
+        session_return("%d request parse error", ERR_CMD_ARG);
+    }
+
+    if(fblock_mem_get(&ss->fb) == MRT_ERR)
+    {
+
+        slog_error("fblock_mem_get error");
+        session_return("%d mem get error", ERR_FB_GET);
+    }
+
+    session_return("%d server=%d file=%s name=%s offset=%u size=%u ref=%u",
+                   OPERATE_SUCCESS, ss->fb.server, ss->fb.file, ss->fb.name, ss->fb.offset, ss->fb.size, ss->fb.ref);
+}
 
 
 int file_ref_dec(inet_task_t *it)
@@ -118,6 +154,7 @@ int file_ref_dec(inet_task_t *it)
         log_error("command error.");
         session_return("%d request parse error", ERR_CMD_ARG);
     }
+
     if(fblock_ref_dec(ss->fb.name) == MRT_ERR)
     {
         slog_error("fblock_ref_dec error");
@@ -196,6 +233,7 @@ int status(inet_task_t *it)
 command_t cmd_list[] = {
     CMD_DEFINE_FLUSH(file_info_add),
     CMD_DEFINE_FLUSH(file_info_set),
+    CMD_DEFINE_FLUSH(file_info_get),
     CMD_DEFINE_FLUSH(file_ref_dec),
     CMD_DEFINE_FLUSH(file_ref_inc),
     CMD_DEFINE_FLUSH(status),

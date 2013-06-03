@@ -605,7 +605,7 @@ int hashdb_init(char *fname, hashdb_t **phdb)
                     //                  goto hashdb_load_error;
                 }
                 else
-                    log_debug("load insert key:%s", key);
+                    log_info("load insert key:%s", key);
                 break;
             case 2:
                 ok_num++;
@@ -615,7 +615,7 @@ int hashdb_init(char *fname, hashdb_t **phdb)
                     //                   goto hashdb_load_error;
                 }
                 else
-                    log_debug("load update key:%s,len:%d, val:%s, len:%d", key, sec.klen, val, sec.vlen);
+                    log_info("load update key:%s,len:%d, val:%s, len:%d", key, sec.klen, val, sec.vlen);
                 break;
             case 3:
                 ok_num++;
@@ -625,7 +625,7 @@ int hashdb_init(char *fname, hashdb_t **phdb)
                     //                    goto hashdb_load_error;
                 }
                 else
-                    log_debug("load delete key:%s", key);
+                    log_info("load delete key:%s", key);
                 break;
             default:
                 err_num++;

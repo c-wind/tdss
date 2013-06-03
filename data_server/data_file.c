@@ -5,6 +5,8 @@
 #include "inet_event.h"
 #include "tdss_config.h"
 #include "hashdb.h"
+#include "data_server.h"
+#include "data_file.h"
 
 
 extern name_server_conf_t ns_conf;
@@ -13,12 +15,12 @@ extern data_server_conf_t ds_conf;
 #define MAX_FILE_BLOCK_SIZE     268435456
 
 
-//全局变量, 所有打开的文件都在这里面
-static hashdb_t *ofdb = NULL;
+static hashdb_t *ofdb = NULL;       //所有打开的文件都在这里面
+
+static block_file_t *cbf = NULL;
 
 
-
-int ds_open_file(file_handle_t **fh, char *name)
+int ds_file_open(file_handle_t **fh, char *name)
 {
     file_handle_t *tmp = NULL;
 
@@ -54,6 +56,7 @@ int ds_open_file(file_handle_t **fh, char *name)
 }
 
 
+
 int ds_file_is_open(char *name)
 {
     file_handle_t *tmp = NULL;
@@ -70,7 +73,7 @@ int ds_file_is_open(char *name)
 
 
 
-int ds_close_file(file_handle_t *fh)
+int ds_file_close(file_handle_t *fh)
 {
     close(fh->fd);
 
@@ -189,5 +192,153 @@ int ds_file_merger(char *path, time_t tm)
     return 0;
 }
 */
+
+//打开一个文件准备写入, 要指定写入大小，此时可能用多个文件往同一个块中写
+static int block_file_create(int size)
+{
+    block_file_t *bf = NULL;
+    int pre = time(NULL), end = 0;
+    static uint16_t i=0;
+
+
+    M_cvril((bf = M_alloc(sizeof(block_file_t))), "Malloc block_file_t error:%m");
+
+    bf->state = 0;
+
+    while(end++ < 10000)
+    {
+        snprintf(bf->name, sizeof(bf->name), "%s/%x.%x", ds_conf.data_path, pre, i++);
+        bf->fd = open(bf->name, O_RDWR|O_EXCL|O_CREAT, 0666);
+        if(bf->fd != -1)
+            break;
+
+        log_debug("file %s %m", bf->name);
+    }
+
+    if(bf->fd == -1)
+    {
+        log_error("can't create block file:%m");
+        return MRT_ERR;
+    }
+
+    if(ftruncate(bf->fd, size) == -1)
+    {
+        log_error("ftruncate %s %m", bf->name);
+        return MRT_ERR;
+    }
+
+    log_debug("open file:%s success.", bf->name);
+
+    bf->state = 1;
+    bf->num = 1;
+    cbf = bf;
+
+    return MRT_OK;
+}
+
+//打开一个文件准备读
+int block_file_open(block_file_t **rbf, char *fname)
+{
+    block_file_t *bf = NULL;
+    int pre = time(NULL), end = 0;
+    static uint16_t i=0;
+
+    M_cvril((bf = M_alloc(sizeof(block_file_t))), "Malloc block_file_t error:%m");
+
+    bf->state = 0;
+    snprintf(bf->name, sizeof(bf->name) -1, "%s/%s", ds_conf.data_path, fname);
+
+    bf->fd = open(bf->name, O_RDONLY);
+    if(bf->fd == -1)
+    {
+        log_error("open file:%s %m", bf->name);
+        return MRT_ERR;
+    }
+
+    log_debug("open file:%s success.", bf->name);
+
+    bf->state = 1;
+    bf->num = 1;
+    *rbf = bf;
+
+    return MRT_OK;
+}
+
+
+//status
+//      -1:需要删除这个块
+//      0:正常关闭
+//
+void block_file_close(block_file_t *bf, off_t pos, int size, int status)
+{
+    if(status == -1)
+    {
+        log_info("BLOCK DELETE name:%s offset:%u, size:%u", bf->name, pos, size);
+    }
+
+    //当状态为2的时候是当前文件大小已经到达指定上限了
+    if(bf->num == 0 && bf->state == 2)
+    {
+        log_debug("close block file:%s", bf->name);
+        close(bf->fd);
+        M_free(bf);
+        return;
+    }
+
+    bf->num--;
+
+    log_debug("dec block file:%s num:%d", bf->name, bf->num);
+}
+
+
+
+//打开一个文件准备写入, 要指定写入大小，此时可能用多个文件往同一个块中写
+int block_file_append(block_file_t **bf, int size, off_t *pos)
+{
+    if(!cbf)
+    {
+        log_debug("+++++ no block file, create");
+        //如果没有打开的文件，就创建一个
+        if(block_file_create(size) == MRT_ERR)
+        {
+            log_fatal("can't create file");
+            return MRT_ERR;
+        }
+
+        *bf = cbf;
+        return MRT_OK;
+    }
+
+    if((cbf->size + size) >= ds_conf.max_block_size)
+    {
+        log_debug("+++++ block file size:%d max:%d, create", cbf->size, ds_conf.max_block_size);
+        cbf->state = 2;
+        //如果打开的文件加上当前要写的内容超过了最大文件大小, 也重新创建一个
+        if(block_file_create(size) == MRT_ERR)
+        {
+            log_fatal("can't create file");
+            return MRT_ERR;
+        }
+        *bf = cbf;
+        return MRT_OK;
+    }
+
+    log_debug("+++++ use exist, size:%d", cbf->size);
+    //如果有并发文件在打开状态并且文件大小在可扩展范围内
+    if(ftruncate(cbf->fd, cbf->size + size) == -1)
+    {
+        log_error("ftruncate %s %m, new size:%u", cbf->name, cbf->size + size);
+        return MRT_ERR;
+    }
+
+    *pos = (off_t)cbf->size;
+    cbf->size += size;
+    cbf->num++;
+
+    *bf = cbf;
+
+    return MRT_OK;
+}
+
 
 

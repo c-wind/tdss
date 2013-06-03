@@ -30,8 +30,9 @@
 #define SERVER_TYPE_NAME    1
 
 #define OPT_ADD_FILE    1
-#define OPT_DEL_FILE    2
-#define OPT_FIND_FILE   3
+#define OPT_GET_FILE    2
+#define OPT_DEL_FILE    3
+#define OPT_FIND_FILE   4
 
 typedef struct
 {

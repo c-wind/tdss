@@ -168,14 +168,12 @@ void __inet_task_free(inet_event_t *ie, inet_task_t *it)
 
 int timer_event_add(inet_event_t *ie, inet_task_t *it)
 {
-    log_debug("--------- add timer event task:%x wait %d.", it->id, it->timeout);
     if(time_queue_push(&ie->tq, it) == MRT_ERR)
     {
         log_error("time_queue_push error");
         return MRT_ERR;
     }
 
-    log_debug("++++++++++++add timer event task:%x wait %d.", it->id, it->timeout);
     return MRT_OK;
 }
 

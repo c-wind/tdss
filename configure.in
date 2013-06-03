@@ -3,7 +3,9 @@
 
 AC_PREREQ(2.63)
 AC_INIT([tdss],[0.0.1],[root@codecn.org])
-AC_CONFIG_SRCDIR([master/master.c])
+AC_CONFIG_SRCDIR([master_server])
+AC_CONFIG_SRCDIR([data_server])
+AC_CONFIG_SRCDIR([name_server])
 AC_CONFIG_HEADERS([none.h])
 
 # Checks for programs.
@@ -19,6 +21,8 @@ AC_CHECK_LIB([m], [main])
 AC_CHECK_LIB([mrt], [main])
 # FIXME: Replace `main' with a function in `-lrt':
 AC_CHECK_LIB([rt], [main])
+
+AC_CHECK_LIB([ssl], [main])
 
 # Checks for header files.
 AC_CHECK_HEADERS([arpa/inet.h fcntl.h float.h limits.h locale.h malloc.h netdb.h netinet/in.h stdint.h stdlib.h string.h sys/file.h sys/ioctl.h sys/socket.h sys/time.h sys/vfs.h syslog.h unistd.h wchar.h wctype.h])
@@ -53,7 +57,7 @@ AC_CONFIG_FILES([Makefile
                  data_server/Makefile
                  lib_mrt/Makefile
                  lib_tdss/Makefile
-                 master/Makefile
+                 master_server/Makefile
                  tdss_client/Makefile
                  name_server/Makefile])
 AC_OUTPUT

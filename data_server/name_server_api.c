@@ -1,4 +1,5 @@
 #include <openssl/conf.h>
+#include <libgen.h>
 #include "global.h"
 #include "inet_event.h"
 #include "tdss_config.h"
@@ -117,19 +118,19 @@ int __ns_process_finish(inet_task_t *it)
 
     if(strncmp(ss->input.str, "1000", 4))
     {
-        log_error("%x save mid:%s to:(%s) recv:%s",
-                  ss->id, ss->fb.name, it->from, ss->input.str);
+        log_error("%x save name:%s to:(%s) recv:%s",
+                  ss->id, ss->fb_info.name, it->from, ss->input.str);
         ec = ERR_NS_PROC;
         goto child_fail_return;
     }
 
-    log_info("%x save mid:%s to:(%s) success", ss->id, ss->fb.name, it->from);
+    log_info("%x save name:%s to:(%s) success", ss->id, pss->fb_info.name, it->from);
 
 child_fail_return:
 
     if(ec == OPERATE_SUCCESS)
     {
-        string_printf(&pss->output, "1000 success name:%s", ss->fb.name);
+        string_printf(&pss->output, "1000 success name:%s", pss->fb_info.name);
     }
     else
     {
@@ -144,6 +145,8 @@ child_fail_return:
 
     it->state = TASK_WAIT_END;
 
+    s_zero(pss->fb_info);
+
     return MRT_SUC;
 }
 
@@ -155,10 +158,11 @@ int ns_file_info_add(inet_task_t *it)
     inet_task_t *nit = NULL;
     session_t *nss = NULL, *ss = (session_t *)it->data;
 
-    iret = ns_get_master_addr(ss->fb.name, strlen(ss->fb.name),  &ip, &port);
+
+    iret = ns_get_master_addr(ss->fb_info.name, strlen(ss->fb_info.name),  &ip, &port);
     if(iret == MRT_ERR)
     {
-        log_error("can't change name:(%s) to addr.", ss->fb.name);
+        log_error("can't change name:(%s) to addr.", ss->fb_info.name);
         return MRT_ERR;
     }
 
@@ -184,8 +188,9 @@ int ns_file_info_add(inet_task_t *it)
         nss->parent = it;
         nss->state = SESSION_BEGIN;
 
-        string_printf(&nss->output, "file_info_add server=%d name=%s size=%d\r\n",
-                      ss->fb.server, ss->fb.name,  ss->fb.size);
+        string_printf(&nss->output, "file_info_add server=%d name=%s file=%s offset=%u size=%d\r\n",
+                      ds_conf.server_id, ss->fb_info.name, basename(ss->fb_info.file), ss->fb_info.offset, ss->fb_info.size);
+        log_info("call `%s`, file:%s", nss->output.str, ss->fb_info.file);
         nit->data = nss;
     }
 
@@ -210,10 +215,10 @@ int ns_file_info_set(inet_task_t *it)
     inet_task_t *nit = NULL;
     session_t *nss = NULL, *ss = (session_t *)it->data;
 
-    iret = ns_get_master_addr(ss->fb.name, strlen(ss->fb.name), &ip, &port);
+    iret = ns_get_master_addr(ss->fb_info.name, strlen(ss->fb_info.name), &ip, &port);
     if(iret == MRT_ERR)
     {
-        log_error("can't change name:(%s) to addr.", ss->fb.name);
+        log_error("can't change name:(%s) to addr.", ss->fb_info.name);
         return MRT_ERR;
     }
 
@@ -239,8 +244,8 @@ int ns_file_info_set(inet_task_t *it)
         nss->parent = it;
         nss->state = SESSION_BEGIN;
 
-        string_printf(&nss->output, "file_info_set server=%d name=%s size=%d\r\n",
-                      ss->fb.server, ss->fb.name, ss->fb.size);
+        string_printf(&nss->output, "file_info_set server=%d name=%s file=%s offset=%u size=%d\r\n",
+                      ds_conf.server_id, ss->fb_info.name, basename(ss->fb_info.file), ss->fb_info.offset, ss->fb_info.size);
         nit->data = nss;
     }
 

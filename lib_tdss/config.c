@@ -4,8 +4,9 @@
 #include "tdss_config.h"
 
 
-data_server_conf_t ds_conf = {0};
-name_server_conf_t ns_conf = {0};
+data_server_conf_t      ds_conf = {0};
+name_server_conf_t      ns_conf = {0};
+master_server_conf_t    ms_conf = {0};
 
 
 
@@ -14,8 +15,8 @@ int data_server_config_load(char *fname)
     __label__ error_return;
     CONF *conf = NULL;
     long ret = 0;
-    char *pstr = NULL, sn[64] = {0}; //sn=server name
-    int sc = 0, i = 0, sid = 0; //sc=server count,sid=server id
+    char *pstr = NULL, sn[64] = {0}, data_path[MAX_PATH] = {0}; //sn=server name
+    int sc = 0, i = 0, sid = 0, max_block_size = 0, log_level = 1, timeout = 5; //sc=server count,sid=server id
     data_server_t *ds = NULL;
 
     conf=NCONF_new(NULL);
@@ -44,6 +45,31 @@ int data_server_config_load(char *fname)
         log_error("M_alloc data_server error:%m");
         goto error_return;
     }
+
+    if(!(pstr = NCONF_get_string(conf, "global", "max_block_size")))
+    {
+        log_error("conf no found global max_block_size");
+        goto error_return;
+    }
+    max_block_size = atoi(pstr);
+
+    if((pstr = NCONF_get_string(conf, "global", "log_level")))
+    {
+        log_level = atoi(pstr);
+    }
+
+    if((pstr = NCONF_get_string(conf, "global", "timeout")))
+    {
+        timeout = atoi(pstr);
+    }
+
+    if(!(pstr = NCONF_get_string(conf, "global", "data_path")))
+    {
+        log_error("conf no found global data_path");
+        goto error_return;
+    }
+    snprintf(data_path, sizeof(data_path) - 1, "%s", pstr);
+
 
     for(i=0; i< sc; i++)
     {
@@ -76,6 +102,12 @@ int data_server_config_load(char *fname)
     ds_conf.server_count = sc;
     ds_conf.server = ds;
     ds_conf.server_id = sid;
+    ds_conf.max_block_size = max_block_size;
+    ds_conf.log_level = log_level;
+    ds_conf.timeout = timeout;
+    snprintf(ds_conf.data_path, sizeof(ds_conf.data_path) -1, "%s",  data_path);
+
+    NCONF_free(conf);
 
     return MRT_SUC;
 
@@ -108,6 +140,8 @@ error_return:
 int ns_get_master_addr(char *key, int klen, char **ip, int *port)
 {
     uint32_t idx = 0;
+
+    M_cpvril(key);
 
     idx = crc32(0L, NULL, 0);
 
@@ -143,6 +177,17 @@ int ns_get_slave_addr(char *key, int klen, char **ip, int *port)
     return MRT_SUC;
 }
 
+int ds_get_addr_by_id(int server_id, char **ip, int *port)
+{
+    if(ds_conf.server_count < server_id || server_id < 0)
+        return MRT_ERR;
+
+    *ip = ds_conf.server[server_id].server.ip;
+    *port = ds_conf.server[server_id].server.port;
+
+    return MRT_OK;
+}
+
 
 int ns_get_server_id(char *mid, int *id)
 {
@@ -169,7 +214,7 @@ int name_server_config_load(char *fname)
     CONF *conf = NULL;
     long ret = 0;
     char *pstr = NULL, sn[64] = {0};    //sn=server name
-    int sc = 0, i = 0, sid = 0, st = 0; //sc=server count sid=server id st=server status
+    int sc = 0, i = 0, sid = 0, st = 0, log_level = 1, timeout = 5; //sc=server count sid=server id st=server status
     name_server_t *ns = NULL;
 
     conf=NCONF_new(NULL);
@@ -198,6 +243,16 @@ int name_server_config_load(char *fname)
     {
         log_error("M_alloc name_server error:%m");
         goto error_return;
+    }
+
+    if((pstr = NCONF_get_string(conf, "global", "log_level")))
+    {
+        log_level = atoi(pstr);
+    }
+
+    if((pstr = NCONF_get_string(conf, "global", "timeout")))
+    {
+        timeout = atoi(pstr);
     }
 
     for(i=0; i< sc; i++)
@@ -262,6 +317,10 @@ int name_server_config_load(char *fname)
     ns_conf.server = ns;
     ns_conf.server_type = st;
     ns_conf.server_id = sid;
+    ns_conf.log_level = log_level;
+    ns_conf.timeout = timeout;
+
+    NCONF_free(conf);
 
     return MRT_SUC;
 
@@ -274,4 +333,51 @@ error_return:
     return MRT_ERR;
 }
 
+
+int master_server_config_load(char *fname)
+{
+    __label__ error_return;
+    CONF *conf = NULL;
+    long ret = 0;
+    char *pstr = NULL;
+
+    conf=NCONF_new(NULL);
+
+    if(!NCONF_load(conf, fname, &ret))
+    {
+        log_error("open conf:%s error line:%ld.", fname, ret);
+        goto error_return;
+    }
+
+    if(!(pstr = NCONF_get_string(conf, "global", "log_level")))
+    {
+        log_error("conf no found global log_level");
+        goto error_return;
+    }
+    ms_conf.log_level = atoi(pstr);
+
+    if(!(pstr = NCONF_get_string(conf, "global", "timeout")))
+    {
+        log_error("conf no found global timeout");
+        goto error_return;
+    }
+    ms_conf.timeout = atoi(pstr);
+
+    if(!(pstr = NCONF_get_string(conf, "global", "interval")))
+    {
+        log_error("conf no found global interval");
+        goto error_return;
+    }
+    ms_conf.interval = atoi(pstr);
+
+    NCONF_free(conf);
+
+    return MRT_SUC;
+
+error_return:
+    if(conf)
+        NCONF_free(conf);
+
+    return MRT_ERR;
+}
 
