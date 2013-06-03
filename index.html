@@ -5,10 +5,8 @@
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
     <meta name="description" content="Tdss : 分布式存储系统" />
-
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Tdss</title>
+    <title>Tdss 高性能，高可靠的分布式存储系统</title>
   </head>
 
   <body>
@@ -29,8 +27,7 @@
             </section>
 
             <section id="main_content">
-            Download
-              <a href="http://c-wind.github.io/tdss/download/tdss-0.0.3.tar.gz">tdss-0.0.3.tar.gz</a>
+              <a href="http://c-wind.github.io/tdss/download/tdss-0.1.0.tar.gz">TDSS-0.1.0下载</a>
             </section>
     </div>
 
@@ -40,12 +37,21 @@
         <p>TDSS是一个高可扩展、高可用、高性能、面向互联网服务的分布式存储系统，主要针对海量的非结构化数据，它构筑在普通的Linux机器集群上，可为外部提供高可靠和高并发的存储访问。它采用了HA架构和平滑扩容，保证了整个文件系统的可用性和扩展性。同时扁平化的数据组织结构，可将文件名映射到文件的物理地址，简化了文件的访问流程，一定程度上为TDSS提供了良好的读写性能。 </p>
 
 <p>主要特性</p>
-
-<p>1.全局单副本 2.扩容简单 3.便于二次开发 </p>
+<p>1.全局单副本: <br />
+    每个文件会根据md5生成一个tdss系统唯一的name，如有相同文件，则只需要修改引用计数即可，无需重新上传.
+</p>
+<p>2.扩容简单: <br />
+   当data_server空间不足添加存储时，只需在配置文件中添加一个新的data_server即可
+</p>
+<p>3.性能可靠: <br />
+   存储采用块文件方式，inode占用低,适合存储海量小文件！！！
+   网络监听使用epoll+单进程方式占用资源少，性能高
+   发送文件使用sendfile方式，速度快
+</p>
 
 <p>总体结构</p>
 
-<p><img src="http://mailchina.org/tdss.jpg" alt="tdss"></p>
+<p><img src="/images/tdss.jpg" alt="tdss"></p>
 
 <p>一个TDSS集群由N个name_server节点（一主一备）和N个data_server节点组成。这些服务程序都是作为一个用户级的程序运行在普通Linux机器上的。 </p>
 
@@ -59,7 +65,7 @@
 
 <p>负责实际数据的存储和读写。 </p>
 
-<p>master</p>
+<p>master_server</p>
 
 <p>管理维护name_server、data_server加入，退出, 心跳信息。 </p>
 
