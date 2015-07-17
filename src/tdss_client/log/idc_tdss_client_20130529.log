@@ -1,0 +1,199 @@
+09:40:08 [31835] [DEBUG] get_storage_from_master file:test.eml size:9196
+09:40:08 [31835] [DEBUG] get_storage_from_master file:test.eml md5:6353876
+09:40:08 [31835] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+09:40:08 [31835] [DEBUG] get_storage_from_master recv msg:(-1201 Try again later
+) from master:(127.0.0.1:4567)
+09:40:08 [31835] [ERROR] request_parse find argc:0
+09:40:08 [31835] [ERROR] get_storage_from_master request_parse error
+09:40:08 [31835] [ERROR] add_file_to_storage get_storage_from_master error
+09:40:12 [31836] [DEBUG] get_storage_from_master file:test.eml size:9196
+09:40:12 [31836] [DEBUG] get_storage_from_master file:test.eml md5:6353876
+09:40:12 [31836] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+09:40:12 [31836] [DEBUG] get_storage_from_master recv msg:(-1201 Try again later
+) from master:(127.0.0.1:4567)
+09:40:12 [31836] [ERROR] request_parse find argc:0
+09:40:12 [31836] [ERROR] get_storage_from_master request_parse error
+09:40:12 [31836] [ERROR] add_file_to_storage get_storage_from_master error
+09:43:20 [31888] [DEBUG] get_storage_from_master file:test.eml size:9196
+09:43:20 [31888] [DEBUG] get_storage_from_master file:test.eml md5:6353876
+09:43:20 [31888] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+09:43:20 [31888] [DEBUG] get_storage_from_master recv msg:(1000 server=127.0.0.1 port=8101
+) from master:(127.0.0.1:4567)
+09:43:20 [31888] [DEBUG] request_parse find argc=2
+09:43:20 [31888] [DEBUG] add_file_to_storage send msg:(file_save name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:8101)
+09:43:20 [31888] [INFO] add_file_to_storage recv msg:(-1000 command no found
+) from master:(127.0.0.1:8101)
+09:43:20 [31888] [INFO] add_file_to_storage recv msg:(-1000 command no found
+) from data_server:(127.0.0.1:8101)
+09:44:02 [31917] [DEBUG] get_storage_from_master file:test.eml size:9196
+09:44:02 [31917] [DEBUG] get_storage_from_master file:test.eml md5:6353908
+09:44:02 [31917] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+09:44:02 [31917] [DEBUG] get_storage_from_master recv msg:(1000 server=127.0.0.1 port=8101
+) from master:(127.0.0.1:4567)
+09:44:02 [31917] [DEBUG] request_parse find argc=2
+09:44:02 [31917] [DEBUG] add_file_to_storage send msg:(file_add name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:8101)
+09:44:02 [31917] [INFO] add_file_to_storage recv msg:(1000 file:data/51a55d62.0 create
+) from master:(127.0.0.1:8101)
+09:44:02 [31917] [INFO] add_file_to_storage recv msg:(1000 success name:5d9b4c5853f0ab37c9f20ae2acf5d5f5) from data_server:(127.0.0.1:8101)
+09:51:29 [32082] [DEBUG] get_storage_from_master file:test.eml size:9196
+09:51:29 [32082] [DEBUG] get_storage_from_master file:test.eml md5:6353908
+09:51:29 [32082] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+09:51:29 [32082] [DEBUG] get_storage_from_master recv msg:(-1201 Try again later
+) from master:(127.0.0.1:4567)
+09:51:29 [32082] [ERROR] request_parse find argc:0
+09:51:29 [32082] [ERROR] get_storage_from_master request_parse error
+09:51:29 [32082] [ERROR] add_file_to_storage get_storage_from_master error
+09:51:36 [32083] [DEBUG] get_storage_from_master file:test.eml size:9196
+09:51:36 [32083] [DEBUG] get_storage_from_master file:test.eml md5:6353908
+09:51:36 [32083] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+09:51:36 [32083] [DEBUG] get_storage_from_master recv msg:(-1201 Try again later
+) from master:(127.0.0.1:4567)
+09:51:36 [32083] [ERROR] request_parse find argc:0
+09:51:36 [32083] [ERROR] get_storage_from_master request_parse error
+09:51:36 [32083] [ERROR] add_file_to_storage get_storage_from_master error
+09:52:02 [32089] [DEBUG] get_storage_from_master file:test.eml size:9196
+09:52:02 [32089] [DEBUG] get_storage_from_master file:test.eml md5:6353908
+09:52:02 [32089] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+09:52:02 [32089] [DEBUG] get_storage_from_master recv msg:(1000 server=127.0.0.1 port=8101
+) from master:(127.0.0.1:4567)
+09:52:02 [32089] [DEBUG] request_parse find argc=2
+09:52:02 [32089] [DEBUG] add_file_to_storage send msg:(file_add name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:8101)
+09:52:02 [32089] [INFO] add_file_to_storage recv msg:(1000 file:data/51a55f42.0 create
+) from master:(127.0.0.1:8101)
+09:52:02 [32089] [INFO] add_file_to_storage recv msg:(1000 success name:5d9b4c5853f0ab37c9f20ae2acf5d5f5) from data_server:(127.0.0.1:8101)
+10:08:40 [32530] [DEBUG] get_storage_from_master file:test.eml size:9196
+10:08:40 [32530] [DEBUG] get_storage_from_master file:test.eml md5:6353908
+10:08:40 [32530] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+10:08:40 [32530] [DEBUG] get_storage_from_master recv msg:(-1201 Try again later
+) from master:(127.0.0.1:4567)
+10:08:40 [32530] [ERROR] request_parse find argc:0
+10:08:40 [32530] [ERROR] get_storage_from_master request_parse error
+10:08:40 [32530] [ERROR] add_file_to_storage get_storage_from_master error
+10:08:50 [32532] [DEBUG] get_storage_from_master file:test.eml size:9196
+10:08:50 [32532] [DEBUG] get_storage_from_master file:test.eml md5:6353908
+10:08:50 [32532] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+10:08:50 [32532] [DEBUG] get_storage_from_master recv msg:(-1201 Try again later
+) from master:(127.0.0.1:4567)
+10:08:50 [32532] [ERROR] request_parse find argc:0
+10:08:50 [32532] [ERROR] get_storage_from_master request_parse error
+10:08:50 [32532] [ERROR] add_file_to_storage get_storage_from_master error
+10:09:17 [32543] [DEBUG] get_storage_from_master file:test.eml size:9196
+10:09:17 [32543] [DEBUG] get_storage_from_master file:test.eml md5:6353908
+10:09:17 [32543] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+10:09:17 [32543] [DEBUG] get_storage_from_master recv msg:(-1201 Try again later
+) from master:(127.0.0.1:4567)
+10:09:17 [32543] [ERROR] request_parse find argc:0
+10:09:17 [32543] [ERROR] get_storage_from_master request_parse error
+10:09:17 [32543] [ERROR] add_file_to_storage get_storage_from_master error
+10:09:20 [32545] [DEBUG] get_storage_from_master file:test.eml size:9196
+10:09:20 [32545] [DEBUG] get_storage_from_master file:test.eml md5:6353908
+10:09:20 [32545] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+10:09:20 [32545] [DEBUG] get_storage_from_master recv msg:(-1201 Try again later
+) from master:(127.0.0.1:4567)
+10:09:20 [32545] [ERROR] request_parse find argc:0
+10:09:20 [32545] [ERROR] get_storage_from_master request_parse error
+10:09:20 [32545] [ERROR] add_file_to_storage get_storage_from_master error
+10:09:39 [32556] [DEBUG] get_storage_from_master file:test.eml size:9196
+10:09:39 [32556] [DEBUG] get_storage_from_master file:test.eml md5:6353908
+10:09:39 [32556] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+10:09:39 [32556] [DEBUG] get_storage_from_master recv msg:(-1201 Try again later
+) from master:(127.0.0.1:4567)
+10:09:39 [32556] [ERROR] request_parse find argc:0
+10:09:39 [32556] [ERROR] get_storage_from_master request_parse error
+10:09:39 [32556] [ERROR] add_file_to_storage get_storage_from_master error
+10:09:43 [32560] [DEBUG] get_storage_from_master file:test.eml size:9196
+10:09:43 [32560] [DEBUG] get_storage_from_master file:test.eml md5:6353908
+10:09:43 [32560] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+10:09:43 [32560] [DEBUG] get_storage_from_master recv msg:(-1201 Try again later
+) from master:(127.0.0.1:4567)
+10:09:43 [32560] [ERROR] request_parse find argc:0
+10:09:43 [32560] [ERROR] get_storage_from_master request_parse error
+10:09:43 [32560] [ERROR] add_file_to_storage get_storage_from_master error
+10:09:55 [32563] [DEBUG] get_storage_from_master file:test.eml size:9196
+10:09:55 [32563] [DEBUG] get_storage_from_master file:test.eml md5:6353908
+10:09:55 [32563] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+10:09:55 [32563] [DEBUG] get_storage_from_master recv msg:(-1201 Try again later
+) from master:(127.0.0.1:4567)
+10:09:55 [32563] [ERROR] request_parse find argc:0
+10:09:55 [32563] [ERROR] get_storage_from_master request_parse error
+10:09:55 [32563] [ERROR] add_file_to_storage get_storage_from_master error
+10:09:57 [32564] [DEBUG] get_storage_from_master file:test.eml size:9196
+10:09:57 [32564] [DEBUG] get_storage_from_master file:test.eml md5:6353908
+10:09:57 [32564] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+10:09:57 [32564] [DEBUG] get_storage_from_master recv msg:(-1201 Try again later
+) from master:(127.0.0.1:4567)
+10:09:57 [32564] [ERROR] request_parse find argc:0
+10:09:57 [32564] [ERROR] get_storage_from_master request_parse error
+10:09:57 [32564] [ERROR] add_file_to_storage get_storage_from_master error
+10:10:05 [32573] [DEBUG] get_storage_from_master file:test.eml size:9196
+10:10:05 [32573] [DEBUG] get_storage_from_master file:test.eml md5:6353908
+10:10:05 [32573] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+10:10:05 [32573] [DEBUG] get_storage_from_master recv msg:(-1201 Try again later
+) from master:(127.0.0.1:4567)
+10:10:05 [32573] [ERROR] request_parse find argc:0
+10:10:05 [32573] [ERROR] get_storage_from_master request_parse error
+10:10:05 [32573] [ERROR] add_file_to_storage get_storage_from_master error
+10:10:07 [32574] [DEBUG] get_storage_from_master file:test.eml size:9196
+10:10:07 [32574] [DEBUG] get_storage_from_master file:test.eml md5:6353908
+10:10:07 [32574] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+10:10:07 [32574] [DEBUG] get_storage_from_master recv msg:(-1201 Try again later
+) from master:(127.0.0.1:4567)
+10:10:07 [32574] [ERROR] request_parse find argc:0
+10:10:07 [32574] [ERROR] get_storage_from_master request_parse error
+10:10:07 [32574] [ERROR] add_file_to_storage get_storage_from_master error
+10:10:24 [32581] [DEBUG] get_storage_from_master file:test.eml size:9196
+10:10:24 [32581] [DEBUG] get_storage_from_master file:test.eml md5:6353908
+10:10:24 [32581] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+10:10:24 [32581] [DEBUG] get_storage_from_master recv msg:(-1201 Try again later
+) from master:(127.0.0.1:4567)
+10:10:24 [32581] [ERROR] request_parse find argc:0
+10:10:24 [32581] [ERROR] get_storage_from_master request_parse error
+10:10:24 [32581] [ERROR] add_file_to_storage get_storage_from_master error
+10:10:26 [32582] [DEBUG] get_storage_from_master file:test.eml size:9196
+10:10:26 [32582] [DEBUG] get_storage_from_master file:test.eml md5:6353908
+10:10:26 [32582] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+10:10:26 [32582] [DEBUG] get_storage_from_master recv msg:(-1201 Try again later
+) from master:(127.0.0.1:4567)
+10:10:26 [32582] [ERROR] request_parse find argc:0
+10:10:26 [32582] [ERROR] get_storage_from_master request_parse error
+10:10:26 [32582] [ERROR] add_file_to_storage get_storage_from_master error
+10:10:33 [32585] [DEBUG] get_storage_from_master file:test.eml size:9196
+10:10:33 [32585] [DEBUG] get_storage_from_master file:test.eml md5:6353908
+10:10:33 [32585] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+10:10:33 [32585] [DEBUG] get_storage_from_master recv msg:(-1201 Try again later
+) from master:(127.0.0.1:4567)
+10:10:33 [32585] [ERROR] request_parse find argc:0
+10:10:33 [32585] [ERROR] get_storage_from_master request_parse error
+10:10:33 [32585] [ERROR] add_file_to_storage get_storage_from_master error
+10:10:35 [32587] [DEBUG] get_storage_from_master file:test.eml size:9196
+10:10:35 [32587] [DEBUG] get_storage_from_master file:test.eml md5:6353908
+10:10:35 [32587] [DEBUG] get_storage_from_master send msg:(server_find name=5d9b4c5853f0ab37c9f20ae2acf5d5f5 size=9196
+) to master:(127.0.0.1:4567)
+10:10:35 [32587] [DEBUG] get_storage_from_master recv msg:(-1201 Try again later
+) from master:(127.0.0.1:4567)
+10:10:35 [32587] [ERROR] request_parse find argc:0
+10:10:35 [32587] [ERROR] get_storage_from_master request_parse error
+10:10:35 [32587] [ERROR] add_file_to_storage get_storage_from_master error

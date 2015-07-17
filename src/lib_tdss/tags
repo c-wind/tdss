@@ -1,0 +1,421 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ACLOCAL	Makefile	/^ACLOCAL = ${SHELL} \/home\/tian\/tdss\/missing --run aclocal-1.11$/;"	m
+ACLOCAL_M4	Makefile	/^ACLOCAL_M4 = $(top_srcdir)\/aclocal.m4$/;"	m
+AMTAR	Makefile	/^AMTAR = ${SHELL} \/home\/tian\/tdss\/missing --run tar$/;"	m
+AR	Makefile	/^AR = ar$/;"	m
+ARFLAGS	Makefile	/^ARFLAGS = cru$/;"	m
+AUTOCONF	Makefile	/^AUTOCONF = ${SHELL} \/home\/tian\/tdss\/missing --run autoconf$/;"	m
+AUTOHEADER	Makefile	/^AUTOHEADER = ${SHELL} \/home\/tian\/tdss\/missing --run autoheader$/;"	m
+AUTOMAKE	Makefile	/^AUTOMAKE = ${SHELL} \/home\/tian\/tdss\/missing --run automake-1.11$/;"	m
+AUTOMAKE_OPTIONS	Makefile	/^AUTOMAKE_OPTIONS = foreign$/;"	m
+AWK	Makefile	/^AWK = gawk$/;"	m
+CC	Makefile	/^CC = gcc$/;"	m
+CCDEPMODE	Makefile	/^CCDEPMODE = depmode=gcc3$/;"	m
+CCLD	Makefile	/^CCLD = $(CC)$/;"	m
+CFLAGS	Makefile	/^CFLAGS = -g -O2$/;"	m
+COMPILE	Makefile	/^COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \\$/;"	m
+CONFIG_CLEAN_FILES	Makefile	/^CONFIG_CLEAN_FILES =$/;"	m
+CONFIG_CLEAN_VPATH_FILES	Makefile	/^CONFIG_CLEAN_VPATH_FILES =$/;"	m
+CONFIG_HEADER	Makefile	/^CONFIG_HEADER = $(top_builddir)\/none.h$/;"	m
+CPP	Makefile	/^CPP = gcc -E$/;"	m
+CPPFLAGS	Makefile	/^CPPFLAGS = $/;"	m
+CTAGS	Makefile	/^CTAGS = ctags$/;"	m
+CYGPATH_W	Makefile	/^CYGPATH_W = echo$/;"	m
+DEFAULT_INCLUDES	Makefile	/^DEFAULT_INCLUDES = -I. -I$(top_builddir)$/;"	m
+DEFS	Makefile	/^DEFS = -DHAVE_CONFIG_H$/;"	m
+DEPDIR	Makefile	/^DEPDIR = .deps$/;"	m
+DISTFILES	Makefile	/^DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)$/;"	m
+DIST_COMMON	Makefile	/^DIST_COMMON = $(srcdir)\/Makefile.am $(srcdir)\/Makefile.in$/;"	m
+DIST_SOURCES	Makefile	/^DIST_SOURCES = $(lib_tdss_a_SOURCES)$/;"	m
+ECHO_C	Makefile	/^ECHO_C = $/;"	m
+ECHO_N	Makefile	/^ECHO_N = -n$/;"	m
+ECHO_T	Makefile	/^ECHO_T = $/;"	m
+EGREP	Makefile	/^EGREP = \/bin\/grep -E$/;"	m
+ERR_CMD_ARG	tdss_config.h	182;"	d
+ERR_CMD_NOFOUND	tdss_config.h	181;"	d
+ERR_DEL_FILE	tdss_config.h	184;"	d
+ERR_DS_FULL	tdss_config.h	198;"	d
+ERR_LINK_FILE	tdss_config.h	185;"	d
+ERR_NOMEM	tdss_config.h	200;"	d
+ERR_NS_CONN	tdss_config.h	187;"	d
+ERR_NS_FNAME	tdss_config.h	193;"	d
+ERR_NS_OFFLINE	tdss_config.h	195;"	d
+ERR_NS_PROC	tdss_config.h	191;"	d
+ERR_NS_READ	tdss_config.h	189;"	d
+ERR_NS_RETURN	tdss_config.h	190;"	d
+ERR_NS_WRITE	tdss_config.h	188;"	d
+ERR_OPEN_FILE	tdss_config.h	183;"	d
+ETAGS	Makefile	/^ETAGS = etags$/;"	m
+EXEEXT	Makefile	/^EXEEXT = $/;"	m
+GREP	Makefile	/^GREP = \/bin\/grep$/;"	m
+INCLUDES	Makefile	/^INCLUDES = -I..\/lib_mrt$/;"	m
+INSTALL	Makefile	/^INSTALL = \/usr\/bin\/install -c$/;"	m
+INSTALL_DATA	Makefile	/^INSTALL_DATA = ${INSTALL} -m 644$/;"	m
+INSTALL_HEADER	Makefile	/^INSTALL_HEADER = $(INSTALL_DATA)$/;"	m
+INSTALL_PROGRAM	Makefile	/^INSTALL_PROGRAM = ${INSTALL}$/;"	m
+INSTALL_SCRIPT	Makefile	/^INSTALL_SCRIPT = ${INSTALL}$/;"	m
+INSTALL_STRIP_PROGRAM	Makefile	/^INSTALL_STRIP_PROGRAM = $(install_sh) -c -s$/;"	m
+LDFLAGS	Makefile	/^LDFLAGS = $/;"	m
+LIBOBJS	Makefile	/^LIBOBJS = $/;"	m
+LIBRARIES	Makefile	/^LIBRARIES = $(noinst_LIBRARIES)$/;"	m
+LIBS	Makefile	/^LIBS = -lssl -lrt -lm -ldl $/;"	m
+LINK	Makefile	/^LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@$/;"	m
+LTLIBOBJS	Makefile	/^LTLIBOBJS = $/;"	m
+MAKEINFO	Makefile	/^MAKEINFO = ${SHELL} \/home\/tian\/tdss\/missing --run makeinfo$/;"	m
+MKDIR_P	Makefile	/^MKDIR_P = \/bin\/mkdir -p$/;"	m
+NORMAL_INSTALL	Makefile	/^NORMAL_INSTALL = :$/;"	m
+NORMAL_UNINSTALL	Makefile	/^NORMAL_UNINSTALL = :$/;"	m
+NSOPT_ADD_FILE	tdss_config.h	173;"	d
+NSOPT_DEL_FILE	tdss_config.h	175;"	d
+NSOPT_MOD_FILE	tdss_config.h	174;"	d
+OBJEXT	Makefile	/^OBJEXT = o$/;"	m
+OPERATE_SUCCESS	tdss_config.h	179;"	d
+PACKAGE	Makefile	/^PACKAGE = tdss$/;"	m
+PACKAGE_BUGREPORT	Makefile	/^PACKAGE_BUGREPORT = root@codecn.org$/;"	m
+PACKAGE_NAME	Makefile	/^PACKAGE_NAME = tdss$/;"	m
+PACKAGE_STRING	Makefile	/^PACKAGE_STRING = tdss 0.1.0$/;"	m
+PACKAGE_TARNAME	Makefile	/^PACKAGE_TARNAME = tdss$/;"	m
+PACKAGE_VERSION	Makefile	/^PACKAGE_VERSION = 0.1.0$/;"	m
+PATH_SEPARATOR	Makefile	/^PATH_SEPARATOR = :$/;"	m
+POST_INSTALL	Makefile	/^POST_INSTALL = :$/;"	m
+POST_UNINSTALL	Makefile	/^POST_UNINSTALL = :$/;"	m
+PRE_INSTALL	Makefile	/^PRE_INSTALL = :$/;"	m
+PRE_UNINSTALL	Makefile	/^PRE_UNINSTALL = :$/;"	m
+RANLIB	Makefile	/^RANLIB = ranlib$/;"	m
+RQ_TYPE_INT	tdss_config.h	207;"	d
+RQ_TYPE_STR	tdss_config.h	209;"	d
+RQ_TYPE_U16	tdss_config.h	205;"	d
+RQ_TYPE_U32	tdss_config.h	206;"	d
+RQ_TYPE_U64	tdss_config.h	208;"	d
+RQ_TYPE_U8	tdss_config.h	204;"	d
+SET_MAKE	Makefile	/^SET_MAKE = $/;"	m
+SHELL	Makefile	/^SHELL = \/bin\/sh$/;"	m
+SOURCES	Makefile	/^SOURCES = $(lib_tdss_a_SOURCES)$/;"	m
+STRIP	Makefile	/^STRIP = $/;"	m
+TASK_ID_GEN	inet_event.c	10;"	d	file:
+TASK_TYPE_CONNNECT	inet_event.h	12;"	d
+TASK_TYPE_LISTEN	inet_event.h	14;"	d
+TASK_TYPE_REQUEST	inet_event.h	13;"	d
+TASK_WAIT_END	inet_event.h	20;"	d
+TASK_WAIT_NOOP	inet_event.h	18;"	d
+TASK_WAIT_READ	inet_event.h	16;"	d
+TASK_WAIT_TIMER	inet_event.h	19;"	d
+TASK_WAIT_WRITE	inet_event.h	17;"	d
+VERSION	Makefile	/^VERSION = 0.0.1$/;"	m
+__CONFIG_H__	tdss_config.h	2;"	d
+__EVENT_WATCH_H__	inet_event.h	2;"	d
+__TIME_QUEUE_H__	time_queue.h	2;"	d
+__anon11::daemon	tdss_config.h	/^    int                     daemon;         \/\/运行方式$/;"	m	struct:__anon11	access:public
+__anon11::data_path	tdss_config.h	/^    char                    data_path[MAX_PATH];$/;"	m	struct:__anon11	access:public
+__anon11::disk_id	tdss_config.h	/^    int                     disk_id;        \/\/当前服务的服务器ID$/;"	m	struct:__anon11	access:public
+__anon11::ie	tdss_config.h	/^    inet_event_t            *ie;$/;"	m	struct:__anon11	access:public
+__anon11::local	tdss_config.h	/^    ip4_addr_t              local;          \/\/当前服务绑定的IP和端口$/;"	m	struct:__anon11	access:public
+__anon11::log_level	tdss_config.h	/^    int                     log_level;$/;"	m	struct:__anon11	access:public
+__anon11::max_block_size	tdss_config.h	/^    int                     max_block_size;$/;"	m	struct:__anon11	access:public
+__anon11::server	tdss_config.h	/^    data_server_t           *server;$/;"	m	struct:__anon11	access:public
+__anon11::server_count	tdss_config.h	/^    int                     server_count;   \/\/data server$/;"	m	struct:__anon11	access:public
+__anon11::server_id	tdss_config.h	/^    int                     server_id;      \/\/当前服务的组ID$/;"	m	struct:__anon11	access:public
+__anon11::timeout	tdss_config.h	/^    int                     timeout;$/;"	m	struct:__anon11	access:public
+__anon12::file	tdss_config.h	/^    char    file[33];$/;"	m	struct:__anon12	access:public
+__anon12::name	tdss_config.h	/^    char    name[33];$/;"	m	struct:__anon12	access:public
+__anon12::offset	tdss_config.h	/^    int     offset;$/;"	m	struct:__anon12	access:public
+__anon12::ref	tdss_config.h	/^    int     ref;$/;"	m	struct:__anon12	access:public
+__anon12::server	tdss_config.h	/^    int     server;$/;"	m	struct:__anon12	access:public
+__anon12::size	tdss_config.h	/^    int     size;$/;"	m	struct:__anon12	access:public
+__anon13::key	tdss_config.h	/^    char    *key;$/;"	m	struct:__anon13	access:public
+__anon13::type	tdss_config.h	/^    int     type;$/;"	m	struct:__anon13	access:public
+__anon13::val	tdss_config.h	/^    void    *val;$/;"	m	struct:__anon13	access:public
+__anon13::vsize	tdss_config.h	/^    int     vsize;$/;"	m	struct:__anon13	access:public
+__anon1::num	inet_event.h	/^    int             num;$/;"	m	struct:__anon1	access:public
+__anon1::size	inet_event.h	/^    int             size;$/;"	m	struct:__anon1	access:public
+__anon1::task	inet_event.h	/^    inet_task_t     **task;$/;"	m	struct:__anon1	access:public
+__anon2::epfd	inet_event.h	/^    int             epfd;$/;"	m	struct:__anon2	access:public
+__anon2::evs	inet_event.h	/^    epev            *evs;$/;"	m	struct:__anon2	access:public
+__anon2::lsfd	inet_event.h	/^    int             lsfd;$/;"	m	struct:__anon2	access:public
+__anon2::max_size	inet_event.h	/^    int             max_size;$/;"	m	struct:__anon2	access:public
+__anon2::task_deinit	inet_event.h	/^    int             (*task_deinit)(inet_task_t *);       \/\/连接断开时的回调函数$/;"	m	struct:__anon2	access:public
+__anon2::task_init	inet_event.h	/^    int             (*task_init)(inet_task_t *);         \/\/连接进入时的回调函数$/;"	m	struct:__anon2	access:public
+__anon2::timeout	inet_event.h	/^    int             timeout;    \/\/所有连接强制使用相同超时时间$/;"	m	struct:__anon2	access:public
+__anon2::tq	inet_event.h	/^    time_queue_t    tq;$/;"	m	struct:__anon2	access:public
+__anon3::master	tdss_config.h	/^    ip4_addr_t          master;$/;"	m	struct:__anon3	access:public
+__anon3::slave	tdss_config.h	/^    ip4_addr_t          slave;$/;"	m	struct:__anon3	access:public
+__anon4::server	tdss_config.h	/^    ip4_addr_t          server;$/;"	m	struct:__anon4	access:public
+__anon5::daemon	tdss_config.h	/^    int                 daemon;         \/\/运行方式$/;"	m	struct:__anon5	access:public
+__anon5::db_path	tdss_config.h	/^    char                db_path[128];   \/\/数据保存位置$/;"	m	struct:__anon5	access:public
+__anon5::ie	tdss_config.h	/^    inet_event_t        *ie;$/;"	m	struct:__anon5	access:public
+__anon5::local	tdss_config.h	/^    ip4_addr_t          local;          \/\/当前服务绑定的IP和端口$/;"	m	struct:__anon5	access:public
+__anon5::log_level	tdss_config.h	/^    int                 log_level;$/;"	m	struct:__anon5	access:public
+__anon5::server	tdss_config.h	/^    name_server_t       *server;$/;"	m	struct:__anon5	access:public
+__anon5::server_count	tdss_config.h	/^    int                 server_count;   \/\/所有name_server服务器总数$/;"	m	struct:__anon5	access:public
+__anon5::server_id	tdss_config.h	/^    int                 server_id;      \/\/当前服务ID$/;"	m	struct:__anon5	access:public
+__anon5::server_type	tdss_config.h	/^    int                 server_type;    \/\/当前进程类型是主还是从，根据配置文件中的IP和端口对应出来$/;"	m	struct:__anon5	access:public
+__anon5::sync_enable	tdss_config.h	/^    int                 sync_enable;    \/\/是否同步到"从"服务器$/;"	m	struct:__anon5	access:public
+__anon5::timeout	tdss_config.h	/^    int                 timeout;$/;"	m	struct:__anon5	access:public
+__anon6::addr	tdss_config.h	/^    ip4_addr_t          addr;$/;"	m	struct:__anon6	access:public
+__anon6::disk_free	tdss_config.h	/^    uint32_t            disk_free;      \/\/单位为MB$/;"	m	struct:__anon6	access:public
+__anon6::disk_size	tdss_config.h	/^    uint32_t            disk_size;      \/\/单位为MB$/;"	m	struct:__anon6	access:public
+__anon6::inode_free	tdss_config.h	/^    uint32_t            inode_free;     \/\/单位为KB$/;"	m	struct:__anon6	access:public
+__anon6::inode_size	tdss_config.h	/^    uint32_t            inode_size;     \/\/单位为KB$/;"	m	struct:__anon6	access:public
+__anon6::server_id	tdss_config.h	/^    uint16_t            server_id;$/;"	m	struct:__anon6	access:public
+__anon6::state	tdss_config.h	/^    int                 state;$/;"	m	struct:__anon6	access:public
+__anon7::addr	tdss_config.h	/^    ip4_addr_t          addr;$/;"	m	struct:__anon7	access:public
+__anon7::server_id	tdss_config.h	/^    uint16_t            server_id;$/;"	m	struct:__anon7	access:public
+__anon7::size	tdss_config.h	/^    uint32_t            size;           \/\/存储了多少条记录$/;"	m	struct:__anon7	access:public
+__anon7::state	tdss_config.h	/^    int                 state;$/;"	m	struct:__anon7	access:public
+__anon7::used	tdss_config.h	/^    uint32_t            used;           \/\/存储了多少条记录$/;"	m	struct:__anon7	access:public
+__anon8::__anon10::count	tdss_config.h	/^        int                 count;$/;"	m	struct:__anon8::__anon10	access:public
+__anon8::__anon10::id	tdss_config.h	/^        int                 id;             \/\/当前检测到的ID$/;"	m	struct:__anon8::__anon10	access:public
+__anon8::__anon10::info	tdss_config.h	/^        name_server_info_t  *info;$/;"	m	struct:__anon8::__anon10	access:public
+__anon8::__anon10::start	tdss_config.h	/^        time_t              start;          \/\/当前次检测开始时间$/;"	m	struct:__anon8::__anon10	access:public
+__anon8::__anon10::task	tdss_config.h	/^        inet_task_t         task;           \/\/task;$/;"	m	struct:__anon8::__anon10	access:public
+__anon8::__anon9::count	tdss_config.h	/^        int                 count;$/;"	m	struct:__anon8::__anon9	access:public
+__anon8::__anon9::id	tdss_config.h	/^        int                 id;             \/\/当前检测到的ID$/;"	m	struct:__anon8::__anon9	access:public
+__anon8::__anon9::info	tdss_config.h	/^        data_server_info_t  *info;$/;"	m	struct:__anon8::__anon9	access:public
+__anon8::__anon9::start	tdss_config.h	/^        time_t              start;          \/\/当前次检测开始时间$/;"	m	struct:__anon8::__anon9	access:public
+__anon8::__anon9::task	tdss_config.h	/^        inet_task_t         task;           \/\/task;$/;"	m	struct:__anon8::__anon9	access:public
+__anon8::__anon9::work_id	tdss_config.h	/^        int                 work_id;        \/\/当前正在工作的ID, 每次有请求过来+1(负载均衡用)$/;"	m	struct:__anon8::__anon9	access:public
+__anon8::daemon	tdss_config.h	/^    int                     daemon;         \/\/运行方式$/;"	m	struct:__anon8	access:public
+__anon8::data_server	tdss_config.h	/^    }data_server;$/;"	m	struct:__anon8	typeref:struct:__anon8::__anon9	access:public
+__anon8::ie	tdss_config.h	/^    inet_event_t            *ie;$/;"	m	struct:__anon8	access:public
+__anon8::interval	tdss_config.h	/^    int                     interval;       \/\/检测各个服务器的间隔时间$/;"	m	struct:__anon8	access:public
+__anon8::local	tdss_config.h	/^    ip4_addr_t              local;          \/\/当前服务绑定的IP和端口$/;"	m	struct:__anon8	access:public
+__anon8::log_level	tdss_config.h	/^    int                     log_level;      \/\/日志级别$/;"	m	struct:__anon8	access:public
+__anon8::name_server	tdss_config.h	/^    }name_server;$/;"	m	struct:__anon8	typeref:struct:__anon8::__anon10	access:public
+__anon8::timeout	tdss_config.h	/^    int                     timeout;        \/\/socket超时$/;"	m	struct:__anon8	access:public
+__inet_task_create	inet_event.c	/^void __inet_task_create(inet_event_t *ie, inet_task_t *it)$/;"	f	signature:(inet_event_t *ie, inet_task_t *it)
+__inet_task_free	inet_event.c	/^void __inet_task_free(inet_event_t *ie, inet_task_t *it)$/;"	f	signature:(inet_event_t *ie, inet_task_t *it)
+__inet_task_free	inet_event.c	/^void __inet_task_free(inet_event_t *ie, inet_task_t *it);$/;"	p	file:	signature:(inet_event_t *ie, inet_task_t *it)
+__time_queue_down	time_queue.c	/^static  void      __time_queue_down(time_queue_t*, int32_t hole_index, inet_task_t* e);$/;"	p	file:	signature:(time_queue_t*, int32_t hole_index, inet_task_t* e)
+__time_queue_down	time_queue.c	/^void __time_queue_down(time_queue_t *heap, int32_t hole_index, inet_task_t* task)$/;"	f	signature:(time_queue_t *heap, int32_t hole_index, inet_task_t* task)
+__time_queue_up	time_queue.c	/^static  void      __time_queue_up(time_queue_t*, int32_t hole_index, inet_task_t* e);$/;"	p	file:	signature:(time_queue_t*, int32_t hole_index, inet_task_t* e)
+__time_queue_up	time_queue.c	/^void __time_queue_up(time_queue_t* heap, int32_t hole_index, inet_task_t* task)$/;"	f	signature:(time_queue_t* heap, int32_t hole_index, inet_task_t* task)
+abs_builddir	Makefile	/^abs_builddir = \/home\/tian\/tdss\/lib_tdss$/;"	m
+abs_srcdir	Makefile	/^abs_srcdir = \/home\/tian\/tdss\/lib_tdss$/;"	m
+abs_top_builddir	Makefile	/^abs_top_builddir = \/home\/tian\/tdss$/;"	m
+abs_top_srcdir	Makefile	/^abs_top_srcdir = \/home\/tian\/tdss$/;"	m
+ac_ct_CC	Makefile	/^ac_ct_CC = gcc$/;"	m
+addr	tdss_config.h	/^    ip4_addr_t          addr;$/;"	m	struct:__anon6	access:public
+addr	tdss_config.h	/^    ip4_addr_t          addr;$/;"	m	struct:__anon7	access:public
+am__aclocal_m4_deps	Makefile	/^am__aclocal_m4_deps = $(top_srcdir)\/configure.in$/;"	m
+am__cd	Makefile	/^am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd$/;"	m
+am__configure_deps	Makefile	/^am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \\$/;"	m
+am__depfiles_maybe	Makefile	/^am__depfiles_maybe = depfiles$/;"	m
+am__include	Makefile	/^am__include = include$/;"	m
+am__leading_dot	Makefile	/^am__leading_dot = .$/;"	m
+am__mv	Makefile	/^am__mv = mv -f$/;"	m
+am__quote	Makefile	/^am__quote = $/;"	m
+am__tar	Makefile	/^am__tar = ${AMTAR} chof - "$$tardir"$/;"	m
+am__untar	Makefile	/^am__untar = ${AMTAR} xf -$/;"	m
+am_lib_tdss_a_OBJECTS	Makefile	/^am_lib_tdss_a_OBJECTS = config.$(OBJEXT) inet_event.$(OBJEXT) \\$/;"	m
+bindir	Makefile	/^bindir = ${exec_prefix}\/bin$/;"	m
+build_alias	Makefile	/^build_alias = $/;"	m
+builddir	Makefile	/^builddir = .$/;"	m
+count	tdss_config.h	/^        int                 count;$/;"	m	struct:__anon8::__anon10	access:public
+count	tdss_config.h	/^        int                 count;$/;"	m	struct:__anon8::__anon9	access:public
+daemon	tdss_config.h	/^    int                     daemon;         \/\/运行方式$/;"	m	struct:__anon11	access:public
+daemon	tdss_config.h	/^    int                     daemon;         \/\/运行方式$/;"	m	struct:__anon8	access:public
+daemon	tdss_config.h	/^    int                 daemon;         \/\/运行方式$/;"	m	struct:__anon5	access:public
+data	inet_event.h	/^    void            *data;      \/\/附加字段，可设置session之类$/;"	m	struct:inet_task_s	access:public
+data_path	tdss_config.h	/^    char                    data_path[MAX_PATH];$/;"	m	struct:__anon11	access:public
+data_server	tdss_config.h	/^    }data_server;$/;"	m	struct:__anon8	typeref:struct:__anon8::__anon9	access:public
+data_server_conf_t	tdss_config.h	/^}data_server_conf_t;$/;"	t	typeref:struct:__anon11
+data_server_config_load	config.c	/^int data_server_config_load(char *fname)$/;"	f	signature:(char *fname)
+data_server_config_load	tdss_config.h	/^int data_server_config_load(char *fname);$/;"	p	signature:(char *fname)
+data_server_info_t	tdss_config.h	/^}data_server_info_t;$/;"	t	typeref:struct:__anon6
+data_server_t	tdss_config.h	/^}data_server_t;$/;"	t	typeref:struct:__anon4
+datadir	Makefile	/^datadir = ${datarootdir}$/;"	m
+datarootdir	Makefile	/^datarootdir = ${prefix}\/share$/;"	m
+db_path	tdss_config.h	/^    char                db_path[128];   \/\/数据保存位置$/;"	m	struct:__anon5	access:public
+depcomp	Makefile	/^depcomp = $(SHELL) $(top_srcdir)\/depcomp$/;"	m
+disk_free	tdss_config.h	/^    uint32_t            disk_free;      \/\/单位为MB$/;"	m	struct:__anon6	access:public
+disk_id	tdss_config.h	/^    int                     disk_id;        \/\/当前服务的服务器ID$/;"	m	struct:__anon11	access:public
+disk_size	tdss_config.h	/^    uint32_t            disk_size;      \/\/单位为MB$/;"	m	struct:__anon6	access:public
+docdir	Makefile	/^docdir = ${datarootdir}\/doc\/${PACKAGE_TARNAME}$/;"	m
+ds_conf	config.c	/^data_server_conf_t      ds_conf = {0};$/;"	v
+ds_get_addr_by_id	config.c	/^int ds_get_addr_by_id(int server_id, char **ip, int *port)$/;"	f	signature:(int server_id, char **ip, int *port)
+dvidir	Makefile	/^dvidir = ${docdir}$/;"	m
+epev	inet_event.h	10;"	d
+epfd	inet_event.h	/^    int             epfd;$/;"	m	struct:__anon2	access:public
+evs	inet_event.h	/^    epev            *evs;$/;"	m	struct:__anon2	access:public
+exec_prefix	Makefile	/^exec_prefix = ${prefix}$/;"	m
+fblock_t	tdss_config.h	/^}fblock_t;$/;"	t	typeref:struct:__anon12
+fd	inet_event.h	/^    int             fd;$/;"	m	struct:inet_task_s	access:public
+file	tdss_config.h	/^    char    file[33];$/;"	m	struct:__anon12	access:public
+from	inet_event.h	/^    char            from[128];$/;"	m	struct:inet_task_s	access:public
+func	inet_event.h	/^    int             (*func)(inet_task_t *);$/;"	m	struct:inet_task_s	access:public
+host_alias	Makefile	/^host_alias = $/;"	m
+htmldir	Makefile	/^htmldir = ${docdir}$/;"	m
+id	inet_event.h	/^    int             id;         \/\/唯一序列号$/;"	m	struct:inet_task_s	access:public
+id	tdss_config.h	/^        int                 id;             \/\/当前检测到的ID$/;"	m	struct:__anon8::__anon10	access:public
+id	tdss_config.h	/^        int                 id;             \/\/当前检测到的ID$/;"	m	struct:__anon8::__anon9	access:public
+idx	inet_event.h	/^    int             idx;        \/\/当任务进入队列后使用这个$/;"	m	struct:inet_task_s	access:public
+ie	tdss_config.h	/^    inet_event_t            *ie;$/;"	m	struct:__anon11	access:public
+ie	tdss_config.h	/^    inet_event_t            *ie;$/;"	m	struct:__anon8	access:public
+ie	tdss_config.h	/^    inet_event_t        *ie;$/;"	m	struct:__anon5	access:public
+includedir	Makefile	/^includedir = ${prefix}\/include$/;"	m
+inet_connect_init	inet_event.c	/^inet_task_t *inet_connect_init(char *ip, int port)$/;"	f	signature:(char *ip, int port)
+inet_connect_init	inet_event.h	/^inet_task_t *inet_connect_init(char *ip, int port);$/;"	p	signature:(char *ip, int port)
+inet_event_add	inet_event.c	/^int inet_event_add(inet_event_t *ie, inet_task_t *it)$/;"	f	signature:(inet_event_t *ie, inet_task_t *it)
+inet_event_add	inet_event.h	/^int inet_event_add(inet_event_t *ie, inet_task_t *it);$/;"	p	signature:(inet_event_t *ie, inet_task_t *it)
+inet_event_clear	inet_event.c	/^int inet_event_clear(inet_event_t *ie)$/;"	f	signature:(inet_event_t *ie)
+inet_event_del	inet_event.c	/^void inet_event_del(inet_event_t *ie, inet_task_t *it)$/;"	f	signature:(inet_event_t *ie, inet_task_t *it)
+inet_event_init	inet_event.c	/^inet_event_t *inet_event_init(int max_event_size, int lsfd)$/;"	f	signature:(int max_event_size, int lsfd)
+inet_event_init	inet_event.h	/^inet_event_t *inet_event_init(int max_event_size, int lsfd);$/;"	p	signature:(int max_event_size, int lsfd)
+inet_event_loop	inet_event.c	/^int inet_event_loop(inet_event_t *ie)$/;"	f	signature:(inet_event_t *ie)
+inet_event_loop	inet_event.h	/^int inet_event_loop(inet_event_t *ie);$/;"	p	signature:(inet_event_t *ie)
+inet_event_t	inet_event.h	/^}inet_event_t;$/;"	t	typeref:struct:__anon2
+inet_task_s	inet_event.h	/^struct inet_task_s$/;"	s
+inet_task_s::data	inet_event.h	/^    void            *data;      \/\/附加字段，可设置session之类$/;"	m	struct:inet_task_s	access:public
+inet_task_s::fd	inet_event.h	/^    int             fd;$/;"	m	struct:inet_task_s	access:public
+inet_task_s::from	inet_event.h	/^    char            from[128];$/;"	m	struct:inet_task_s	access:public
+inet_task_s::func	inet_event.h	/^    int             (*func)(inet_task_t *);$/;"	m	struct:inet_task_s	access:public
+inet_task_s::id	inet_event.h	/^    int             id;         \/\/唯一序列号$/;"	m	struct:inet_task_s	access:public
+inet_task_s::idx	inet_event.h	/^    int             idx;        \/\/当任务进入队列后使用这个$/;"	m	struct:inet_task_s	access:public
+inet_task_s::state	inet_event.h	/^    int             state;      \/\/状态：TASK_WAIT_READ准备读，TASK_WAIT_WRITE准备写， TASK_WAIT_END准备断开$/;"	m	struct:inet_task_s	access:public
+inet_task_s::timeout	inet_event.h	/^    int             timeout;$/;"	m	struct:inet_task_s	access:public
+inet_task_s::type	inet_event.h	/^    int             type;       \/\/类型：TASK_TYPE_CONNNECT连接到远程服务器的长连接，TASK_TYPE_REQUEST客户端请求 , TASK_TYPE_LISTEN当前监听的fd$/;"	m	struct:inet_task_s	access:public
+inet_task_t	inet_event.h	/^typedef struct inet_task_s inet_task_t;$/;"	t	typeref:struct:inet_task_s
+info	tdss_config.h	/^        data_server_info_t  *info;$/;"	m	struct:__anon8::__anon9	access:public
+info	tdss_config.h	/^        name_server_info_t  *info;$/;"	m	struct:__anon8::__anon10	access:public
+infodir	Makefile	/^infodir = ${datarootdir}\/info$/;"	m
+inode_free	tdss_config.h	/^    uint32_t            inode_free;     \/\/单位为KB$/;"	m	struct:__anon6	access:public
+inode_size	tdss_config.h	/^    uint32_t            inode_size;     \/\/单位为KB$/;"	m	struct:__anon6	access:public
+install_sh	Makefile	/^install_sh = ${SHELL} \/home\/tian\/tdss\/install-sh$/;"	m
+install_sh_DATA	Makefile	/^install_sh_DATA = $(install_sh) -c -m 644$/;"	m
+install_sh_PROGRAM	Makefile	/^install_sh_PROGRAM = $(install_sh) -c$/;"	m
+install_sh_SCRIPT	Makefile	/^install_sh_SCRIPT = $(install_sh) -c$/;"	m
+interval	tdss_config.h	/^    int                     interval;       \/\/检测各个服务器的间隔时间$/;"	m	struct:__anon8	access:public
+key	tdss_config.h	/^    char    *key;$/;"	m	struct:__anon13	access:public
+lib_tdss_a_AR	Makefile	/^lib_tdss_a_AR = $(AR) $(ARFLAGS)$/;"	m
+lib_tdss_a_DEPENDENCIES	Makefile	/^lib_tdss_a_DEPENDENCIES = ..\/lib_mrt\/lib_mrt.a$/;"	m
+lib_tdss_a_LIBADD	Makefile	/^lib_tdss_a_LIBADD = ..\/lib_mrt\/lib_mrt.a$/;"	m
+lib_tdss_a_OBJECTS	Makefile	/^lib_tdss_a_OBJECTS = $(am_lib_tdss_a_OBJECTS)$/;"	m
+lib_tdss_a_SOURCES	Makefile	/^lib_tdss_a_SOURCES = config.c  inet_event.c  time_queue.c request.c$/;"	m
+libdir	Makefile	/^libdir = ${exec_prefix}\/lib$/;"	m
+libexecdir	Makefile	/^libexecdir = ${exec_prefix}\/libexec$/;"	m
+local	tdss_config.h	/^    ip4_addr_t              local;          \/\/当前服务绑定的IP和端口$/;"	m	struct:__anon11	access:public
+local	tdss_config.h	/^    ip4_addr_t              local;          \/\/当前服务绑定的IP和端口$/;"	m	struct:__anon8	access:public
+local	tdss_config.h	/^    ip4_addr_t          local;          \/\/当前服务绑定的IP和端口$/;"	m	struct:__anon5	access:public
+localedir	Makefile	/^localedir = ${datarootdir}\/locale$/;"	m
+localstatedir	Makefile	/^localstatedir = ${prefix}\/var$/;"	m
+log_level	tdss_config.h	/^    int                     log_level;      \/\/日志级别$/;"	m	struct:__anon8	access:public
+log_level	tdss_config.h	/^    int                     log_level;$/;"	m	struct:__anon11	access:public
+log_level	tdss_config.h	/^    int                 log_level;$/;"	m	struct:__anon5	access:public
+lsfd	inet_event.h	/^    int             lsfd;$/;"	m	struct:__anon2	access:public
+main	inet_event.c	/^int  main(int argc, char *argv[])$/;"	f	signature:(int argc, char *argv[])
+mandir	Makefile	/^mandir = ${datarootdir}\/man$/;"	m
+master	tdss_config.h	/^    ip4_addr_t          master;$/;"	m	struct:__anon3	access:public
+master_server_conf_t	tdss_config.h	/^}master_server_conf_t;$/;"	t	typeref:struct:__anon8
+master_server_config_load	config.c	/^int master_server_config_load(char *fname)$/;"	f	signature:(char *fname)
+max_block_size	tdss_config.h	/^    int                     max_block_size;$/;"	m	struct:__anon11	access:public
+max_size	inet_event.h	/^    int             max_size;$/;"	m	struct:__anon2	access:public
+mkdir_p	Makefile	/^mkdir_p = \/bin\/mkdir -p$/;"	m
+mkinstalldirs	Makefile	/^mkinstalldirs = $(install_sh) -d$/;"	m
+ms_conf	config.c	/^master_server_conf_t    ms_conf = {0};$/;"	v
+name	tdss_config.h	/^    char    name[33];$/;"	m	struct:__anon12	access:public
+name_server	tdss_config.h	/^    }name_server;$/;"	m	struct:__anon8	typeref:struct:__anon8::__anon10	access:public
+name_server_conf_t	tdss_config.h	/^}name_server_conf_t;$/;"	t	typeref:struct:__anon5
+name_server_config_load	config.c	/^int name_server_config_load(char *fname)$/;"	f	signature:(char *fname)
+name_server_config_load	tdss_config.h	/^int name_server_config_load(char *fname);$/;"	p	signature:(char *fname)
+name_server_info_t	tdss_config.h	/^}name_server_info_t;$/;"	t	typeref:struct:__anon7
+name_server_t	tdss_config.h	/^}name_server_t;$/;"	t	typeref:struct:__anon3
+noinst_LIBRARIES	Makefile	/^noinst_LIBRARIES = lib_tdss.a$/;"	m
+ns_conf	config.c	/^name_server_conf_t      ns_conf = {0};$/;"	v
+ns_config_load	tdss_config.h	/^int ns_config_load(char *fname);$/;"	p	signature:(char *fname)
+ns_get_master_addr	config.c	/^int ns_get_master_addr(char *key, int klen, char **ip, int *port)$/;"	f	signature:(char *key, int klen, char **ip, int *port)
+ns_get_master_addr	tdss_config.h	/^int ns_get_master_addr(char *key, int klen, char **ip, int *port);$/;"	p	signature:(char *key, int klen, char **ip, int *port)
+ns_get_server_id	config.c	/^int ns_get_server_id(char *mid, int *id)$/;"	f	signature:(char *mid, int *id)
+ns_get_slave_addr	config.c	/^int ns_get_slave_addr(char *key, int klen, char **ip, int *port)$/;"	f	signature:(char *key, int klen, char **ip, int *port)
+ns_get_slave_addr	tdss_config.h	/^int ns_get_slave_addr(char *key, int klen, char **ip, int *port);$/;"	p	signature:(char *key, int klen, char **ip, int *port)
+num	inet_event.h	/^    int             num;$/;"	m	struct:__anon1	access:public
+offset	tdss_config.h	/^    int     offset;$/;"	m	struct:__anon12	access:public
+oldincludedir	Makefile	/^oldincludedir = \/usr\/include$/;"	m
+pdfdir	Makefile	/^pdfdir = ${docdir}$/;"	m
+pkgdatadir	Makefile	/^pkgdatadir = $(datadir)\/tdss$/;"	m
+pkgincludedir	Makefile	/^pkgincludedir = $(includedir)\/tdss$/;"	m
+pkglibdir	Makefile	/^pkglibdir = $(libdir)\/tdss$/;"	m
+pkglibexecdir	Makefile	/^pkglibexecdir = $(libexecdir)\/tdss$/;"	m
+prefix	Makefile	/^prefix = \/home\/tdss$/;"	m
+program_transform_name	Makefile	/^program_transform_name = s,x,x,$/;"	m
+psdir	Makefile	/^psdir = ${docdir}$/;"	m
+ref	tdss_config.h	/^    int     ref;$/;"	m	struct:__anon12	access:public
+request_parse	request.c	/^int request_parse(string_t *src, rq_arg_t *arg, int asize)$/;"	f	signature:(string_t *src, rq_arg_t *arg, int asize)
+rq_arg_t	tdss_config.h	/^}rq_arg_t;$/;"	t	typeref:struct:__anon13
+sbindir	Makefile	/^sbindir = ${exec_prefix}\/sbin$/;"	m
+server	tdss_config.h	/^    data_server_t           *server;$/;"	m	struct:__anon11	access:public
+server	tdss_config.h	/^    int     server;$/;"	m	struct:__anon12	access:public
+server	tdss_config.h	/^    ip4_addr_t          server;$/;"	m	struct:__anon4	access:public
+server	tdss_config.h	/^    name_server_t       *server;$/;"	m	struct:__anon5	access:public
+server_conf_init	inet_event.c	/^int server_conf_init()$/;"	f
+server_count	tdss_config.h	/^    int                     server_count;   \/\/data server$/;"	m	struct:__anon11	access:public
+server_count	tdss_config.h	/^    int                 server_count;   \/\/所有name_server服务器总数$/;"	m	struct:__anon5	access:public
+server_id	tdss_config.h	/^    int                     server_id;      \/\/当前服务的组ID$/;"	m	struct:__anon11	access:public
+server_id	tdss_config.h	/^    int                 server_id;      \/\/当前服务ID$/;"	m	struct:__anon5	access:public
+server_id	tdss_config.h	/^    uint16_t            server_id;$/;"	m	struct:__anon6	access:public
+server_id	tdss_config.h	/^    uint16_t            server_id;$/;"	m	struct:__anon7	access:public
+server_type	tdss_config.h	/^    int                 server_type;    \/\/当前进程类型是主还是从，根据配置文件中的IP和端口对应出来$/;"	m	struct:__anon5	access:public
+sharedstatedir	Makefile	/^sharedstatedir = ${prefix}\/com$/;"	m
+size	inet_event.h	/^    int             size;$/;"	m	struct:__anon1	access:public
+size	tdss_config.h	/^    int     size;$/;"	m	struct:__anon12	access:public
+size	tdss_config.h	/^    uint32_t            size;           \/\/存储了多少条记录$/;"	m	struct:__anon7	access:public
+slave	tdss_config.h	/^    ip4_addr_t          slave;$/;"	m	struct:__anon3	access:public
+srcdir	Makefile	/^srcdir = .$/;"	m
+start	tdss_config.h	/^        time_t              start;          \/\/当前次检测开始时间$/;"	m	struct:__anon8::__anon10	access:public
+start	tdss_config.h	/^        time_t              start;          \/\/当前次检测开始时间$/;"	m	struct:__anon8::__anon9	access:public
+state	inet_event.h	/^    int             state;      \/\/状态：TASK_WAIT_READ准备读，TASK_WAIT_WRITE准备写， TASK_WAIT_END准备断开$/;"	m	struct:inet_task_s	access:public
+state	tdss_config.h	/^    int                 state;$/;"	m	struct:__anon6	access:public
+state	tdss_config.h	/^    int                 state;$/;"	m	struct:__anon7	access:public
+subdir	Makefile	/^subdir = lib_tdss$/;"	m
+sync_enable	tdss_config.h	/^    int                 sync_enable;    \/\/是否同步到"从"服务器$/;"	m	struct:__anon5	access:public
+sysconfdir	Makefile	/^sysconfdir = ${prefix}\/etc$/;"	m
+target_alias	Makefile	/^target_alias = $/;"	m
+task	inet_event.h	/^    inet_task_t     **task;$/;"	m	struct:__anon1	access:public
+task	tdss_config.h	/^        inet_task_t         task;           \/\/task;$/;"	m	struct:__anon8::__anon10	access:public
+task	tdss_config.h	/^        inet_task_t         task;           \/\/task;$/;"	m	struct:__anon8::__anon9	access:public
+task_create	inet_event.c	/^inet_task_t *task_create()$/;"	f
+task_create	inet_event.h	/^inet_task_t *task_create();$/;"	p	signature:()
+task_deinit	inet_event.h	/^    int             (*task_deinit)(inet_task_t *);       \/\/连接断开时的回调函数$/;"	m	struct:__anon2	access:public
+task_id_inc	inet_event.c	/^static int task_id_inc = 0x1000000;$/;"	v	file:
+task_init	inet_event.c	/^void task_init(inet_task_t *it)$/;"	f	signature:(inet_task_t *it)
+task_init	inet_event.h	/^    int             (*task_init)(inet_task_t *);         \/\/连接进入时的回调函数$/;"	m	struct:__anon2	access:public
+task_init	inet_event.h	/^void task_init(inet_task_t *it);$/;"	p	signature:(inet_task_t *it)
+time_queue_deinit	time_queue.c	/^void time_queue_deinit(time_queue_t *heap)$/;"	f	signature:(time_queue_t *heap)
+time_queue_deinit	time_queue.h	/^void    time_queue_deinit(time_queue_t *heap);$/;"	p	signature:(time_queue_t *heap)
+time_queue_delete	time_queue.c	/^int time_queue_delete(time_queue_t *heap, inet_task_t* task)$/;"	f	signature:(time_queue_t *heap, inet_task_t* task)
+time_queue_delete	time_queue.h	/^int       time_queue_delete(time_queue_t *heap, inet_task_t *);$/;"	p	signature:(time_queue_t *heap, inet_task_t *)
+time_queue_elem_init	time_queue.h	21;"	d
+time_queue_empty	time_queue.h	23;"	d
+time_queue_init	time_queue.c	/^int time_queue_init(time_queue_t *heap, int32_t size)$/;"	f	signature:(time_queue_t *heap, int32_t size)
+time_queue_init	time_queue.h	/^int     time_queue_init(time_queue_t *heap, int32_t size);$/;"	p	signature:(time_queue_t *heap, int32_t size)
+time_queue_min	time_queue.h	27;"	d
+time_queue_num	time_queue.h	25;"	d
+time_queue_pop	time_queue.c	/^inet_task_t *time_queue_pop(time_queue_t *heap)$/;"	f	signature:(time_queue_t *heap)
+time_queue_pop	time_queue.h	/^inet_task_t    *time_queue_pop(time_queue_t *heap);$/;"	p	signature:(time_queue_t *heap)
+time_queue_push	time_queue.c	/^int time_queue_push(time_queue_t *heap, inet_task_t *task)$/;"	f	signature:(time_queue_t *heap, inet_task_t *task)
+time_queue_push	time_queue.h	/^int       time_queue_push(time_queue_t *heap, inet_task_t *);$/;"	p	signature:(time_queue_t *heap, inet_task_t *)
+time_queue_resize	time_queue.c	/^int time_queue_resize(time_queue_t *heap)$/;"	f	signature:(time_queue_t *heap)
+time_queue_t	inet_event.h	/^}time_queue_t;$/;"	t	typeref:struct:__anon1
+timeout	inet_event.h	/^    int             timeout;    \/\/所有连接强制使用相同超时时间$/;"	m	struct:__anon2	access:public
+timeout	inet_event.h	/^    int             timeout;$/;"	m	struct:inet_task_s	access:public
+timeout	tdss_config.h	/^    int                     timeout;        \/\/socket超时$/;"	m	struct:__anon8	access:public
+timeout	tdss_config.h	/^    int                     timeout;$/;"	m	struct:__anon11	access:public
+timeout	tdss_config.h	/^    int                 timeout;$/;"	m	struct:__anon5	access:public
+timer_event_add	inet_event.c	/^int timer_event_add(inet_event_t *ie, inet_task_t *it)$/;"	f	signature:(inet_event_t *ie, inet_task_t *it)
+timer_event_add	inet_event.h	/^int timer_event_add(inet_event_t *ie, inet_task_t *it);$/;"	p	signature:(inet_event_t *ie, inet_task_t *it)
+timer_event_del	inet_event.c	/^void timer_event_del(inet_event_t *ie, inet_task_t *it)$/;"	f	signature:(inet_event_t *ie, inet_task_t *it)
+top_build_prefix	Makefile	/^top_build_prefix = ..\/$/;"	m
+top_builddir	Makefile	/^top_builddir = ..$/;"	m
+top_srcdir	Makefile	/^top_srcdir = ..$/;"	m
+tq	inet_event.h	/^    time_queue_t    tq;$/;"	m	struct:__anon2	access:public
+transform	Makefile	/^transform = $(program_transform_name)$/;"	m
+type	inet_event.h	/^    int             type;       \/\/类型：TASK_TYPE_CONNNECT连接到远程服务器的长连接，TASK_TYPE_REQUEST客户端请求 , TASK_TYPE_LISTEN当前监听的fd$/;"	m	struct:inet_task_s	access:public
+type	tdss_config.h	/^    int     type;$/;"	m	struct:__anon13	access:public
+used	tdss_config.h	/^    uint32_t            used;           \/\/存储了多少条记录$/;"	m	struct:__anon7	access:public
+val	tdss_config.h	/^    void    *val;$/;"	m	struct:__anon13	access:public
+vsize	tdss_config.h	/^    int     vsize;$/;"	m	struct:__anon13	access:public
+work_id	tdss_config.h	/^        int                 work_id;        \/\/当前正在工作的ID, 每次有请求过来+1(负载均衡用)$/;"	m	struct:__anon8::__anon9	access:public

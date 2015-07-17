@@ -1,0 +1,263 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ACLOCAL	Makefile	/^ACLOCAL = ${SHELL} \/home\/tian\/tdss\/missing --run aclocal-1.11$/;"	m
+ACLOCAL_M4	Makefile	/^ACLOCAL_M4 = $(top_srcdir)\/aclocal.m4$/;"	m
+AMTAR	Makefile	/^AMTAR = ${SHELL} \/home\/tian\/tdss\/missing --run tar$/;"	m
+AUTOCONF	Makefile	/^AUTOCONF = ${SHELL} \/home\/tian\/tdss\/missing --run autoconf$/;"	m
+AUTOHEADER	Makefile	/^AUTOHEADER = ${SHELL} \/home\/tian\/tdss\/missing --run autoheader$/;"	m
+AUTOMAKE	Makefile	/^AUTOMAKE = ${SHELL} \/home\/tian\/tdss\/missing --run automake-1.11$/;"	m
+AUTOMAKE_OPTIONS	Makefile	/^AUTOMAKE_OPTIONS = foreign$/;"	m
+AWK	Makefile	/^AWK = gawk$/;"	m
+CC	Makefile	/^CC = gcc$/;"	m
+CCDEPMODE	Makefile	/^CCDEPMODE = depmode=gcc3$/;"	m
+CCLD	Makefile	/^CCLD = $(CC)$/;"	m
+CFLAGS	Makefile	/^CFLAGS = -g -O2$/;"	m
+CMD_DEFINE_FLUSH	command.c	146;"	d	file:
+COMPILE	Makefile	/^COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \\$/;"	m
+CONFIG_CLEAN_FILES	Makefile	/^CONFIG_CLEAN_FILES =$/;"	m
+CONFIG_CLEAN_VPATH_FILES	Makefile	/^CONFIG_CLEAN_VPATH_FILES =$/;"	m
+CONFIG_HEADER	Makefile	/^CONFIG_HEADER = $(top_builddir)\/none.h$/;"	m
+CPP	Makefile	/^CPP = gcc -E$/;"	m
+CPPFLAGS	Makefile	/^CPPFLAGS = $/;"	m
+CTAGS	Makefile	/^CTAGS = ctags$/;"	m
+CYGPATH_W	Makefile	/^CYGPATH_W = echo$/;"	m
+DEFAULT_INCLUDES	Makefile	/^DEFAULT_INCLUDES = -I. -I$(top_builddir)$/;"	m
+DEFS	Makefile	/^DEFS = -DHAVE_CONFIG_H$/;"	m
+DEPDIR	Makefile	/^DEPDIR = .deps$/;"	m
+DISTFILES	Makefile	/^DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)$/;"	m
+DIST_COMMON	Makefile	/^DIST_COMMON = $(srcdir)\/Makefile.am $(srcdir)\/Makefile.in$/;"	m
+DIST_SOURCES	Makefile	/^DIST_SOURCES = $(master_server_SOURCES)$/;"	m
+ECHO_C	Makefile	/^ECHO_C = $/;"	m
+ECHO_N	Makefile	/^ECHO_N = -n$/;"	m
+ECHO_T	Makefile	/^ECHO_T = $/;"	m
+EGREP	Makefile	/^EGREP = \/bin\/grep -E$/;"	m
+ERR_CMD_ARG	master.h	108;"	d
+ERR_CMD_NOFOUND	master.h	107;"	d
+ERR_DEL_FILE	master.h	110;"	d
+ERR_FB_ADD	master.h	113;"	d
+ERR_FB_DEL	master.h	115;"	d
+ERR_FB_MOD	master.h	114;"	d
+ERR_FB_REF_DEC	master.h	117;"	d
+ERR_FB_REF_INC	master.h	116;"	d
+ERR_FB_STATUS	master.h	118;"	d
+ERR_LINK_FILE	master.h	111;"	d
+ERR_NOMEM	master.h	126;"	d
+ERR_NS_CONN	master.h	120;"	d
+ERR_NS_PROC	master.h	124;"	d
+ERR_NS_READ	master.h	122;"	d
+ERR_NS_RETURN	master.h	123;"	d
+ERR_NS_WRITE	master.h	121;"	d
+ERR_OPEN_FILE	master.h	109;"	d
+ETAGS	Makefile	/^ETAGS = etags$/;"	m
+EXEEXT	Makefile	/^EXEEXT = $/;"	m
+GREP	Makefile	/^GREP = \/bin\/grep$/;"	m
+INCLUDES	Makefile	/^INCLUDES = -I..\/lib_mrt\/ -I..\/lib_tdss\/$/;"	m
+INSTALL	Makefile	/^INSTALL = \/usr\/bin\/install -c$/;"	m
+INSTALL_DATA	Makefile	/^INSTALL_DATA = ${INSTALL} -m 644$/;"	m
+INSTALL_HEADER	Makefile	/^INSTALL_HEADER = $(INSTALL_DATA)$/;"	m
+INSTALL_PROGRAM	Makefile	/^INSTALL_PROGRAM = ${INSTALL}$/;"	m
+INSTALL_SCRIPT	Makefile	/^INSTALL_SCRIPT = ${INSTALL}$/;"	m
+INSTALL_STRIP_PROGRAM	Makefile	/^INSTALL_STRIP_PROGRAM = $(install_sh) -c -s$/;"	m
+LDFLAGS	Makefile	/^LDFLAGS = $/;"	m
+LIBOBJS	Makefile	/^LIBOBJS = $/;"	m
+LIBS	Makefile	/^LIBS = -lssl -lrt -lm -ldl $/;"	m
+LINK	Makefile	/^LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@$/;"	m
+LTLIBOBJS	Makefile	/^LTLIBOBJS = $/;"	m
+MAKEINFO	Makefile	/^MAKEINFO = ${SHELL} \/home\/tian\/tdss\/missing --run makeinfo$/;"	m
+MKDIR_P	Makefile	/^MKDIR_P = \/bin\/mkdir -p$/;"	m
+MY_VERSION	master.h	24;"	d
+NEXT_END	master.h	103;"	d
+NEXT_READ	master.h	101;"	d
+NEXT_WRITE	master.h	102;"	d
+NORMAL_INSTALL	Makefile	/^NORMAL_INSTALL = :$/;"	m
+NORMAL_UNINSTALL	Makefile	/^NORMAL_UNINSTALL = :$/;"	m
+OBJEXT	Makefile	/^OBJEXT = o$/;"	m
+OPERATE_SUCCESS	master.h	105;"	d
+PACKAGE	Makefile	/^PACKAGE = tdss$/;"	m
+PACKAGE_BUGREPORT	Makefile	/^PACKAGE_BUGREPORT = root@codecn.org$/;"	m
+PACKAGE_NAME	Makefile	/^PACKAGE_NAME = tdss$/;"	m
+PACKAGE_STRING	Makefile	/^PACKAGE_STRING = tdss 0.1.0$/;"	m
+PACKAGE_TARNAME	Makefile	/^PACKAGE_TARNAME = tdss$/;"	m
+PACKAGE_VERSION	Makefile	/^PACKAGE_VERSION = 0.1.0$/;"	m
+PATH_SEPARATOR	Makefile	/^PATH_SEPARATOR = :$/;"	m
+POST_INSTALL	Makefile	/^POST_INSTALL = :$/;"	m
+POST_UNINSTALL	Makefile	/^POST_UNINSTALL = :$/;"	m
+PRE_INSTALL	Makefile	/^PRE_INSTALL = :$/;"	m
+PRE_UNINSTALL	Makefile	/^PRE_UNINSTALL = :$/;"	m
+PROGRAMS	Makefile	/^PROGRAMS = $(bin_PROGRAMS)$/;"	m
+RANLIB	Makefile	/^RANLIB = ranlib$/;"	m
+SERVER_OFFLINE	master.h	26;"	d
+SERVER_ONLINE	master.h	27;"	d
+SERVER_TYPE_DATA	master.h	29;"	d
+SERVER_TYPE_NAME	master.h	30;"	d
+SESSION_BEGIN	master.h	34;"	d
+SESSION_END	master.h	41;"	d
+SESSION_LOOP	master.h	38;"	d
+SESSION_PROC	master.h	39;"	d
+SESSION_READ	master.h	35;"	d
+SESSION_REPLY	master.h	37;"	d
+SESSION_WAIT	master.h	40;"	d
+SESSION_WRITE	master.h	36;"	d
+SET_MAKE	Makefile	/^SET_MAKE = $/;"	m
+SHELL	Makefile	/^SHELL = \/bin\/sh$/;"	m
+SOURCES	Makefile	/^SOURCES = $(master_server_SOURCES)$/;"	m
+STRIP	Makefile	/^STRIP = $/;"	m
+VERSION	Makefile	/^VERSION = 0.0.1$/;"	m
+__MASTER_H__	master.h	2;"	d
+__anon2::func	master.h	/^    int             (*func)(inet_task_t *);$/;"	m	struct:__anon2	access:public
+__anon2::name	master.h	/^    char            *name;$/;"	m	struct:__anon2	access:public
+__data_server_next	server_check.c	/^int __data_server_next(ip4_addr_t *addr)$/;"	f	signature:(ip4_addr_t *addr)
+__data_server_report	server_check.c	/^int __data_server_report(session_t *ss)$/;"	f	signature:(session_t *ss)
+__name_server_next	server_check.c	/^int __name_server_next(ip4_addr_t *addr)$/;"	f	signature:(ip4_addr_t *addr)
+__name_server_report	server_check.c	/^int __name_server_report(session_t *ss)$/;"	f	signature:(session_t *ss)
+__server_check_loop	server_check.c	/^int __server_check_loop(inet_task_t *it)$/;"	f	signature:(inet_task_t *it)
+__server_check_loop	server_check.c	/^int __server_check_loop(inet_task_t *it);$/;"	p	file:	signature:(inet_task_t *it)
+__server_finish	server_check.c	/^int __server_finish(inet_task_t *it)$/;"	f	signature:(inet_task_t *it)
+__server_next	server_check.c	/^int __server_next(int type, ip4_addr_t *addr)$/;"	f	signature:(int type, ip4_addr_t *addr)
+__server_recv	server_check.c	/^int __server_recv(inet_task_t *it)$/;"	f	signature:(inet_task_t *it)
+__server_report	server_check.c	/^int __server_report(session_t *ss)$/;"	f	signature:(session_t *ss)
+__server_send	server_check.c	/^int __server_send(inet_task_t *it)$/;"	f	signature:(inet_task_t *it)
+__session_reply	process.c	/^static int __session_reply(inet_task_t *it)$/;"	f	file:	signature:(inet_task_t *it)
+abs_builddir	Makefile	/^abs_builddir = \/home\/tian\/tdss\/master_server$/;"	m
+abs_srcdir	Makefile	/^abs_srcdir = \/home\/tian\/tdss\/master_server$/;"	m
+abs_top_builddir	Makefile	/^abs_top_builddir = \/home\/tian\/tdss$/;"	m
+abs_top_srcdir	Makefile	/^abs_top_srcdir = \/home\/tian\/tdss$/;"	m
+ac_ct_CC	Makefile	/^ac_ct_CC = gcc$/;"	m
+am__aclocal_m4_deps	Makefile	/^am__aclocal_m4_deps = $(top_srcdir)\/configure.in$/;"	m
+am__cd	Makefile	/^am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd$/;"	m
+am__configure_deps	Makefile	/^am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \\$/;"	m
+am__depfiles_maybe	Makefile	/^am__depfiles_maybe = depfiles$/;"	m
+am__include	Makefile	/^am__include = include$/;"	m
+am__installdirs	Makefile	/^am__installdirs = "$(DESTDIR)$(bindir)"$/;"	m
+am__leading_dot	Makefile	/^am__leading_dot = .$/;"	m
+am__mv	Makefile	/^am__mv = mv -f$/;"	m
+am__quote	Makefile	/^am__quote = $/;"	m
+am__tar	Makefile	/^am__tar = ${AMTAR} chof - "$$tardir"$/;"	m
+am__untar	Makefile	/^am__untar = ${AMTAR} xf -$/;"	m
+am_master_server_OBJECTS	Makefile	/^am_master_server_OBJECTS = command.$(OBJEXT) master.$(OBJEXT) \\$/;"	m
+bin_PROGRAMS	Makefile	/^bin_PROGRAMS = master_server$(EXEEXT)$/;"	m
+bindir	Makefile	/^bindir = ${exec_prefix}\/bin$/;"	m
+build_alias	Makefile	/^build_alias = $/;"	m
+builddir	Makefile	/^builddir = .$/;"	m
+cmd	master.h	/^        string_t    cmd;$/;"	m	struct:session_s::__anon1	access:public
+cmd_list	command.c	/^command_t cmd_list[] = {$/;"	v
+cmd_list	process.c	/^extern command_t cmd_list[];$/;"	x
+cmd_nofound	command.c	/^int cmd_nofound(inet_task_t *it)$/;"	f	signature:(inet_task_t *it)
+command_process	master.h	/^int command_process();$/;"	p	signature:()
+command_t	master.h	/^}command_t;$/;"	t	typeref:struct:__anon2
+conf_load	master.h	/^int conf_load(char *fname);$/;"	p	signature:(char *fname)
+data_server_config_load	master.h	/^int data_server_config_load(char *fname);$/;"	p	signature:(char *fname)
+datadir	Makefile	/^datadir = ${datarootdir}$/;"	m
+datarootdir	Makefile	/^datarootdir = ${prefix}\/share$/;"	m
+depcomp	Makefile	/^depcomp = $(SHELL) $(top_srcdir)\/depcomp$/;"	m
+docdir	Makefile	/^docdir = ${datarootdir}\/doc\/${PACKAGE_TARNAME}$/;"	m
+ds_conf	command.c	/^extern data_server_conf_t ds_conf;$/;"	x
+ds_conf	master.c	/^extern data_server_conf_t ds_conf;$/;"	x
+ds_conf	process.c	/^extern data_server_conf_t ds_conf;$/;"	x
+ds_conf	server_check.c	/^extern data_server_conf_t ds_conf;$/;"	x
+dvidir	Makefile	/^dvidir = ${docdir}$/;"	m
+exec_prefix	Makefile	/^exec_prefix = ${prefix}$/;"	m
+finish	master.h	/^        int         (*finish)(inet_task_t *);$/;"	m	struct:session_s::__anon1	access:public
+flush	master.h	/^void flush();$/;"	p	signature:()
+func	master.h	/^    int             (*func)(inet_task_t *);$/;"	m	struct:__anon2	access:public
+get_eth1_ip	master.h	/^int get_eth1_ip(char *addr, int size);$/;"	p	signature:(char *addr, int size)
+host_alias	Makefile	/^host_alias = $/;"	m
+htmldir	Makefile	/^htmldir = ${docdir}$/;"	m
+id	master.h	/^    uint32_t        id;             \/\/一个新命令到来时重新生成id，以记录当前会话$/;"	m	struct:session_s	access:public
+includedir	Makefile	/^includedir = ${prefix}\/include$/;"	m
+infodir	Makefile	/^infodir = ${datarootdir}\/info$/;"	m
+input	master.h	/^    string_t        input;          \/\/客户端发送过来的命令$/;"	m	struct:session_s	access:public
+install_sh	Makefile	/^install_sh = ${SHELL} \/home\/tian\/tdss\/install-sh$/;"	m
+install_sh_DATA	Makefile	/^install_sh_DATA = $(install_sh) -c -m 644$/;"	m
+install_sh_PROGRAM	Makefile	/^install_sh_PROGRAM = $(install_sh) -c$/;"	m
+install_sh_SCRIPT	Makefile	/^install_sh_SCRIPT = $(install_sh) -c$/;"	m
+libdir	Makefile	/^libdir = ${exec_prefix}\/lib$/;"	m
+libexecdir	Makefile	/^libexecdir = ${exec_prefix}\/libexec$/;"	m
+localedir	Makefile	/^localedir = ${datarootdir}\/locale$/;"	m
+localstatedir	Makefile	/^localstatedir = ${prefix}\/var$/;"	m
+mail_save	process.c	/^int mail_save(inet_task_t *it);$/;"	p	file:	signature:(inet_task_t *it)
+main	master.c	/^int main(int argc, char *argv[])$/;"	f	signature:(int argc, char *argv[])
+mandir	Makefile	/^mandir = ${datarootdir}\/man$/;"	m
+master_server_DEPENDENCIES	Makefile	/^master_server_DEPENDENCIES = ..\/lib_tdss\/lib_tdss.a \\$/;"	m
+master_server_LDADD	Makefile	/^master_server_LDADD = ..\/lib_tdss\/lib_tdss.a ..\/lib_mrt\/lib_mrt.a -lssl$/;"	m
+master_server_OBJECTS	Makefile	/^master_server_OBJECTS = $(am_master_server_OBJECTS)$/;"	m
+master_server_SOURCES	Makefile	/^master_server_SOURCES = command.c  master.c  process.c  server_check.c$/;"	m
+mkdir_p	Makefile	/^mkdir_p = \/bin\/mkdir -p$/;"	m
+mkinstalldirs	Makefile	/^mkinstalldirs = $(install_sh) -d$/;"	m
+ms_conf	command.c	/^extern master_server_conf_t ms_conf;$/;"	x
+ms_conf	master.c	/^extern master_server_conf_t ms_conf;$/;"	x
+ms_conf	server_check.c	/^extern master_server_conf_t ms_conf;$/;"	x
+name	master.h	/^    char            *name;$/;"	m	struct:__anon2	access:public
+name_server_sync	master.h	/^int name_server_sync(inet_task_t *it);$/;"	p	signature:(inet_task_t *it)
+next	master.h	/^    int             next;           \/\/当reply完之后要执行的动作，监听读还是写, 还是断开$/;"	m	struct:session_s	access:public
+node_server	master.h	/^    }node_server;$/;"	m	struct:session_s	typeref:struct:session_s::__anon1	access:public
+ns_conf	command.c	/^extern name_server_conf_t ns_conf;$/;"	x
+ns_conf	master.c	/^extern name_server_conf_t ns_conf;$/;"	x
+ns_conf	server_check.c	/^extern name_server_conf_t ns_conf;$/;"	x
+ns_save_mid	master.h	/^int ns_save_mid(inet_task_t *it);$/;"	p	signature:(inet_task_t *it)
+oldincludedir	Makefile	/^oldincludedir = \/usr\/include$/;"	m
+output	master.h	/^    string_t        output;         \/\/要给客户端返回的结果$/;"	m	struct:session_s	access:public
+parent	master.h	/^    inet_task_t     *parent;        \/\/父任务;$/;"	m	struct:session_s	access:public
+parse_args	master.c	/^int parse_args(int argc, char* argv[])$/;"	f	signature:(int argc, char* argv[])
+pdfdir	Makefile	/^pdfdir = ${docdir}$/;"	m
+pkgdatadir	Makefile	/^pkgdatadir = $(datadir)\/tdss$/;"	m
+pkgincludedir	Makefile	/^pkgincludedir = $(includedir)\/tdss$/;"	m
+pkglibdir	Makefile	/^pkglibdir = $(libdir)\/tdss$/;"	m
+pkglibexecdir	Makefile	/^pkglibexecdir = $(libexecdir)\/tdss$/;"	m
+prefix	Makefile	/^prefix = \/home\/tdss$/;"	m
+proc	master.h	/^    int             (*proc)(inet_task_t *);$/;"	m	struct:session_s	access:public
+program_transform_name	Makefile	/^program_transform_name = s,x,x,$/;"	m
+psdir	Makefile	/^psdir = ${docdir}$/;"	m
+reply	master.h	/^void reply(char *s);$/;"	p	signature:(char *s)
+request_command	process.c	/^int request_command(inet_task_t *it)$/;"	f	signature:(inet_task_t *it)
+request_deinit	master.h	/^int request_deinit(inet_task_t *it);$/;"	p	signature:(inet_task_t *it)
+request_deinit	process.c	/^int request_deinit(inet_task_t *it)$/;"	f	signature:(inet_task_t *it)
+request_init	master.h	/^int request_init(inet_task_t *it);$/;"	p	signature:(inet_task_t *it)
+request_init	process.c	/^int request_init(inet_task_t *it)$/;"	f	signature:(inet_task_t *it)
+request_parse	process.c	/^int request_parse(string_t *src, rq_arg_t *arg, int asize)$/;"	f	signature:(string_t *src, rq_arg_t *arg, int asize)
+request_process	master.h	/^int request_process(inet_task_t *it);$/;"	p	signature:(inet_task_t *it)
+request_process	process.c	/^int request_process(inet_task_t *it)$/;"	f	signature:(inet_task_t *it)
+sbindir	Makefile	/^sbindir = ${exec_prefix}\/sbin$/;"	m
+server_check_init	master.h	/^int server_check_init();$/;"	p	signature:()
+server_check_init	server_check.c	/^int server_check_init()$/;"	f
+server_find	command.c	/^int server_find(inet_task_t *it)$/;"	f	signature:(inet_task_t *it)
+server_type	master.h	/^    int             server_type;    \/\/0:检测name_server 1:检测data_server$/;"	m	struct:session_s	access:public
+server_usage	master.c	/^void server_usage(char *pname)$/;"	f	signature:(char *pname)
+session_free	server_check.c	/^void session_free(session_t *ss)$/;"	f	signature:(session_t *ss)
+session_id_create	process.c	/^int32_t session_id_create()$/;"	f
+session_return	master.h	94;"	d
+session_s	master.h	/^struct session_s$/;"	s
+session_s::__anon1::cmd	master.h	/^        string_t    cmd;$/;"	m	struct:session_s::__anon1	access:public
+session_s::__anon1::finish	master.h	/^        int         (*finish)(inet_task_t *);$/;"	m	struct:session_s::__anon1	access:public
+session_s::__anon1::state	master.h	/^        int         state;          \/\/调用node_server服务执行状态$/;"	m	struct:session_s::__anon1	access:public
+session_s::__anon1::type	master.h	/^        int         type;           \/\/类型NSOPT_ADD_FILE：保存文件信息, NSOPT_MOD_FILE:修改，NSOPT_DEL_FILE删除$/;"	m	struct:session_s::__anon1	access:public
+session_s::id	master.h	/^    uint32_t        id;             \/\/一个新命令到来时重新生成id，以记录当前会话$/;"	m	struct:session_s	access:public
+session_s::input	master.h	/^    string_t        input;          \/\/客户端发送过来的命令$/;"	m	struct:session_s	access:public
+session_s::next	master.h	/^    int             next;           \/\/当reply完之后要执行的动作，监听读还是写, 还是断开$/;"	m	struct:session_s	access:public
+session_s::node_server	master.h	/^    }node_server;$/;"	m	struct:session_s	typeref:struct:session_s::__anon1	access:public
+session_s::output	master.h	/^    string_t        output;         \/\/要给客户端返回的结果$/;"	m	struct:session_s	access:public
+session_s::parent	master.h	/^    inet_task_t     *parent;        \/\/父任务;$/;"	m	struct:session_s	access:public
+session_s::proc	master.h	/^    int             (*proc)(inet_task_t *);$/;"	m	struct:session_s	access:public
+session_s::server_type	master.h	/^    int             server_type;    \/\/0:检测name_server 1:检测data_server$/;"	m	struct:session_s	access:public
+session_s::state	master.h	/^    int             state;          \/\/当前会话的状态， SESSION_BEGIN到SESSION_END$/;"	m	struct:session_s	access:public
+session_t	master.h	/^typedef struct session_s session_t;$/;"	t	typeref:struct:session_s
+sharedstatedir	Makefile	/^sharedstatedir = ${prefix}\/com$/;"	m
+slog_debug	command.c	17;"	d	file:
+slog_error	command.c	16;"	d	file:
+slog_info	command.c	15;"	d	file:
+srcdir	Makefile	/^srcdir = .$/;"	m
+state	master.h	/^        int         state;          \/\/调用node_server服务执行状态$/;"	m	struct:session_s::__anon1	access:public
+state	master.h	/^    int             state;          \/\/当前会话的状态， SESSION_BEGIN到SESSION_END$/;"	m	struct:session_s	access:public
+status	command.c	/^int status(inet_task_t *it)$/;"	f	signature:(inet_task_t *it)
+subdir	Makefile	/^subdir = master_server$/;"	m
+sysconfdir	Makefile	/^sysconfdir = ${prefix}\/etc$/;"	m
+target_alias	Makefile	/^target_alias = $/;"	m
+top_build_prefix	Makefile	/^top_build_prefix = ..\/$/;"	m
+top_builddir	Makefile	/^top_builddir = ..$/;"	m
+top_srcdir	Makefile	/^top_srcdir = ..$/;"	m
+transform	Makefile	/^transform = $(program_transform_name)$/;"	m
+type	master.h	/^        int         type;           \/\/类型NSOPT_ADD_FILE：保存文件信息, NSOPT_MOD_FILE:修改，NSOPT_DEL_FILE删除$/;"	m	struct:session_s::__anon1	access:public
