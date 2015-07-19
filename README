@@ -1,3 +1,7 @@
+TDSS是一个高可扩展、高可用、高性能、面向互联网服务的分布式存储系统，主要针对海量的非结构化数据，它构筑在普通的Linux机器集群上，可为外部提供高可靠和高并发的存储访问。它采用了HA架构和平滑扩容，保证了整个文件系统的可用性和扩展性。同时扁平化的数据组织结构，可将文件名映射到文件的物理地址，简化了文件的访问流程，一定程度上为TDSS提供了良好的读写性能。
+
+详见：https://github.com/c-wind/tdss/wiki
+
 Installation
 ------------
 
@@ -12,5 +16,5 @@ see https://github.com/c-wind/tdss/wiki/Configure
 Contact info
 ------------
 
-mrt <mrt@codecn.org>, https://github.com/c-wind/tdss/wiki
+mrt <mrt@codecn.org>, 
 
