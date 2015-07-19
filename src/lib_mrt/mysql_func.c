@@ -27,6 +27,12 @@ static int mydb_connect(mydb_t *mm)
         return MRT_ERR;
     }
 
+    if(mysql_options(&mm->srv, MYSQL_SET_CHARSET_NAME, "utf8"))
+    {
+        set_error("mysql_options error:%s.", mysql_error(&mm->srv));
+        return MRT_ERR;
+    }
+
     if(!mysql_real_connect(&mm->srv, mm->ip,
                            mm->user, mm->pass,
                            mm->name, mm->port, NULL, CLIENT_MULTI_STATEMENTS))
@@ -116,7 +122,7 @@ int mydb_query_uint32(mydb_t *mm, string_t *cmd, uint32_t *num)
 
     if(cmd->str[0] == 'c')
     {
-        if(mysql_next_result(srv) == -1)
+        if(mysql_next_result(srv) == MRT_ERR)
         {
             set_error("mysql_next_result error:%s.", mysql_error(srv));
             return MRT_SUC;
@@ -162,7 +168,7 @@ int mydb_query_exist(mydb_t *mm, string_t *cmd)
 
     if(cmd->str[0] == 'c')
     {
-        if(mysql_next_result(srv) == -1)
+        if(mysql_next_result(srv) == MRT_ERR)
         {
             set_error("mysql_next_result error:%s.", mysql_error(srv));
             return 1;
@@ -212,7 +218,7 @@ int mydb_query_int(mydb_t *mm, string_t *cmd, int *num)
 
     if(cmd->str[0] == 'c')
     {
-        if(mysql_next_result(srv) == -1)
+        if(mysql_next_result(srv) == MRT_ERR)
         {
             set_error("mysql_next_result error:%s.", mysql_error(srv));
             return MRT_SUC;

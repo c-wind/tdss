@@ -2,9 +2,6 @@
 
 factory_t factory;
 
-#define factory_lock() pthread_mutex_lock(&factory.worker_mutex)
-#define factory_unlock() pthread_mutex_unlock(&factory.worker_mutex)
-
 #define worker_wakeup(wkr) pthread_cond_signal(&(wkr->cnd))
 
 #define master_wakeup() \
@@ -15,7 +12,73 @@ factory_t factory;
     pthread_mutex_unlock(&(factory.master.mtx)); \
 }while(0);
 
+#define factory_task_lock() pthread_mutex_lock(&factory.task_mtx)
+#define factory_task_wakeup() pthread_cond_signal(&factory.task_cnd)
+#define factory_task_wait() pthread_cond_wait(&factory.task_cnd, &factory.task_mtx)
+#define factory_task_unlock() pthread_mutex_unlock(&factory.task_mtx)
 
+#define factory_lock() pthread_mutex_lock(&factory.mtx)
+#define factory_wakeup() pthread_cond_signal(&factory.cnd)
+#define factory_wakeup_all() pthread_cond_broadcast(&factory.cnd)
+#define factory_wait() pthread_cond_wait(&factory.cnd, &factory.mtx)
+#define factory_unlock() pthread_mutex_unlock(&factory.mtx)
+
+static void *worker_deinit(void *arg);
+
+int factory_init(int wkr_max, int wkr_min)
+{
+    s_zero(factory);
+
+    LIST_INIT(&factory, task_head);
+    LIST_INIT(&factory, worker_head);
+
+    factory.state = FACTORY_READY;
+
+    pthread_mutex_init(&factory.mtx, NULL);
+    pthread_cond_init(&factory.cnd, NULL);
+    pthread_key_create(&factory.key, (void *)&worker_deinit);
+    pthread_setspecific(factory.key, &(factory.master));
+
+    factory.worker_max = wkr_max;
+    factory.worker_min = wkr_min;
+
+
+    return MRT_SUC;
+}
+
+
+void factory_task_push(task_t *tsk)
+{
+    factory_task_lock();
+
+    LIST_INSERT_TAIL(&factory, task_head, tsk, node);
+
+    factory.task_num++;
+
+    factory_task_wakeup();
+
+    factory_task_unlock();
+}
+
+int factory_task_pop(worker_t *wkr, task_t **ntsk)
+{
+    factory_task_lock();
+
+    while(!factory.task_num || LIST_EMPTY(&factory, task_head))
+    {
+        log_debug("%lx wait task.", wkr->idx);
+        factory_task_wait();
+    }
+
+    *ntsk = LIST_FIRST(&factory, task_head);
+
+    LIST_REMOVE_HEAD(&factory, task_head);
+    factory.task_num--;
+
+    factory_task_unlock();
+
+    return MRT_SUC;
+}
 
 int worker_wait(worker_t *wkr)
 {
@@ -31,95 +94,71 @@ int worker_wait(worker_t *wkr)
 }
 
 
-
-
-
-
-
-void *worker_init(void *arg)
+int factory_worker_count()
 {
-    worker_t *wkr = NULL;
+    int size;
+    factory_lock();
+    size = factory.worker_num;
+    factory_unlock();
+    return size;
+}
+
+
+void *worker_main(void *arg)
+{
+    worker_t *wkr = (worker_t *) arg;
+    task_t *tsk = NULL;
     int iret = 0;
-
-    M_cpvrvl(arg);
-
-    wkr = (worker_t *) arg;
 
     pthread_detach(pthread_self());
     pthread_setspecific(factory.key, wkr);
 
     wkr->idx = pthread_self();
-
-    //等待启动信号
     M_cirvnl(worker_wait(wkr));
 
     wkr->state = WORKER_START;
 
-    log_info("worker:(%lu) start, will run %s.",
-             wkr->idx, wkr->proc.name);
+    factory_lock();
+    LIST_INSERT_HEAD(&factory, worker_head,  wkr, node);
+    factory.worker_num++;
+    factory_unlock();
+
+    log_info("%lx start", wkr->idx);
 
     while(factory.state != FACTORY_OVER)
     {
-        if(!wkr->proc.argv)
-            iret = wkr->proc.func(wkr);
-        else
-            iret = wkr->proc.func(wkr->proc.argv);
-
-        if(iret == MRT_ERR)
-        {
-            log_error("run %s return:%d.", wkr->proc.name, iret);
-            return NULL;
-        }
-        log_info("run %s return:%d.", wkr->proc.name, iret);
+        factory_task_pop(wkr, &tsk);
+        iret = tsk->thread_main.func(tsk->data);
+        log_debug("%lx process function:(%s) return:%d.", wkr->idx, tsk->thread_main.name, iret);
+        worker_return(tsk);
+        log_info("%lx return ok", wkr->idx);
+        iret = factory_worker_count();
+        log_info("%lx current worker num:%d", wkr->idx, iret);
+        if (iret > factory.worker_min)
+            break;
     }
+
+    log_info("%lx stop", wkr->idx);
 
     return NULL;
 }
 
-void *worker_deinit(void *arg)
-{
-    worker_t *wkr = (worker_t *) arg;
-
-    M_cirvl(factory_lock(), "lock factory error, %m");
-    M_list_remove(&factory, wkr);
-    //if(factory.max_run_times)
-    {
-        //factory.master.func = wkr->func;
-        M_free(wkr);
-        master_wakeup();
-    }
-    factory.conf.worker_num--;
-    factory_unlock();
-
-    return NULL;
-}
-
-
-
-int worker_create(callback_t cb)
+int worker_create()
 {
     worker_t *wkr = NULL;
 
-    M_ciril(factory_lock(), "lock factory error:%m");
     M_cvril((wkr = (worker_t *)M_alloc(sizeof(worker_t))), "malloc worker error, %m.");
 
     pthread_mutex_init(&(wkr->mtx), NULL);
     pthread_cond_init(&(wkr->cnd), NULL);
 
     wkr->state = WORKER_READY;
-    wkr->proc = cb;
 
-    if(pthread_create(&(wkr->idx), NULL, worker_init, (void *)wkr) != 0)
+    if(pthread_create(&(wkr->idx), NULL, worker_main, (void *)wkr) != 0)
     {
         log_error("pthread_create error.%m");
         return MRT_ERR;
     }
-
-    M_list_insert_head(&factory, wkr);
-
-    factory.conf.worker_num++;
-
-    M_ciril(factory_unlock(), "unlock factory error, %m");
 
     while(wkr->state == WORKER_READY)
     {
@@ -128,19 +167,14 @@ int worker_create(callback_t cb)
         continue;
     }
 
-    log_debug("create success, worker:(%lu), worker num:%x", wkr->idx, factory.conf.worker_num);
+    log_debug("create success, worker:(%lu), worker num:%x", wkr->idx, factory.worker_num);
 
     return MRT_SUC;
 }
 
 void *worker_master(void *arg)
 {
-    worker_t *wkr = NULL;
-    callback_t cb;
-
-    M_cpvrvl(arg);
-
-    wkr = (worker_t *)arg;
+    worker_t *wkr = (worker_t *)arg;
 
     pthread_detach(pthread_self());
     pthread_setspecific(factory.key, wkr);
@@ -148,17 +182,24 @@ void *worker_master(void *arg)
     wkr->idx = pthread_self();
     wkr->state = WORKER_START;
 
-    callback_set(cb, process_center_loop, NULL);
-
-    while(1)
+    while(factory.state == WORKER_START)
     {
-        log_info("process center check...");
-        if(process_center_check() == 1)
+        factory_lock();
+        //如果任务数除2比工人数少，就不算忙, 就是任务数是否大于工人数量的2倍
+        if((factory.task_num >> 1 ) < factory.worker_num)
+            factory.busy = 0;
+        else
         {
-            if(worker_create(cb) == MRT_ERR)
-                log_error("create process center worker error.");
+            factory.busy = 1;
+            if(factory.worker_num < factory.worker_max)
+            {
+                log_info("task_num:%d, worker_num:%d, max:%d", factory.task_num, factory.worker_num, factory.worker_max);
+                if(worker_create() == MRT_ERR)
+                    log_error("create process center worker error.");
+            }
         }
-        sleep(5);
+        factory_unlock();
+        sleep(1);
     }
 
     return NULL;
@@ -166,185 +207,75 @@ void *worker_master(void *arg)
 
 
 
-int factory_init(server_config_t sconf, callback_t proc)
+
+
+
+void factory_deinit()
 {
-    s_zero(factory);
-
-    M_list_init(&factory);
-
-    pthread_mutex_init(&factory.worker_mutex, NULL);
-    pthread_key_create(&(factory.key), (void *)&worker_deinit);
-    pthread_setspecific(factory.key, &(factory.master));
-
-    if(sconf.logger == 1)
-    {
-        if(logger_init("./log/", sconf.logger_name, sconf.logger_level))
-            return MRT_ERR;
-    }
-
-    //最大线程数，默认为1
-    factory.conf.worker_max = sconf.worker_max > 0 ? sconf.worker_max : 1;
-    //最小线程数，默认为1
-    factory.conf.worker_min = sconf.worker_min > 0 ? sconf.worker_min : 1;
-
-    if(sconf.local_bind == 1)
-    {
-        //绑定IP，默认为0.0.0.0
-        if(!*sconf.local_host)
-            snprintf(factory.conf.local_host, sizeof(factory.conf.local_host), "0.0.0.0");
-        else
-            snprintf(factory.conf.local_host, sizeof(factory.conf.local_host), "%s", sconf.local_host);
-        //绑定端口，默认为2345
-        factory.conf.local_port = sconf.local_port > 1 ? sconf.local_port : 2345;
-        //最大连接数，默认为1024
-        factory.conf.conn_max       = sconf.conn_max > M_1KB ? sconf.conn_max : M_1KB;
-        factory.conf.conn_timeout   = sconf.conn_timeout > 1 ? sconf.conn_timeout : 5;
-
-        factory.conf.local_bind = 1;
-
-        /*
-        M_ciril(event_center_init(&factory.event_center, factory.conf.conn_max, factory.conf.conn_timeout,
-                                  factory.conf.local_host,
-                                  factory.conf.local_port,
-                                  ev_init, ev_deinit),
-                "init event center error.");
-                */
-
-
-    }
-
-    if(proc.state == 1)
-    {
-        M_ciril(process_center_init(factory.conf.worker_max,
-                                    factory.conf.worker_min,
-                                    proc),
-                "init process center error.");
-    }
-
-    if(sconf.daemon == 1)
-    {
-        //如果daemon_home有值就切换到daemon_home目录，否则以当前目录为中心
-        if(daemon_init(*sconf.daemon_home ? sconf.daemon_home : "./"))
-        {
-            printf("daemon init error:%m\n");
-            return MRT_ERR;
-        }
-    }
-
-    log_info("factory init success.");
-
-    factory.state = FACTORY_READY;
-
-    return MRT_SUC;
-}
-
-
-int factory_start(int backend, int type)
-{
-    worker_t *wkr = NULL;
-    int i=0;
-    callback_t cb;
-
-    if(type == FACTORY_SINGLE)
-    {
-        factory.event_center.worker_num = 1;
-        callback_set(cb, event_single_loop, &factory.event_center);
-        M_ciril(worker_create(cb), "create event single loop error.");
-    }
-    else
-    {
-        callback_set(cb, process_center_loop, NULL);
-        for(i=0; i< factory.conf.worker_min; i++)
-        {
-            M_ciril(worker_create(cb),
-                    "create process center worker %d error.", i);
-        }
-    }
-    factory.state = FACTORY_START;
-
-    log_info("factory start success.");
-
-    if(backend)
-    {
-        callback_set(cb, worker_master, NULL);
-        M_ciril(worker_create(cb), "create process center worker error.");
-    }
-    else
-    {
-        wkr = &factory.master;
-        if(worker_master(wkr))
-        {
-            log_error("worker master return error.");
-            return -1;
-        }
-    }
-
-    return MRT_SUC;
-}
-
-
-
-int factory_deinit()
-{
-    M_ciril(factory_lock(), "lock factory error, %m");
-
-    log_info("factory will stop, There are %d workers are working.",
-             factory.conf.worker_num);
+    factory_lock();
 
     factory.state = FACTORY_OVER;
 
+    factory.worker_max = 0;
+
+    while(factory.worker_num)
+    {
+        log_info("current worker num:%d\n", factory.worker_num);
+        //向worker_center中所有worker发信号
+        factory_wakeup_all();
+        //解锁
+        factory_unlock();
+        //休息一秒
+        sleep(1);
+        //加锁，检测worker数量
+        factory_lock();
+    }
+    //解锁
+    factory_unlock();
+}
+
+
+
+
+
+
+void *worker_deinit(void *arg)
+{
+    worker_t *wkr = (worker_t *) arg;
+
+    factory_lock();
+
+    LIST_REMOVE(&factory, worker_head, wkr, node);
+
+    M_free(wkr);
+    master_wakeup();
+    factory.worker_num--;
+
     factory_unlock();
 
-    while(factory.conf.worker_num > 0)
+    return NULL;
+}
+
+
+int factory_start()
+{
+    worker_t *wkr = &factory.master;
+    int i=0;
+
+    for(i=0; i< factory.worker_min; i++)
     {
-        log_info("wait for worker exit, current has %d.", factory.conf.worker_num);
-        sleep(1);
+        M_ciril(worker_create(), "create process center worker %d error.", i);
     }
 
-    log_info("current worker num:%d, factory stop!", factory.conf.worker_num);
+    if(pthread_create(&(wkr->idx), NULL, worker_master, (void *)wkr) != 0)
+    {
+        log_error("pthread_create error.%m");
+        return MRT_ERR;
+    }
 
-    return MRT_OK;
+    factory.state = FACTORY_START;
+
+    return MRT_SUC;
 }
-
-
-
-
-
-
-#ifdef FACTORY_TEST
-
-int test(worker_t *wkr)
-{
-    //    printf("wkr:%u in %s.\n", wkr->idx, __func__);
-
-    char *pstr = M_alloc(125);
-    sprintf(pstr, "%lu", worker_id);
-    printf("pstr:%s\n", pstr);
-
-    sleep(1);
-
-    //   printf("wkr:%u out %s.\n", wkr->idx, __func__);
-
-    return 0;
-}
-
-int main()
-{
-
-    log_init("./", "factory", "debug");
-    factory_init(5);
-
-    worker_create(test);
-
-    worker_create(test);
-
-    sleep(100);
-
-    factory_destory();
-
-    return 0;
-}
-
-#endif
 
 

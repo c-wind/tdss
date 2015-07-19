@@ -187,7 +187,7 @@ static int hashdb_grow(hashdb_t *map)
     hashdb_entry_t **h = map->data;
     hashdb_entry_t **old_entries = h;
 
-    if(hashdb_size(map, primes[++map->idx]) == -1)
+    if(hashdb_size(map, primes[++map->idx]) == MRT_ERR)
     {
         return -1;
     }
@@ -544,14 +544,14 @@ hashdb_entry_t **hashdb_list(hashdb_t *map)
 //      0：成功
 //      -1：出错
 
-int hashdb_init(char *fname, hashdb_t **phdb)
+int hashdb_init(char *fname, hashdb_t **phdb, int (*load)(uint8_t type, char *key, uint16_t klen, void *val, uint16_t vlen))
 {
     hashdb_sec_t sec = {0};
     hashdb_t *hdb = NULL;
     char *key = NULL, *val = NULL;
     int iret, ok_num = 0, err_num =0;
 
-    if(hashdb_create(&hdb, 108631) == -1)
+    if(hashdb_create(&hdb, 108631) == MRT_ERR)
     {
         log_error("create hashdb error:%m");
         return -1;
@@ -594,6 +594,13 @@ int hashdb_init(char *fname, hashdb_t **phdb)
             }
         }
 
+        //如果回调函数返回1证明这个key不需要导入了
+        if(load && (load(sec.type, key, sec.klen, val, sec.vlen) == 1))
+        {
+            log_info("no load key:%s", key);
+            continue;
+        }
+
         switch(sec.type)
         {
             case 1:
@@ -605,7 +612,7 @@ int hashdb_init(char *fname, hashdb_t **phdb)
                     //                  goto hashdb_load_error;
                 }
                 else
-                    log_info("load insert key:%s", key);
+                    log_debug("load insert key:%s", key);
                 break;
             case 2:
                 ok_num++;
@@ -615,7 +622,7 @@ int hashdb_init(char *fname, hashdb_t **phdb)
                     //                   goto hashdb_load_error;
                 }
                 else
-                    log_info("load update key:%s,len:%d, val:%s, len:%d", key, sec.klen, val, sec.vlen);
+                    log_debug("load update key:%s,len:%d, val:%s, len:%d", key, sec.klen, val, sec.vlen);
                 break;
             case 3:
                 ok_num++;
@@ -625,7 +632,7 @@ int hashdb_init(char *fname, hashdb_t **phdb)
                     //                    goto hashdb_load_error;
                 }
                 else
-                    log_info("load delete key:%s", key);
+                    log_debug("load delete key:%s", key);
                 break;
             default:
                 err_num++;
@@ -939,7 +946,7 @@ int main(int argc, char *argv[])
 
     openlog("hashdb", LOG_PID, LOG_MAIL);
 
-    if(hashdb_init("./test.db", &map) == -1)
+    if(hashdb_init("./test.db", &map) == MRT_ERR)
     {
         printf("create hashdb error:%m\n");
         return -1;

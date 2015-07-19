@@ -32,7 +32,7 @@ static int send_error(const char *fmt, ...)
 
     snprintf(err_buf + strlen(err_buf), sizeof(err_buf) - strlen(err_buf), "\n");
 
-    syslog(LOG_ERR, err_buf);
+    syslog(LOG_ERR, "%s", err_buf);
 
     return MRT_OK;
 }
@@ -113,7 +113,7 @@ int open_log()
 
         old_umask = umask(0111);
 
-        if ((logfd = open(nstr, O_WRONLY|O_APPEND|O_CREAT, 0666)) == -1 )
+        if ((logfd = open(nstr, O_WRONLY|O_APPEND|O_CREAT, 0666)) == MRT_ERR )
         {
             send_error("%s open file:[%s] error, %m.", __func__, nstr);
             umask(old_umask);
@@ -134,7 +134,7 @@ int open_log()
 
 int logger_init(char *path, char *prefix, int level)
 {
-    char hostname[MAX_USER] = {0};
+//    char hostname[MAX_USER] = {0};
 
     if(!path || !*path || !prefix || !*prefix)
     {
@@ -147,14 +147,18 @@ int logger_init(char *path, char *prefix, int level)
     M_cirinl(path_check(path));
     logger.level = level;
 
-    if(gethostname(hostname, sizeof(hostname) - 1) == -1)
+    /*
+    if(gethostname(hostname, sizeof(hostname) - 1) == MRT_ERR)
     {
         send_error("%s get host name error, %m.\n", __func__);
         return MRT_ERR;
     }
 
+    */
+
     strcpy(logger.path, path);
-    snprintf(logger.prefix, sizeof(logger.prefix), "%s_%s", hostname, prefix);
+    //snprintf(logger.prefix, sizeof(logger.prefix), "%s_%s", hostname, prefix);
+    snprintf(logger.prefix, sizeof(logger.prefix), "%s", prefix);
 
     if((open_log() == MRT_ERR))
     {

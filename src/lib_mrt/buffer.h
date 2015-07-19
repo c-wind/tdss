@@ -20,6 +20,7 @@ typedef struct
     int         auto_pop;   //如果为1，在缓冲区满后自动调用pop_func将数据推出
     int         (*pop_func)(int, void *, size_t);
 
+    list_node_t node;
 } buffer_t;
 
 

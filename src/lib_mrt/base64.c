@@ -77,6 +77,44 @@ void base64_encode(const void *src, size_t src_size, char *dest)
     }
 }
 
+int string_base64_encode(string_t *src, string_t *dest)
+{
+    const unsigned char *src_c = (const unsigned char *)src->str;
+    char tmp[5] = {0};
+    size_t src_pos;
+
+    for (src_pos = 0; src_pos < src->len; )
+    {
+        tmp[0] = b64enc[src_c[src_pos] >> 2];
+        switch (src->len - src_pos) {
+        case 1:
+            tmp[1] = b64enc[(src_c[src_pos] & 0x03) << 4];
+            tmp[2] = '=';
+            tmp[3] = '=';
+            src_pos++;
+            break;
+        case 2:
+            tmp[1] = b64enc[((src_c[src_pos] & 0x03) << 4) |
+                (src_c[src_pos+1] >> 4)];
+            tmp[2] = b64enc[((src_c[src_pos+1] & 0x0f) << 2)];
+            tmp[3] = '=';
+            src_pos += 2;
+            break;
+        default:
+            tmp[1] = b64enc[((src_c[src_pos] & 0x03) << 4) |
+                (src_c[src_pos+1] >> 4)];
+            tmp[2] = b64enc[((src_c[src_pos+1] & 0x0f) << 2) |
+                ((src_c[src_pos+2] & 0xc0) >> 6)];
+            tmp[3] = b64enc[src_c[src_pos+2] & 0x3f];
+            src_pos += 3;
+            break;
+        }
+
+        M_cirinl(string_cats(dest, tmp));
+    }
+    return MRT_OK;
+}
+
 #define IS_EMPTY(c) \
     ((c) == '\n' || (c) == '\r' || (c) == ' ' || (c) == '\t')
 
@@ -144,6 +182,65 @@ int base64_decode(const void *src, size_t src_size, char *dest)
     }
 
     return ret;
+}
+
+#define IS_EMPTY(c) \
+    ((c) == '\n' || (c) == '\r' || (c) == ' ' || (c) == '\t')
+
+int string_base64_decode(string_t *src, string_t *dest)
+{
+    const unsigned char *src_c = (const unsigned char *)src->str;
+    size_t src_pos;
+    unsigned char input[4];
+    char output[4] = {0};
+
+    for (src_pos = 0; src_pos+3 < src->len; ) {
+        input[0] = b64dec[src_c[src_pos]];
+        if (input[0] == 0xff) {
+            if ((!IS_EMPTY(src_c[src_pos])))
+            {
+                return MRT_ERR;
+            }
+            src_pos++;
+            continue;
+        }
+
+        input[1] = b64dec[src_c[src_pos+1]];
+        if ((input[1] == 0xff))
+        {
+            return MRT_ERR;
+        }
+        output[0] = (input[0] << 2) | (input[1] >> 4);
+
+        input[2] = b64dec[src_c[src_pos+2]];
+        if (input[2] == 0xff) {
+            if ((src_c[src_pos+2] != '=' || src_c[src_pos+3] != '='))
+            {
+                return MRT_ERR;
+            }
+            M_cirinl(string_catb(dest, output, 1));
+            src_pos += 4;
+            break;
+        }
+
+        output[1] = (input[1] << 4) | (input[2] >> 2);
+        input[3] = b64dec[src_c[src_pos+3]];
+        if (input[3] == 0xff) {
+            if ((src_c[src_pos+3] != '='))
+            {
+                return MRT_ERR;
+            }
+            M_cirinl(string_catb(dest, output, 2));
+            src_pos += 4;
+            break;
+        }
+
+        output[2] = ((input[2] << 6) & 0xc0) | input[3];
+        M_cirinl(string_catb(dest, output, 3));
+        src_pos += 4;
+    }
+
+    return MRT_OK;
 }
 
 

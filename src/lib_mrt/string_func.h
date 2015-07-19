@@ -79,6 +79,8 @@ int string_move_fetch(string_t *src, char *begin, char *end, string_t *dest);
 
 int string_rtrim(string_t *src);
 
+int string_ltrim(string_t *src);
+
 int string_printf(string_t *str, const char *fmt, ...);
 
 void string_add(string_t *dat, const char *fmt, ...);
@@ -129,5 +131,13 @@ int charset_convert(char *f_set, char *t_set, char *f_str, size_t f_len, char *t
 int charset_convert_string(char *from_set, char *to_set, string_t *from_str);
 
 int string_realloc(string_t *src, int32_t size);
+
+int string_base64_encode(string_t *src, string_t *dest);
+
+int string_base64_decode(string_t *src, string_t *dest);
+
+int aes_decode(string_t *input, char *src_key, string_t *output);
+
+int aes_encode(string_t *input, char *src_key, string_t *output);
 
 #endif

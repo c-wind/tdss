@@ -4,13 +4,9 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-#define closesocket(x) close(x)
-
-#define SOCKET_NOBLOCK 0
-#define SOCKET_BLOCK 1
-#define PROXY_OFF   0
-#define PROXY_SOCKS 1
-#define PROXY_HTTP  2
+#define CLOSE(x) while((close(x) == -1) && (errno == EINTR))
+#define SOCKET_BLOCK(s) fcntl(s, F_SETFL, fcntl(s, F_GETFL, 0)& ~O_NONBLOCK)
+#define SOCKET_NONBLOCK(s) fcntl(s, F_SETFL, fcntl(s, F_GETFL, 0)|O_NONBLOCK)
 
 typedef struct
 {
@@ -49,11 +45,6 @@ int get_ip_addr(char* hostname, unsigned int * ip);
 
 int get_local_ip(int sockfd, char * local_ip);
 
-
-int socket_block(int s);
-
-int socket_nonblock(int s);
-
 int socket_wait_write(int s, int timeout);
 
 int socket_wait_read(int s, int timeout);
@@ -80,7 +71,7 @@ ssize_t socket_write_loop( int fd, const void *vptr, size_t n );
 
 int socket_request(int fd, int timeout, string_t *str);
 
-void socket_ntoa(struct sockaddr_in addr, char *abuf, int asize);
+int socket_ntoa(struct sockaddr_in addr, char *abuf, int asize);
 
 //非阻塞的连接
 int socket_connect_nonblock(char *addr, unsigned short port);

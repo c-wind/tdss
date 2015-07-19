@@ -10,7 +10,7 @@ extern data_server_conf_t ds_conf;
 
 extern command_t cmd_list[];
 
-int mail_save(inet_task_t *it);
+int mail_save(conn_t *it);
 
 
 int32_t session_id_create()
@@ -104,7 +104,7 @@ int request_parse(string_t *src, rq_arg_t *arg, int asize)
 
 //功能：
 //      统一的返回消息, 这东西自动调用,不要显示调用
-static int __session_reply(inet_task_t *it)
+static int __session_reply(conn_t *it)
 {
     int i=0, max = 0;
     session_t *ss = (session_t *)it->data;
@@ -153,32 +153,13 @@ static int __session_reply(inet_task_t *it)
 }
 
 //读取用户命令并调用相应函数
-int request_command(inet_task_t *it)
+int request_command(conn_t *it)
 {
     int i = 0;
     char c = 0;
     session_t *ss = (session_t *)it->data;
     char line[1024] = {0};
     char cmd[64] = {0};
-
-    string_zero(&ss->input);
-    ss->next = SESSION_BEGIN;
-    ss->state = SESSION_BEGIN;
-
-    while((i = read(it->fd, line, sizeof(line))))
-    {
-        if(i == -1)
-        {
-            if(errno == EAGAIN)
-                break;
-            if(errno == EINTR)
-                continue;
-            log_error("read from:%s fd:%d error:%m", it->from, it->fd);
-            return SESSION_END;
-        }
-
-        string_catb(&ss->input, line, i);
-    }
 
     if(!ss->input.len)
     {
@@ -214,7 +195,7 @@ int request_command(inet_task_t *it)
 }
 
 
-int request_init(inet_task_t *it)
+int on_accept(conn_t *it)
 {
     session_t *ss = NULL;
 
@@ -224,78 +205,44 @@ int request_init(inet_task_t *it)
         log_error("M_alloc error:%m");
         return MRT_ERR;
     }
-    it->data = ss;
-    it->func = request_process;
 
-    string_zero(&ss->input);
-    string_zero(&ss->output);
-    ss->next = SESSION_BEGIN;
+    it->dat = ss;
+
     ss->state = SESSION_BEGIN;
 
-    log_debug("11111111 from:%s state:%d", it->from, ss->state);
+    conn_debug("session stat:%d", ss->state);
     return MRT_SUC;
 }
 
 
 
 
-int request_process(inet_task_t *it)
+int on_request(conn_t *conn)
 {
     int iret = 0;
-    session_t *ss = (session_t *)it->data;
+    session_t *ss = (session_t *)conn->dat;
+    buffer_t *buf;
 
-
-//    log_debug("222222 from:%s state:%d", it->from, ss->state);
-    //SESSION_LOOP继续上次命令处理
-    //SESSION_REPLY要返回消息
-    switch(ss->state)
+    LIST_FOREACH(buf, node, conn, recv_bufs)
     {
-    case SESSION_READ:
-        log_debug("session state is read.");
-        iret = ss->proc(it);
-        break;
-    case SESSION_WRITE:
-        log_debug("session state is write.");
-        iret = ss->proc(it);
-        break;
-    case SESSION_REPLY:
-        log_debug("session state is reply.");
-        iret = __session_reply(it);
-        break;
-    default:
-        log_debug("session no state.");
-        iret = request_command(it);
-        break;
+        if (string_catb(ss->input, buf->rpos, buf->len) == MRT_ERR)
+        {
+            log_info("%x string_catb size:%d error", conn->id, buf->len);
+            return MRT_ERR;
+        }
     }
 
-    //如果返回值是-1要断开连接
-    switch(iret)
-    {
-    case SESSION_END:
-        it->state = TASK_WAIT_END;
-        break;
-    case SESSION_BEGIN:
-        it->state = TASK_WAIT_READ;
-        break;
-    case SESSION_READ:
-        it->state = TASK_WAIT_READ;
-        break;
-    case SESSION_WAIT:
-        it->state = TASK_WAIT_NOOP;
-        break;
-    case SESSION_REPLY:
-    case SESSION_WRITE:
-        it->state = TASK_WAIT_WRITE;
-        break;
-    }
+    request_command
+
+
 
     log_debug("fd:%d from:%s state:%d", it->fd, it->from, ss->state);
     return 0;
 }
 
-int request_deinit(inet_task_t *it)
+int on_close(conn_t *it)
 {
-    session_t *ss = (session_t *)it->data;
+    session_t *ss = (session_t *)it->dat;
 
     if(ss)
     {

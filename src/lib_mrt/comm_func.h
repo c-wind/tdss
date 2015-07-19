@@ -32,7 +32,7 @@ char *legible(off_t l);
 
 int numdigit (long number);
 
-char *basename(char * p);
+//char *basename(char * p);
 
 // -------------------------------------
 //

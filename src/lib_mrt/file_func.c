@@ -1,12 +1,13 @@
 #include "global.h"
 #include "macro_const.h"
 #include "macro_func.h"
-#include <openssl/md5.h>
 
 
 int file_size(const char *filename)
 {
     struct stat st;
+
+    M_cpsril(filename);
 
     s_zero(st);
 
@@ -66,41 +67,157 @@ FILE *create_FILE(char *fname)
 }
 
 
+int create_temp_file(char *path, char **nf)
+{
+    int nfd = -1, i = 0;
+    char *fname = NULL;
+    struct timeval tv;
+
+    M_cpsril(path);
+
+    fname = M_alloc(strlen(path) + 32);
+    if (!fname)
+    {
+        log_error("malloc fname error:%m");
+        return MRT_ERR;
+    }
+
+    for(i=0; i<100; i++)
+    {
+        gettimeofday(&tv, NULL);
+        sprintf(fname, "%s/%.4x%.4x.%.2x", path, getpid(), (uint32_t)tv.tv_usec, i);
+        if((nfd = create_file(fname)) != -1)
+            break;
+    }
+
+    if (nfd == MRT_ERR)
+    {
+        log_error("can't create temp file error:%m");
+        M_free(fname);
+        return MRT_ERR;
+    }
+
+    *nf = fname;
+
+    return nfd;
+}
+
 int create_file(char *fname)
 {
-    int nfd;
-    char *tmp_dir = fname;
-    char *tmp_sep = NULL;
+    int nfd = -1;
+    char *tmp_sep = fname;
 
-    umask(0);
+    umask(022);
 
-    while((tmp_sep = strchr(tmp_dir, '/')))
+    if((nfd = open(fname, O_CREAT|O_TRUNC|O_WRONLY, 0666)) == MRT_ERR)
+    {
+        if (errno != ENOENT)
+        {
+            log_error("open %s error:%m", fname);
+            return MRT_ERR;
+        }
+    }
+    else
+    {
+        log_debug("open %s succ", fname);
+        return nfd;
+    }
+
+    while(tmp_sep && *tmp_sep && (tmp_sep = strchr(tmp_sep, '/')))
     {
         *tmp_sep = 0;
-        if(mkdir(fname, 0777) == MRT_ERR)
+        if(mkdir(fname, 0766) == MRT_ERR)
         {
             if(errno != EEXIST)
             {
-                log_error("%s mkdir error, path:[%s], %m", __func__, fname);
-                tmp_sep[0] = '/';
+                log_error("mkdir error:%m, path:%s", fname);
+                *tmp_sep = '/';
                 return MRT_ERR;
             }
         }
-        tmp_sep[0] = '/';
-        tmp_dir = tmp_sep;
-        tmp_dir +=1;
+        *tmp_sep = '/';
+        tmp_sep +=1;
     }
 
-    if((nfd = open(fname, O_CREAT|O_TRUNC|O_WRONLY, 0666)) == -1)
+    if((nfd = open(fname, O_CREAT|O_TRUNC|O_WRONLY, 0666)) == MRT_ERR)
     {
-        log_error("%s fopen error, file:[%s], error:%m", __func__, fname);
+        log_error("open %s error:%m", fname);
         return MRT_ERR;
     }
 
     return nfd;
 }
 
+int file_move_uniq(char *ofile, char **nfile)
+{
+    struct stat s;
+    struct timeval tv;
+    uint64_t k = 0;
+    char *nf = NULL, *pend = NULL;
 
+    M_cpsril(ofile);
+
+    if (stat(ofile, &s) == MRT_ERR)
+    {
+        log_error("stat %s error:%m", ofile);
+        return MRT_ERR;
+    }
+
+    gettimeofday(&tv, NULL);
+
+    k = ((uint64_t)s.st_ino << 32) + tv.tv_usec;
+    nf = M_alloc(strlen(ofile) + 16);
+    pend = strrchr(ofile, '/');
+
+    *pend = 0;
+    sprintf(nf, "%s/%lx", ofile, k);
+    *pend = '/';
+
+    if (link(ofile, nf) == MRT_ERR)
+    {
+        log_error("link %s to %s error:%m", ofile, nf);
+        M_free(nf);
+        return MRT_ERR;
+    }
+
+    if (unlink(ofile) == MRT_ERR)
+    {
+        log_error("unlink old file %s error:%m", ofile);
+    }
+    else
+    {
+        log_debug("move %s to %s", ofile, nf);
+    }
+
+    *nfile = nf;
+
+    return MRT_OK;
+}
+
+
+
+int mkdir_p(char *file)
+{
+    char *pstr = NULL, *psep = strchr(file, '/');
+    umask(022);
+    while(psep && *psep && (pstr = strchr(psep, '/')))
+    {
+        *pstr = 0;
+        if (mkdir(file, 0766) == MRT_ERR)
+        {
+            if (errno != EEXIST)
+            {
+                log_error("can't mkdir %s error:%m", file);
+                *pstr = '/';
+                return MRT_ERR;
+            }
+        }
+        *pstr = '/';
+        psep++;
+    }
+
+    return MRT_OK;
+}
 
 
 
@@ -212,9 +329,9 @@ int file_open_create(file_handle_t *file)
 
     M_cpvril(file);
 
-    umask(0);
+    umask(022);
 
-    if((nfd = open(file->from, flag, 0666)) == -1)
+    if((nfd = open(file->from, flag, 0666)) == MRT_ERR)
     {
         log_error("open file:[%s] error:%m", file->from);
         return MRT_ERR;
@@ -249,10 +366,9 @@ int file_open_append(file_handle_t *file)
 
     M_cpvril(file);
 
-    umask(0);
+    umask(022);
 
-
-    if((nfd = open(file->from, flag, 0666)) == -1)
+    if((nfd = open(file->from, flag, 0666)) == MRT_ERR)
     {
         log_error("open file:[%s] error:%m", file->from);
         return MRT_ERR;
@@ -270,7 +386,7 @@ int file_open_append(file_handle_t *file)
 
     //锁定后要获取文件大小，有可能其它有锁操作将其修改
     file->size = fd_file_size(nfd);
-    if(file->size == -1)
+    if(file->size == MRT_ERR)
     {
         log_error("fd_file_size error:%m, fd:%d", nfd);
         close(nfd);
@@ -305,7 +421,7 @@ int file_open_read(file_handle_t *file)
 
     M_cpvril(file);
 
-    if((nfd = open(file->from, flag, 0666)) == -1)
+    if((nfd = open(file->from, flag, 0666)) == MRT_ERR)
     {
         log_error("open file:[%s] error:%m", file->from);
         return MRT_ERR;
@@ -322,7 +438,7 @@ int file_open_read(file_handle_t *file)
 
     //锁定后要获取文件大小，有可能其它有锁操作将其修改
     file->size = fd_file_size(nfd);
-    if(file->size == -1)
+    if(file->size == MRT_ERR)
     {
         log_error("fd_file_size error:%m, fd:%d", nfd);
         close(nfd);
@@ -357,14 +473,14 @@ int file_open(file_handle_t *file)
 
     M_cpvril(file);
 
-    umask(0);
+    umask(022);
 
     if(file->op_append == 1)
     {
         flag |= O_APPEND;
     }
 
-    if((nfd = open(file->from, flag, 0666)) == -1)
+    if((nfd = open(file->from, flag, 0666)) == MRT_ERR)
     {
         log_error("open file:[%s] error:%m", file->from);
         return MRT_ERR;
@@ -381,7 +497,7 @@ int file_open(file_handle_t *file)
 
     //锁定后要获取文件大小，有可能其它有锁操作将其修改
     file->size = fd_file_size(nfd);
-    if(file->size == -1)
+    if(file->size == MRT_ERR)
     {
         log_error("fd_file_size error:%m, fd:%d", nfd);
         close(nfd);
@@ -430,6 +546,13 @@ int file_open_temp(char *path, file_handle_t *file)
     if(i == 100)
     {
         log_error("can't create tmp file, error:%m");
+        return MRT_ERR;
+    }
+
+    if(file_buffer_init(file, M_8KB) == MRT_ERR)
+    {
+        log_error("file buffer init error, size:%d", M_8KB);
+        file_close(file);
         return MRT_ERR;
     }
 
@@ -544,11 +667,52 @@ int file_write_loop(int fd, void *vptr, size_t n)
     return MRT_SUC;
 }
 
+char *file_to_string(char *file)
+{
+    int nfd, size;
+    char *buf = NULL;
+
+    size = file_size(file);
+    if(size == MRT_ERR)
+    {
+        return NULL;
+    }
+
+    if((nfd = open(file, O_RDONLY, 0666)) == MRT_ERR)
+    {
+        log_error("open %s error:%m", file);
+        return NULL;
+    }
+
+    buf = M_alloc(size + 1);
+    if(!buf)
+    {
+        close(nfd);
+        log_error("malloc size:%d error:%m", size);
+        return NULL;
+    }
+
+    size = read(nfd, buf, size);
+    if(size == MRT_ERR)
+    {
+        log_error("read %s error:%m", file);
+        close(nfd);
+        M_free(buf);
+        return NULL;
+    }
+
+    close(nfd);
+
+    buf[size] = 0;
+
+    return buf;
+}
+
 
 
 int file_delete(char *fname)
 {
-    if(unlink(fname) == -1)
+    if(unlink(fname) == MRT_ERR)
     {
         log_error("delete file:%s error:%m", fname);
         return MRT_ERR;
@@ -559,51 +723,6 @@ int file_delete(char *fname)
 }
 
 
-
-int file_md5(char *fname, char *res)
-{
-    MD5_CTX mctx;
-    char fbuf[BUFSIZ] = {0}, md[16] = {0};
-    FILE *fp = fopen(fname, "r");
-    size_t rsize = 0, i = 0;
-
-    if(!fp)
-    {
-        log_error("open file:%s error:%m", fname);
-        return MRT_ERR;
-    }
-
-    if(MD5_Init(&mctx) == 0)
-    {
-        log_error("MD5_Init error:%m");
-        fclose(fp);
-        return MRT_ERR;
-    }
-
-    while((rsize = fread(fbuf, sizeof(char), sizeof(fbuf), fp)))
-    {
-        if(MD5_Update(&mctx, fbuf, rsize) == 0)
-        {
-            log_error("MD5_Update error:%m");
-            fclose(fp);
-            return MRT_ERR;
-        }
-    }
-
-    if(MD5_Final(md, &mctx) == 0)
-    {
-        log_error("MD5_Update error:%m");
-        fclose(fp);
-        return MRT_ERR;
-    }
-
-    for(; i< 16; i++)
-        sprintf(res + 2 * i, "%2.2x", (unsigned char)md[i]);
-
-    fclose(fp);
-
-    return MRT_OK;
-}
 
 
 
@@ -620,7 +739,7 @@ int main(int argc, char *argv[])
     {
         gen_old_path(file, "test", ".txt");
 
-        if((nfd = create_file(file)) == -1)
+        if((nfd = create_file(file)) == MRT_ERR)
         {
             printf("error:%s\n", get_error());
             return -1;

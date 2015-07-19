@@ -1,88 +1,97 @@
 #ifndef	__LIST_FUNC_H__
 #define	__LIST_FUNC_H__
 
+typedef struct list_node list_node_t;
+struct list_node {
+    list_node_t *prev;
+    list_node_t *next;
+    void *dat;
+};
 
-/*
- * Tail queue definitions.
- */
-#define	M_list_head(type)					\
-    type *_first;		/* first element */		\
-type *_last;	/* addr of last next element */
+typedef struct list_head list_head_t;
+struct list_head{
+    list_node_t *first;
+    list_node_t *last;
+    uint32_t size;
+};
 
-#define	M_list_head_initalizer(head) \
-{ NULL, (head)._first }
+#define	LIST_INIT(list, head) \
+    (list)->head.first = NULL;\
+    (list)->head.last = NULL;\
+    (list)->head.size = 0;
 
-#define	M_list_entry(type)					\
-    type *_next;		/* next element */		\
-type *_prev;	/* address of previous next element */
+#define LIST_NODE_INIT(elm, node) \
+    (elm)->node.prev = NULL; \
+    (elm)->node.next = NULL; \
+    (elm)->node.dat = (elm);
 
-/*
- * Tail queue functions.
- */
-#define	M_list_init(head) 						\
-    (head)->_first = NULL;					        \
-(head)->_last = (head)->_first;
 
-#define	M_list_insert_head(head, elm) 			\
-    if (((elm)->_next = (head)->_first) != NULL)	\
-        (head)->_first->_prev =	 (elm);		\
-    else								            \
-        (head)->_last = (elm);		        \
-    (head)->_first = (elm);					        \
-    (elm)->_prev = (head)->_first;
-
-#define	M_list_insert_tail(head, elm) 			\
-    (elm)->_next = NULL;					\
-    if(((elm)->_prev = (head)->_last)) \
-        ((head)->_last)->_next = (elm); \
-    if ((head)->_first == NULL) \
-        (head)->_first = (elm); \
-    (head)->_last = (elm);
-
-#define M_list_remove_head(head) \
-    if (((head)->_first = (head)->_first->_next) == NULL) \
-        (head)->_last = (head)->_first; \
+#define	LIST_INSERT_HEAD(list, head, elm, node) 			\
+    LIST_NODE_INIT(elm, node); \
+    if (((elm)->node.next = (list)->head.first) != NULL)	\
+        (list)->head.first->prev = &((elm)->node);		\
     else \
-        ((head)->_first)->_prev = (head)->_first;
+        (list)->head.last = &((elm)->node); \
+    (list)->head.first = &((elm)->node); \
+    (elm)->node.prev = (list)->head.first; \
+    (list)->head.size++;
 
-#define M_list_remove_tail(head) \
-    if ((head)->_last == (head)->_first) \
+#define	LIST_INSERT_TAIL(list, head, elm, node) 			\
+    LIST_NODE_INIT(elm, node); \
+    if(((elm)->node.prev = (list)->head.last)) \
+        ((list)->head.last)->next = &(elm)->node; \
+    if ((list)->head.first == NULL) \
+        (list)->head.first = &(elm)->node; \
+    (list)->head.last = &(elm)->node; \
+    (list)->head.size++;
+
+#define LIST_REMOVE_HEAD(list, head) \
+    if (((list)->head.first = (list)->head.first->next) == NULL) \
+        (list)->head.last = (list)->head.first; \
+    else \
+        ((list)->head.first)->prev = (list)->head.first; \
+    (list)->head.size--;
+
+#define LIST_REMOVE_TAIL(list, head) \
+    if ((list)->head.last == (list)->head.first) \
     { \
-        M_list_init(head); \
-    } \
-    else \
+        LIST_INIT(list, head); \
+    }else \
     {   \
-        (head)->_last = (head)->_last->_prev; \
-        (head)->_last->_next = NULL; \
+        (list)->head.last = (list)->head.last->prev; \
+        (list)->head.last->next = NULL; \
+        (list)->head.size--; \
     }
 
-#define	M_list_remove(head, elm) \
+#define	LIST_REMOVE(list, head, elm, node) \
     do {      \
-        if ((head)->_first == (elm))           \
+        if (((elm)->node.prev == (elm)->node.next) && ((elm)->node.prev == NULL)) \
+            break; \
+        if ((list)->head.first == &((elm)->node))           \
         { \
-            M_list_remove_head(head);           \
+            LIST_REMOVE_HEAD(list, head);           \
             break; \
         } \
-        if((head)->_last == elm) \
+        if((list)->head.last == &((elm)->node)) \
         {\
-            M_list_remove_tail(head); \
+            LIST_REMOVE_TAIL(list, head); \
             break; \
         }\
-        (elm)->_next->_prev = (elm)->_prev;	\
-        (elm)->_prev->_next = (elm)->_next;     \
+        (elm)->node.next->prev = (elm)->node.prev;	\
+        (elm)->node.prev->next = (elm)->node.next;     \
+        (elm)->node.prev = (elm)->node.next = NULL; \
+        (list)->head.size--; \
     } while(0)
 
-#define	M_list_foreach(var, head)			\
-    for ((var) = ((head)->_first);		    \
-         (var);							    \
-         (var) = ((var)->_next))
+#define	LIST_FOREACH(var, node, list, head)	\
+        for ((var) = ((list)->head.first)? ((list)->head.first)->dat: NULL;		    \
+             (var);							    \
+             (var) = ((var)->node.next) ? ((var)->node.next)->dat: NULL)
 
-/*
- * Tail queue access methods.
- */
-#define	M_list_empty(head)		((head)->_first == NULL)
-#define	M_list_first(head)		((head)->_first)
-#define	M_list_last(head)		((head)->_last)
+#define	LIST_EMPTY(list,head)		((list)->head.first == NULL)
+#define	LIST_FIRST(list, head)		((list)->head.first) ? ((list)->head.first)->dat: NULL
+#define	LIST_LAST(list, head)		((list)->head.last) ? ((list)->head.last)->dat: NULL
+#define	LIST_SIZE(list, head)		((list)->head.size)
 
 #endif
 

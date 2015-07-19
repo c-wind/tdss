@@ -49,6 +49,7 @@ typedef struct memory_pool_s memory_pool_t;
 #include "mysql_func.h"
 #include "factory.h"
 #include "minheap.h"
+#include "event_center.h"
 
 
 #endif

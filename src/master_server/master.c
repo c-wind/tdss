@@ -1,5 +1,4 @@
 #include "global.h"
-#include "inet_event.h"
 #include "tdss_config.h"
 #include "socket_func.h"
 #include "master.h"
@@ -116,21 +115,22 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    callback_t cb_accept, cb_request, cb_response, cb_close;
 
-    fd = socket_bind_nonblock(ms_conf.local.ip, ms_conf.local.port);
-    if(fd == -1)
-    {
-        log_error("socket_bind_nonblock host:(%s:%d) error:%m",
-                  ms_conf.local.ip, ms_conf.local.port);
-        return -1;
-    }
+    callback_set(cb_accept, on_accept);
+    callback_set(cb_request, on_request);
+    callback_set(cb_response, on_response);
+    callback_set(cb_close, on_close);
 
-    ms_conf.ie = inet_event_init(10240, fd);
-    if(!ms_conf.ie)
-    {
-        log_error("inet_event_init error.");
-        return -1;
-    }
+
+
+
+    if(event_center_init(MAX_CONN, ms_conf.timeout,  ms_conf.local.ip, ms_conf.local.port,
+                          callback_t on_accept,     //在接收完连接时调用
+                      callback_t on_request,    //在接收到用户数据之后调用
+                      callback_t on_response,   //在向用户发送完数据之后调用，不管当前发送缓冲区有没有需要发送的数据，都会调用
+                      callback_t on_close      //在关闭连接之前调用
+                     )
 
     ms_conf.ie->task_init = request_init;
     ms_conf.ie->task_deinit = request_deinit;

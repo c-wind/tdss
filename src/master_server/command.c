@@ -1,7 +1,6 @@
 #include <sys/time.h>
 #include <sys/sendfile.h>
 #include "global.h"
-#include "inet_event.h"
 #include "tdss_config.h"
 #include "master.h"
 
@@ -21,9 +20,9 @@ extern master_server_conf_t ms_conf;
 
 
 
-int cmd_nofound(inet_task_t *it)
+int cmd_nofound(conn_t *it)
 {
-    session_t *ss = (session_t *)it->data;
+    session_t *ss = (session_t *)it->dat;
 
     slog_error("command error");
 
@@ -32,9 +31,9 @@ int cmd_nofound(inet_task_t *it)
 
 
 
-int server_find(inet_task_t *it)
+int server_find(conn_t *it)
 {
-    session_t *ss = (session_t *)it->data;
+    session_t *ss = (session_t *)it->dat;
     char fname[33] = {0};
     uint32_t size = 0, i = 0, nsize = 0, ns_id = 0;
     data_server_info_t *dsi = NULL;
@@ -113,12 +112,12 @@ int server_find(inet_task_t *it)
 
 
 
-int status(inet_task_t *it)
+int status(conn_t *it)
 {
     string_t res = {0};
     int i=0;
     char line[MAX_LINE] = {0};
-    session_t *ss = (session_t *)it->data;
+    session_t *ss = (session_t *)it->dat;
 
     for(i=0; i<ms_conf.data_server.count; i++)
     {

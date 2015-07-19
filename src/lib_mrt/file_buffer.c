@@ -45,7 +45,7 @@ int file_buffer_write(file_handle_t *file, void *data, int size)
 {
     int dsize = size;
 
-    if(buffer_push(file->buffer, data, &dsize) == -1)
+    if(buffer_push(file->buffer, data, &dsize) == MRT_ERR)
     {
         log_error("buffer append error.");
         return MRT_ERR;
@@ -60,7 +60,7 @@ int file_buffer_write(file_handle_t *file, void *data, int size)
             return MRT_ERR;
         }
 
-        if(buffer_push(file->buffer, (data + (size - dsize)), &dsize) == -1)
+        if(buffer_push(file->buffer, (data + (size - dsize)), &dsize) == MRT_ERR)
         {
             log_error("buffer append error.");
             return MRT_ERR;

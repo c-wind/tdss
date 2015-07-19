@@ -1,5 +1,6 @@
 #include "global.h"
 #include <openssl/md5.h>
+#include <openssl/aes.h>
 #include <stdarg.h>
 
 inline int str_format(char *str);
@@ -89,9 +90,10 @@ int string_catb(string_t *dat, char *src, int slen)
     M_cpvril(dat);
     M_cpvril(src);
 
-
-    if((dat->size - dat->len - 1) < slen)
+    if(slen > (dat->size - dat->len - 1))
+    {
         M_ciril(string_realloc(dat, dat->size + slen + 1), "string realloc error.");
+    }
 
     memcpy(dat->str + dat->len, src, slen);
     dat->len += slen;
@@ -415,4 +417,140 @@ int string_move_fetch(string_t *src, char *begin, char *end, string_t *dest)
     return MRT_OK;
 }
 
+
+int aes_decode(string_t *input, char *src_key, string_t *output)
+{
+    unsigned char key[AES_BLOCK_SIZE + 1] = {0};
+    unsigned char iv[AES_BLOCK_SIZE + 1] = {0};
+    int nlen = 0, klen = strlen(src_key);
+    AES_KEY aes;
+
+    M_cpsril(src_key);
+
+    memset(key, '*', AES_BLOCK_SIZE);
+    memcpy(key, src_key, AES_BLOCK_SIZE > klen ? klen : sizeof(key));
+    log_debug("key:%s", key);
+
+    if (AES_set_decrypt_key(key, 128, &aes) < 0)
+    {
+        log_debug("AES_set_encrypt_key error.");
+        return MRT_ERR;
+    }
+
+    string_t dstr = {0};
+
+    //解码base64
+    M_ciril(string_base64_decode(input, &dstr), "base64 decode error");
+
+    if((dstr.len + 1) % AES_BLOCK_SIZE == 0)
+        nlen = dstr.len + 1;
+    else
+        nlen = ((dstr.len + 1) /  AES_BLOCK_SIZE + 1 ) * AES_BLOCK_SIZE;
+
+    if(nlen > output->size)
+    {
+        if(string_realloc(output, nlen))
+        {
+            set_error("string_realloc error");
+            string_free(&dstr);
+            return MRT_ERR;
+        }
+    }
+
+
+    AES_cbc_encrypt((unsigned char *)dstr.str, (unsigned char*)output->str, dstr.len, &aes, iv, AES_DECRYPT);
+
+    string_free(&dstr);
+
+    return MRT_OK;
+}
+
+
+
+
+
+int aes_encode(string_t *input, char *src_key, string_t *output)
+{
+    unsigned char key[AES_BLOCK_SIZE + 1] = {0};
+    unsigned char iv[AES_BLOCK_SIZE + 1] = {0};
+    int nlen = 0, klen = strlen(src_key);
+    AES_KEY aes;
+
+    M_cpsril(src_key);
+
+    memset(key, '*', AES_BLOCK_SIZE);
+    memcpy(key, src_key, AES_BLOCK_SIZE > klen ? klen : sizeof(key));
+    log_debug("key:%s", key);
+
+    if (AES_set_decrypt_key(key, 128, &aes) < 0)
+    {
+        log_debug("AES_set_encrypt_key error.");
+        return MRT_ERR;
+    }
+
+    if((input->len + 1) % AES_BLOCK_SIZE == 0)
+    {
+        nlen = input->len + 1;
+    }
+    else
+    {
+        nlen = ((input->len + 1) /  AES_BLOCK_SIZE + 1 ) * AES_BLOCK_SIZE;
+    }
+
+    if (AES_set_encrypt_key(key, 128, &aes) < 0)
+    {
+        log_debug("AES_set_encrypt_key error.");
+        return -1;
+    }
+
+    if((input->len + 1) % AES_BLOCK_SIZE == 0)
+        nlen = input->len + 1;
+    else
+        nlen = ((input->len + 1) /  AES_BLOCK_SIZE + 1 ) * AES_BLOCK_SIZE;
+
+    string_t *dstr = string_create(nlen);
+    if(!dstr)
+    {
+        return MRT_ERR;
+    }
+
+    AES_cbc_encrypt((unsigned char *)input->str, (unsigned char*)dstr->str, nlen, &aes, iv, AES_ENCRYPT);
+    dstr->len = nlen;
+
+    if(string_base64_encode(dstr, output) == MRT_ERR)
+    {
+        set_error("base64 encode error");
+        string_free(dstr);
+        return MRT_ERR;
+    }
+
+    string_free(dstr);
+    M_free(dstr);
+
+    return MRT_OK;
+}
+
+#if 0
+int main(int argc, char *argv[])
+{
+    char str[100] = {'*'};
+    int i=0;
+    string_t *src = string_new(1024, "tian1234%%#");
+    string_t dest = {0};
+    string_t dest2 = {0};
+
+//    int aes_encode(string_t *input, char *src_key, string_t *output)
+   i =  aes_encode(src, "123456", &dest);
+
+    printf("str:%s\n", dest.str);
+
+    i =  aes_decode(&dest, "123456", &dest2);
+    printf("i:%d, dest:%s\n", i, dest2.str);
+
+
+
+
+        return 0;
+}
+#endif
 

@@ -66,7 +66,8 @@ int charset_convert_string(char *from_set, char *to_set, string_t *from_str)
     size_t fsize, tsize;
     char *to_str = NULL, *pt, *pf;
 
-    if(charset_convert_begin(from_set, to_set) == MRT_ERR)
+    //if(charset_convert_begin(from_set, to_set) == MRT_ERR)
+    if(charset_convert_begin(from_set, "UTF-8//IGNORE") == MRT_ERR)
         return MRT_ERR;
 
     fsize = from_str->len;
@@ -78,7 +79,7 @@ int charset_convert_string(char *from_set, char *to_set, string_t *from_str)
     pt = to_str;
     pf = from_str->str;
 
-//    log_debug("from:%s, to:%s, fsize:%u tsize:%u.", from_set, to_set, fsize, tsize);
+    //log_debug("from:%s, to:%s, fsize:%ld tsize:%ld.", from_set, to_set, fsize, tsize);
 
     if(iconv(ct, &pf, &fsize, &pt, &tsize) == MRT_ERR)
     {

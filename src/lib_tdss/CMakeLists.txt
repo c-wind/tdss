@@ -1,7 +1,7 @@
-SET(LIBMRT_SRC config.c inet_event.c request.c time_queue.c)
+SET(LIBMRT_SRC config.c request.c)
 
 ADD_LIBRARY(tdss STATIC ${LIBMRT_SRC})
 
 INSTALL(TARGETS tdss ARCHIVE DESTINATION lib)
 
-INSTALL(FILES inet_event.h tdss_config.h time_queue.h  DESTINATION include/libtdss)
+INSTALL(FILES tdss_config.h DESTINATION include/libtdss)

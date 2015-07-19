@@ -49,7 +49,7 @@ int socket_connect_wait(char *addr, unsigned short port, int timeout)
     setsockopt(sock,SOL_SOCKET,SO_SNDTIMEO,(char *)&tm, sizeof(struct timeval));
     //setsockopt(sock,SOL_SOCKET,SO_RCVTIMEO,(char *)&timeout,sizeof(struct timeval));
 
-    if(connect(sock, (const struct sockaddr *)&iaddr, sizeof(iaddr)) == -1)
+    if(connect(sock, (const struct sockaddr *)&iaddr, sizeof(iaddr)) == MRT_ERR)
     {
         log_error("socket connect error:%m");
         close(sock);
@@ -74,14 +74,14 @@ int socket_connect_nonblock(char *addr, unsigned short port)
         return MRT_ERR;
     }
 
-    if(socket_nonblock(sock) == -1)
+    if(SOCKET_NONBLOCK(sock) == MRT_ERR)
     {
-        log_error("socket_nonblock error:%m");
+        log_error("SOCKET_NONBLOCK error:%m");
         close(sock);
         return MRT_ERR;
     }
 
-    if(connect(sock, (const struct sockaddr *)&iaddr, sizeof(iaddr)) == -1)
+    if(connect(sock, (const struct sockaddr *)&iaddr, sizeof(iaddr)) == MRT_ERR)
     {
         if(errno == EINPROGRESS)
             return sock;
@@ -156,7 +156,7 @@ int socket_accept(int sock)
 
     clilen = sizeof( client_addr);
     nfd = accept(sock, (struct sockaddr *)&client_addr, &clilen);
-    if(nfd == -1)
+    if(nfd == MRT_ERR)
     {
         log_error("accepting the incoming connection");
         exit(4);
@@ -168,18 +168,6 @@ int socket_accept(int sock)
 }
 
 
-void socket_close(int  sock)
-{
-    log_debug("closing socket %d", sock);
-    shutdown(sock, 2);
-    closesocket(sock);
-}
-
-/* =================================== *
- * ============ basic IO ============= *
- * =================================== */
-
-
 /* recv, but take care of read-timeouts and read-interuptions */
 /* error-levels: ERR_TIMEOUT, MRT_ERR */
 int socket_read_wait(int  sock, void *buf, size_t len, int timeout)
@@ -187,13 +175,13 @@ int socket_read_wait(int  sock, void *buf, size_t len, int timeout)
     int res;
     struct timeval tm = {timeout,0};
 
-    if(setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&tm, sizeof(struct timeval)) == -1)
+    if(setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&tm, sizeof(struct timeval)) == MRT_ERR)
         return MRT_ERR;
     do
     {
         res = recv(sock, buf, len, 0);
 
-    } while( (res == -1 && errno == EINTR) );
+    } while( (res == MRT_ERR && errno == EINTR) );
 
     return res;
 }
@@ -212,7 +200,7 @@ int socket_read(int  sock, void *buf, size_t len)
     do
     {
         res = recv(sock, buf, len, 0);
-    } while( (res == -1 && errno == EINTR) );
+    } while( (res == MRT_ERR && errno == EINTR) );
 
     if(res == 0)
         return MRT_ERR;
@@ -227,15 +215,15 @@ int socket_write_wait(int sock, void *buf, size_t len, int timeout)
     int res;
     struct timeval tm = {timeout,0};
 
-    if(setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (char *)&tm, sizeof(struct timeval)) == -1)
+    if(setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (char *)&tm, sizeof(struct timeval)) == MRT_ERR)
         return MRT_ERR;
     do
     {
         res = send(sock, buf, len, 0);
 
-    } while( (res == -1 && errno == EINTR) );
+    } while( (res == MRT_ERR && errno == EINTR) );
 
-    return (res == -1) ? MRT_ERR : MRT_SUC;
+    return (res == MRT_ERR) ? MRT_ERR : MRT_SUC;
 }
 /* simple function to send through the socket
  * if ssl is available send through the ssl-module */
@@ -259,7 +247,7 @@ int socket_accept_block(int lsfd, int block)
         return MRT_ERR;
     }
 
-    if(socket_nonblock(nfd) == MRT_ERR)
+    if(SOCKET_NONBLOCK(nfd) == MRT_ERR)
     {
         log_error("socket set blocking error, error:%m");
         close(nfd);
@@ -343,9 +331,9 @@ int socket_bind_nonblock(char *host, int port)
         return MRT_ERR;
     }
 
-    if(socket_nonblock(nfd) == -1)
+    if(SOCKET_NONBLOCK(nfd) == MRT_ERR)
     {
-        log_error("socket_nonblock:(%s:%d) error:%m", host, port);
+        log_error("SOCKET_NONBLOCK:(%s:%d) error:%m", host, port);
         close(nfd);
         return MRT_ERR;
     }
@@ -434,15 +422,14 @@ int get_ip_addr(char* hostname, unsigned int * ip)
 }
 
 
-void socket_ntoa(struct sockaddr_in addr, char *abuf, int asize)
+int socket_ntoa(struct sockaddr_in addr, char *abuf, int asize)
 {
-    snprintf(abuf, asize,
-             "%d.%d.%d.%d:%d",
-             addr.sin_addr.s_addr        & 0xFF,
-             (addr.sin_addr.s_addr >> 8) & 0xFF,
-             (addr.sin_addr.s_addr >> 16)& 0xFF,
-             (addr.sin_addr.s_addr >> 24)& 0xFF,
-             ntohs(addr.sin_port));
+    return snprintf(abuf, asize, "%d.%d.%d.%d:%d",
+                    addr.sin_addr.s_addr        & 0xFF,
+                    (addr.sin_addr.s_addr >> 8) & 0xFF,
+                    (addr.sin_addr.s_addr >> 16)& 0xFF,
+                    (addr.sin_addr.s_addr >> 24)& 0xFF,
+                    ntohs(addr.sin_port));
 }
 
 int get_local_ip(int sockfd, char * local_ip)
@@ -461,14 +448,5 @@ int get_local_ip(int sockfd, char * local_ip)
     return MRT_SUC;
 }
 
-int socket_block(int s)
-{
-    return fcntl(s, F_SETFL, fcntl(s, F_GETFL, 0)& ~O_NONBLOCK);
-}
-
-int socket_nonblock(int s)
-{
-    return fcntl(s, F_SETFL, fcntl(s, F_GETFL, 0)|O_NONBLOCK);
-}
 
 

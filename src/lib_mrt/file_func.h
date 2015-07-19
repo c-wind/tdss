@@ -81,6 +81,8 @@ void file_buffer_deinit(file_handle_t *file);
 
 inline int file_delete(char *fname);
 
+char *file_to_string(char *file);
+
 //设置文件打开后并挂载到内存中
 #define FMOD_MAP(file) (file)->op_map = 1
 
@@ -96,6 +98,8 @@ inline int file_delete(char *fname);
     (file)->add_size = size; \
     (file)->op_size = 1
 
-int file_md5(char *fname, char *res);
+int file_move_uniq(char *ofile, char **nfile);
+
+int create_temp_file(char *path, char **nf);
 
 #endif

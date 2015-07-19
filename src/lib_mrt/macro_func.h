@@ -16,6 +16,7 @@
 #define p_zero(obj) memset(obj, 0, sizeof(*obj))
 #define s_zero(obj) memset(&obj, 0, sizeof(obj))
 
+#define ARRAY_SIZE(o) (sizeof(o) / sizeof(*(o)))
 
 #define MEM_ALIGN(size, asize) \
     (((size) + (asize) - 1) & ~((unsigned int) (asize) -1))
@@ -28,11 +29,11 @@ return NULL;
 //检测int返回int不记录日志
 #define M_cirinl(val) \
     if((val) == -1) \
-return -1;
+return MRT_ERR;
 
 #define M_csrinl(val) \
     if(!(val)||!*(val)) \
-return -1;
+return MRT_ERR;
 
 #define M_csrvnl(val) \
     if(!(val)||!*(val)) \
@@ -43,7 +44,7 @@ return NULL;
     if((val) == -1) \
 { \
     log_error("%s "msg" %m.", __func__, ##__VA_ARGS__); \
-    return -1; \
+    return MRT_ERR; \
 }
 
 //检测int返回记录日志
@@ -68,7 +69,7 @@ return NULL;
     if(!(val)||!*(val)) \
 { \
     log_error("%s "msg" %m.", __func__, ##__VA_ARGS__); \
-    return -1; \
+    return MRT_ERR; \
 }
 
 //检测string返回string记录日志
@@ -113,7 +114,7 @@ continue;
     if(!(val)) \
 { \
     log_error("%s "msg, __func__, ##__VA_ARGS__); \
-    return -1; \
+    return MRT_ERR; \
 }
 
 //检测void *返回int, 设置错误信息
@@ -121,14 +122,14 @@ continue;
     if(!(val)) \
 { \
     worker_set_error("%s "msg, __func__, ##__VA_ARGS__); \
-    return -1; \
+    return MRT_ERR; \
 }
 
 //检测void *返回int不记录日志
 #define M_cvrinl(val) \
     if(!(val)) \
 { \
-    return -1; \
+    return MRT_ERR; \
 }
 
 
@@ -176,12 +177,12 @@ continue;
     if(!(val)||!*(val)) \
 { \
     log_error("parameter "#val" is null."); \
-    return -1; \
+    return MRT_ERR; \
 }
 //参数字符串是否为空，不记录日志，返回类型为int
 #define M_cpsrinl(val) \
     if(!(val)||!*(val)) \
-    return -1;
+    return MRT_ERR;
 
 
 
@@ -190,7 +191,7 @@ continue;
     if((val) == -1) \
 { \
     log_error("parameter "#val" is -1."); \
-    return -1; \
+    return MRT_ERR; \
 }
 
 
@@ -224,7 +225,7 @@ continue;
     if(!(val)) \
 { \
     set_error("parameter "#val" is null."); \
-    return -1; \
+    return MRT_ERR; \
 }
 
 
@@ -233,7 +234,7 @@ continue;
     if(!(val)) \
 { \
     log_error("parameter "#val" is null."); \
-    return -1; \
+    return MRT_ERR; \
 }
 
 
@@ -250,17 +251,12 @@ continue;
 #define M_file_exec(file) access(file, X_OK)
 
 
+#define BASE64_ENCODE_LEN(x) ((size_t) (((((x) + 2) / 57) * 77) + 77))
 
 
-#ifdef USE_MEM_POOL
 #define M_alloc(val) memory_alloc(val, __LINE__, (char *)__func__)
 #define M_realloc(val, size) memory_realloc(val, size, __LINE__, (char *)__func__)
 #define M_free(val) memory_free(val,  __LINE__, (char *)__func__)
-#else
-#define M_alloc(val) calloc(1, val)
-#define M_realloc(val, size) realloc(val, size)
-#define M_free(val) free(val)
-#endif
 
 #ifndef __DEBUG__
 #define log_fatal(fmt, ...) logger_write(MRT_FATAL, "FATAL", "%s "fmt, __func__, ##__VA_ARGS__)

@@ -18,19 +18,10 @@ typedef struct
 typedef struct
 {
     string_t            data;
-
     string_t            charset;
     string_t            base;
 
-//    char                head_description[MAX_URL];         //当前页head中的description
- //   char                head_keywords[MAX_URL];         //当前页head中的description
-//    char                *pbuf;
-//    char                *pbody;
-//    int                 blen;
-//    int                 bsize;
     char                url[MAX_URL];
-  //  char                charset[MAX_URL];
-//    char                base[MAX_URL];
     char                *start_url;
 
 }html_page_t;
@@ -39,21 +30,21 @@ typedef struct mrt_mark_s mrt_mark_t;
 struct mrt_mark_s
 {
     //begin在过滤删除的时候是开始标签，在替换的时候是要被替换的字段
-    char                begin[MAX_CAPTION];
+    char                begin[MAX_LINE];
     //end在过滤删除的时候是结束标签，在替换的时候是代替上面degin的字段
-    char                end[MAX_CAPTION];
+    char                end[MAX_LINE];
 
     //在替换时，如果新的内容长度大于旧的，这个值就是新的字段的长度
     uint16_t            new_len;
 
-    M_list_entry        (mrt_mark_t)
+    list_node_t         node;
 };
 
 typedef struct
 {
     int                 size;
 
-    M_list_head         (mrt_mark_t);
+    list_head_t         head;
 
 }mrt_mark_list_t;
 

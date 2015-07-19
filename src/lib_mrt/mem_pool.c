@@ -33,7 +33,8 @@ void *memory_alloc(int64_t size, int line, char *func)
     else
     {
         blst = &memory_pool.free_blst[(size - 1) >> 5];
-        if(blst->blk_sum == 0)
+        M_blst_lock(blst);
+        if(LIST_EMPTY(blst, head))
         {
             M_cirvs(block_alloc(blst->blst_width, &nblk), "alloc new memory error");
             nblk->blst_id = blst->blst_id;
@@ -41,13 +42,11 @@ void *memory_alloc(int64_t size, int line, char *func)
         }
         else
         {
-            M_blst_lock(blst);
-            nblk = M_list_first(blst);
-            M_list_remove_head(blst);
-            blst->blk_sum--;
-            M_blst_unlock(blst);
+            nblk = LIST_FIRST(blst, head);
+            LIST_REMOVE_HEAD(blst, head);
             memset(nblk->data, 0, blst->blst_width);
         }
+        M_blst_unlock(blst);
 #ifdef MEMORY_DEBUG
         blst = &memory_pool.used_blst[(size - 1) >> 5];
 #endif
@@ -56,13 +55,11 @@ void *memory_alloc(int64_t size, int line, char *func)
 #ifdef MEMORY_DEBUG
     /* 此处的blst是used_blst的list */
     M_blst_lock(blst);
-    M_list_insert_head(blst, nblk);
-    blst->blk_sum++;
+    LIST_INSERT_HEAD(blst, head, nblk, node);
     M_blst_unlock(blst);
     strcpy(nblk->func, func);
     nblk->line = line;
 #endif
-
 
     return (nblk->data);
 }
@@ -140,8 +137,7 @@ void memory_free(void *data, int line, char *func)
     {
         blst = &memory_pool.free_blst[blk->blst_id];
         M_blst_lock(blst);
-        M_list_insert_head(blst, blk);
-        blst->blk_sum++;
+        LIST_INSERT_HEAD(blst, head, blk, node);
         M_blst_unlock(blst);
         *(char *)data = 0;
     }
@@ -165,7 +161,7 @@ inline int block_alloc(int64_t size, block_t **blk)
             mry->used = 0;
             mry->data = mry + 1;
 
-            M_list_insert_head(memory_pool.memory_list, mry);
+            LIST_INSERT_HEAD(memory_pool.memory_list, head, mry, node);
 
             memory_pool.slave = mry;
 
@@ -205,7 +201,7 @@ inline static block_t *memory_addr_check(void *data)
     block_t *tblk;
 
     for(; i< M_1KB + 1; i++)
-        M_list_foreach(tblk, &memory_pool.used_blst[i])
+        LIST_FOREACH(tblk, node, &memory_pool.used_blst[i], head)
         {
             if(tblk->data == data)
                 return blk;
@@ -243,7 +239,7 @@ int memory_pool_init()
         return MRT_ERR;
     }
 
-    M_list_init(memory_pool.memory_list);
+    LIST_INIT(memory_pool.memory_list, head);
 
 #ifdef MEMORY_DEBUG
     if(!(memory_pool.used_blst = calloc(M_1KB + 1, sizeof(block_list_t))))
@@ -257,7 +253,7 @@ int memory_pool_init()
     {
         memory_pool.free_blst[i].blst_id = i;
         memory_pool.free_blst[i].blst_width = (i + 1) << 5;
-        M_list_init(&memory_pool.free_blst[i]);
+        LIST_INIT(&memory_pool.free_blst[i], head);
         pthread_mutex_init(&(memory_pool.free_blst[i].mtx), NULL);
 
 #ifdef MEMORY_DEBUG
@@ -274,7 +270,7 @@ int memory_pool_init()
     memory_pool.master->used = 0;
     memory_pool.master->data = memory_pool.master + 1;
 
-    M_list_insert_head(memory_pool.memory_list, mry);
+    LIST_INSERT_HEAD(memory_pool.memory_list, head, mry, node);
 
     return MRT_OK;
 }
@@ -336,7 +332,7 @@ int memory_pool_destroy()
 #endif
     free(memory_pool.free_blst);
 
-    M_list_foreach(mry, memory_pool.memory_list)
+    LIST_FOREACH(mry, node, memory_pool.memory_list, head)
     {
         if(old)
             free(old);

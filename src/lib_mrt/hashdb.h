@@ -61,7 +61,7 @@ typedef struct
 //      0：成功
 //      -1：出错
 
-int hashdb_init(char *fname, hashdb_t **phmp);
+int hashdb_init(char *fname, hashdb_t **phdb, int (*load)(uint8_t type, char *key, uint16_t klen, void *val, uint16_t vlen));
 
 int hashdb_insert(hashdb_t *map, char *key, uint16_t key_len, void *val, uint16_t val_len);
 

@@ -28,7 +28,7 @@ static void *tried_signal(const int signo, void *pfunc)
     memset( &act, 0, sizeof(struct sigaction) );
     memset( &oact, 0, sizeof(struct sigaction) );
     act.sa_handler = pfunc;
-    if ( sigemptyset( &act.sa_mask ) == -1 )
+    if ( sigemptyset( &act.sa_mask ) == MRT_ERR )
         return SIG_ERR;
     act.sa_flags = 0;
     if(signo == SIGALRM)

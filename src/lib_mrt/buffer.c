@@ -92,7 +92,7 @@ int buffer_read(int fd, buffer_t *buf)
     while(buf->len < buf->size)
     {
 
-        if((rlen = recv(fd, buf->data + buf->len, buf->size - buf->len, 0)) == -1)
+        if((rlen = recv(fd, buf->data + buf->len, buf->size - buf->len, 0)) == MRT_ERR)
         {
             if(errno == EAGAIN)
                 break;

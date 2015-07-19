@@ -68,8 +68,6 @@ typedef struct
 
     char                db_path[128];   //数据保存位置
 
-    inet_event_t        *ie;
-
 }name_server_conf_t;
 
 
@@ -117,7 +115,7 @@ typedef struct
         data_server_info_t  *info;
         time_t              start;          //当前次检测开始时间
         int                 work_id;        //当前正在工作的ID, 每次有请求过来+1(负载均衡用)
-        inet_task_t         task;           //task;
+//        inet_task_t         task;           //task;
 
     }data_server;
 
@@ -127,10 +125,8 @@ typedef struct
         int                 count;
         name_server_info_t  *info;
         time_t              start;          //当前次检测开始时间
-        inet_task_t         task;           //task;
+//        inet_task_t         task;           //task;
     }name_server;
-
-    inet_event_t            *ie;
 
 
 }master_server_conf_t;
@@ -150,8 +146,6 @@ typedef struct
 
     int                     server_count;   //data server
     data_server_t           *server;
-
-    inet_event_t            *ie;
 
     int                     max_block_size;
     char                    data_path[MAX_PATH];

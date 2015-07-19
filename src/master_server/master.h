@@ -51,16 +51,16 @@ struct session_s
 
     int             server_type;    //0:检测name_server 1:检测data_server
 
-    int             (*proc)(inet_task_t *);
+    int             (*proc)(conn_t *);
 
-    inet_task_t     *parent;        //父任务;
+    conn_t     *parent;        //父任务;
 
     struct
     {
         int         state;          //调用node_server服务执行状态
         int         type;           //类型NSOPT_ADD_FILE：保存文件信息, NSOPT_MOD_FILE:修改，NSOPT_DEL_FILE删除
         string_t    cmd;
-        int         (*finish)(inet_task_t *);
+        int         (*finish)(conn_t *);
     }node_server;
 
     string_t        input;          //客户端发送过来的命令
@@ -70,7 +70,7 @@ struct session_s
 typedef struct
 {
     char            *name;
-    int             (*func)(inet_task_t *);
+    int             (*func)(conn_t *);
 }command_t;
 
 
@@ -126,17 +126,17 @@ int get_eth1_ip(char *addr, int size);
 #define ERR_NOMEM       -1111
 
 
-int request_init(inet_task_t *it);
+int request_init(conn_t *it);
 
-int request_process(inet_task_t *it);
+int request_process(conn_t *it);
 
-int request_deinit(inet_task_t *it);
+int request_deinit(conn_t *it);
 
 int data_server_config_load(char *fname);
 
-int ns_save_mid(inet_task_t *it);
+int ns_save_mid(conn_t *it);
 
-int name_server_sync(inet_task_t *it);
+int name_server_sync(conn_t *it);
 
 int server_check_init();
 
