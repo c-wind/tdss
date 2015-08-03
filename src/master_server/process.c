@@ -1,7 +1,6 @@
 #include <sys/time.h>
 #include <sys/sendfile.h>
 #include "global.h"
-#include "inet_event.h"
 #include "tdss_config.h"
 #include "master.h"
 
@@ -10,7 +9,6 @@ extern data_server_conf_t ds_conf;
 
 extern command_t cmd_list[];
 
-int mail_save(conn_t *it);
 
 
 int32_t session_id_create()
@@ -104,17 +102,17 @@ int request_parse(string_t *src, rq_arg_t *arg, int asize)
 
 //功能：
 //      统一的返回消息, 这东西自动调用,不要显示调用
-static int __session_reply(conn_t *it)
+static int __session_reply(conn_t *conn)
 {
     int i=0, max = 0;
-    session_t *ss = (session_t *)it->data;
+    session_t *ss = (session_t *)conn->dat;
     char *pb = ss->output.idx;
 
     max = ss->output.len - (ss->output.idx - ss->output.str);
 
     while(max > 0)
     {
-        i = write(it->fd, pb + i, max);
+        i = write(conn->fd, pb + i, max);
         if(i == -1)
         {
             if(errno == EAGAIN)
@@ -125,7 +123,7 @@ static int __session_reply(conn_t *it)
 
         if(i == 0)
         {
-            log_info("write to %s error:%m", it->from);
+            log_info("write to %s error:%m", conn->addr_str);
             return -1;
         }
 
@@ -145,7 +143,7 @@ static int __session_reply(conn_t *it)
     log_debug("%x reply:%s", ss->id, ss->output.str);
 
     ss->state = ss->next ?: SESSION_BEGIN;
-//    log_debug("444444444 from:%s state:%d", it->from, ss->state);
+//    log_debug("444444444 from:%s state:%d", conn->addr_str, ss->state);
     string_zero(&ss->input);
     string_zero(&ss->output);
 
@@ -153,17 +151,17 @@ static int __session_reply(conn_t *it)
 }
 
 //读取用户命令并调用相应函数
-int request_command(conn_t *it)
+int request_command(conn_t *conn)
 {
     int i = 0;
     char c = 0;
-    session_t *ss = (session_t *)it->data;
+    session_t *ss = (session_t *)conn->dat;
     char line[1024] = {0};
     char cmd[64] = {0};
 
     if(!ss->input.len)
     {
-        log_info("client:(%s) close", it->from);
+        log_info("client:(%s) close", conn->addr_str);
         return SESSION_END;
     }
 
@@ -191,12 +189,13 @@ int request_command(conn_t *it)
     ss->id = session_id_create();
     ss->proc = cmd_list[i].func;
 
-    return cmd_list[i].func(it);
+    return cmd_list[i].func(conn);
 }
 
 
-int on_accept(conn_t *it)
+int on_accept(void *dat)
 {
+    conn_t *conn = (conn_t *)dat;
     session_t *ss = NULL;
 
     ss = M_alloc(sizeof(session_t));
@@ -206,7 +205,7 @@ int on_accept(conn_t *it)
         return MRT_ERR;
     }
 
-    it->dat = ss;
+    conn->dat = ss;
 
     ss->state = SESSION_BEGIN;
 
@@ -214,47 +213,79 @@ int on_accept(conn_t *it)
     return MRT_SUC;
 }
 
-
-
-
-int on_request(conn_t *conn)
+//用于主动连接，当对方返回数据时调用这个
+int on_active_response()
 {
+
+}
+
+
+int on_request(void *dat)
+{
+    conn_t *conn = (conn_t *)dat;
     int iret = 0;
     session_t *ss = (session_t *)conn->dat;
     buffer_t *buf;
 
+    //如果是主动连接，此时为对方返回数据，调用on_active_response
+    if (conn->type == CONN_ACTIVE)
+    {
+        return on_active_response();
+    }
+
     LIST_FOREACH(buf, node, conn, recv_bufs)
     {
-        if (string_catb(ss->input, buf->rpos, buf->len) == MRT_ERR)
+        if (string_catb(&ss->input, buf->rpos, buf->len) == MRT_ERR)
         {
             log_info("%x string_catb size:%d error", conn->id, buf->len);
             return MRT_ERR;
         }
     }
 
-    request_command
+    request_command(conn);
 
-
-
-    log_debug("fd:%d from:%s state:%d", it->fd, it->from, ss->state);
+    log_debug("fd:%d from:%s state:%d", conn->fd, conn->addr_str, ss->state);
     return 0;
 }
 
-int on_close(conn_t *it)
+
+//用于主动连接，向对方发数据时调用
+int on_active_request()
 {
-    session_t *ss = (session_t *)it->dat;
+
+
+
+}
+
+int on_response(void *dat)
+{
+    conn_t *conn = (conn_t *)dat;
+
+    //如果是主动连接，此时向对方发送数据，调用on_active_request
+    if (conn->type == CONN_ACTIVE)
+    {
+        return on_active_request();
+    }
+
+    return MRT_OK;
+}
+
+int on_close(void *dat)
+{
+    conn_t *conn = (conn_t *)dat;
+    session_t *ss = (session_t *)conn->dat;
 
     if(ss)
     {
         if(ss->node_server.finish)
         {
-            ss->node_server.finish(it);
+            ss->node_server.finish(conn);
         }
 
         string_free(&ss->input);
         string_free(&ss->output);
         string_free(&ss->node_server.cmd);
-        log_info("task:%x session:(%x) over", it->id, ss->id);
+        log_info("task:%x session:(%x) over", conn->id, ss->id);
         M_free(ss);
     }
 

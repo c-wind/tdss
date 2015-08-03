@@ -126,12 +126,6 @@ int get_eth1_ip(char *addr, int size);
 #define ERR_NOMEM       -1111
 
 
-int request_init(conn_t *it);
-
-int request_process(conn_t *it);
-
-int request_deinit(conn_t *it);
-
 int data_server_config_load(char *fname);
 
 int ns_save_mid(conn_t *it);
@@ -139,6 +133,11 @@ int ns_save_mid(conn_t *it);
 int name_server_sync(conn_t *it);
 
 int server_check_init();
+
+int on_accept(void *);
+int on_request(void *);
+int on_response(void *);
+int on_close(void *);
 
 #endif
 

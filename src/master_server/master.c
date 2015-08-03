@@ -122,19 +122,12 @@ int main(int argc, char *argv[])
     callback_set(cb_response, on_response);
     callback_set(cb_close, on_close);
 
+    if(event_center_init(ms_conf.timeout,  ms_conf.local.ip, ms_conf.local.port, cb_accept, cb_request, cb_response, cb_close) == MRT_ERR)
+    {
+        log_error("event_center_init error");
+        return -1;
 
-
-
-    if(event_center_init(MAX_CONN, ms_conf.timeout,  ms_conf.local.ip, ms_conf.local.port,
-                          callback_t on_accept,     //在接收完连接时调用
-                      callback_t on_request,    //在接收到用户数据之后调用
-                      callback_t on_response,   //在向用户发送完数据之后调用，不管当前发送缓冲区有没有需要发送的数据，都会调用
-                      callback_t on_close      //在关闭连接之前调用
-                     )
-
-    ms_conf.ie->task_init = request_init;
-    ms_conf.ie->task_deinit = request_deinit;
-    ms_conf.ie->timeout = ms_conf.timeout;
+    }
 
     if(server_check_init() == MRT_ERR)
     {
@@ -142,8 +135,8 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    event_loop();
 
-    inet_event_loop(ms_conf.ie);
 
     return 0;
 }

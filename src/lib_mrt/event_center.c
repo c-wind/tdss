@@ -169,78 +169,56 @@ return MRT_SUC;
 }
 
 
-
-int connect_create(char *addr, int port, task_t *old_task)
-{
-M_cpvril(ec);
-M_cpsril(addr);
-
-struct sockaddr_in iaddr;
-int sock = -1;
-task_t *tsk = NULL;
-char from[MAX_IP] = {0};
-
-if((sock = socket(AF_INET,SOCK_STREAM,0)) < 0)
-{
-log_error("socket error:%m remote:(%s:%d)", addr, port);
-return MRT_ERR;
-}
-
-SOCKET_NONBLOCK(sock);
-
-iaddr.sin_family      = AF_INET;
-iaddr.sin_addr.s_addr = inet_addr(addr);
-iaddr.sin_port        = htons((unsigned short) port);
-
-if(connect(sock, (const struct sockaddr *)&iaddr, sizeof(iaddr)) == MRT_ERR)
-{
-if(errno != EINPROGRESS)
-{
-log_error("socket connect error:%m remote:(%s:%d)", addr, port);
-return MRT_ERR;
-}
-}
-
-snprintf(from, sizeof(from), "%s:%d", addr, port);
-
-tsk = &ec->task_array[sock];
-tsk->id = old_task->id;
-tsk->child = old_task;
-tsk->child->event = EVENT_PROC;
-
-
-if(file_handle_init(&tsk->file, sock, FILE_HANDLE_OPEN, FD_TYPE_SOCKET | FD_TYPE_ACTIVE, from, M_4KB) == MRT_ERR)
-{
-    log_error("remote:(%s) fd:%d init socket handle error", from, sock);
-    close(sock);
-    return MRT_ERR;
-}
-
-if(ec->accept_before.state == 1)
-{
-    if(ec->accept_before.func(tsk) == MRT_ERR)
-    {
-        log_error("remote:(%s) fd:%d accept before error.", from, sock);
-        connect_close(tsk);
-        return MRT_ERR;
-    }
-}
-
-event_center_lock();
-if(event_insert(tsk))
-{
-    task_error("event add error");
-    connect_close(tsk);
-    event_center_unlock();
-    return MRT_ERR;
-}
-
-ec->online++;
-event_center_unlock();
-
-return MRT_SUC;
-}
 */
+
+conn_t *connect_create(char *addr, int port)
+{
+    struct sockaddr_in iaddr;
+    int sock = -1;
+    char from[MAX_IP];
+    conn_t *conn = NULL;
+
+    if((sock = socket(AF_INET,SOCK_STREAM,0)) < 0)
+    {
+        log_error("socket error:%m remote:(%s:%d)", addr, port);
+        return NULL;
+    }
+
+    SOCKET_NONBLOCK(sock);
+
+    iaddr.sin_family      = AF_INET;
+    iaddr.sin_addr.s_addr = inet_addr(addr);
+    iaddr.sin_port        = htons((unsigned short) port);
+
+    if(connect(sock, (const struct sockaddr *)&iaddr, sizeof(iaddr)) == MRT_ERR)
+    {
+        if(errno != EINPROGRESS)
+        {
+            log_error("socket connect error:%m remote:(%s:%d)", addr, port);
+            return NULL;
+        }
+    }
+
+    sprintf(from, "%s:%d", addr, port);
+
+    conn = conn_create(sock, iaddr, from);
+
+    M_cvril(conn, "conn_create error");
+
+    conn->wait = CONN_WAIT_RECV|CONN_WAIT_SEND;
+    conn->type = CONN_ACTIVE;
+
+    if(event_insert(conn))
+    {
+        log_error("event add error");
+        connect_close(conn);
+        return NULL;
+    }
+
+    ec->online++;
+
+    return conn;
+}
 
 
 
@@ -422,10 +400,10 @@ DO_SEND_AGAIN:
     return MRT_SUC;
 }
 
-
+#define MAX_CONN 1024
 
 //不管函数执行成功失败都会清空ec
-int event_center_init(int max_conn, int timeout, char *host, int port,
+int event_center_init(int timeout, char *host, int port,
                       callback_t on_accept,     //在接收完连接时调用
                       callback_t on_request,    //在接收到用户数据之后调用
                       callback_t on_response,   //在向用户发送完数据之后调用，不管当前发送缓冲区有没有需要发送的数据，都会调用
@@ -435,16 +413,15 @@ int event_center_init(int max_conn, int timeout, char *host, int port,
     struct epoll_event epev = {0, {0}};
     addr_t addr;
 
-    M_cpiril(max_conn);
     M_cpsril(host);
     M_cpiril(port);
 
     s_zero(def_event_center);
     ec = &def_event_center;
 
-    if((ec->epfd = epoll_create(max_conn)) == MRT_ERR)
+    if((ec->epfd = epoll_create(MAX_CONN)) == MRT_ERR)
     {
-        log_error("epoll_create error:%m, max:%d.", max_conn);
+        log_error("epoll_create error:%m, max:%d.", MAX_CONN);
         return MRT_ERR;
     }
 
@@ -455,7 +432,6 @@ int event_center_init(int max_conn, int timeout, char *host, int port,
     }
 
     ec->timeout = timeout;
-    ec->max_conn = max_conn;
 
     ec->on_accept = on_accept;
     ec->on_request = on_request;

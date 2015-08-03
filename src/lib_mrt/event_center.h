@@ -25,7 +25,7 @@
                       callback_t on_response,   //在向用户发送完数据之后调用，不管当前发送缓冲区有没有需要发送的数据，都会调用
                       callback_t on_close,      //在关闭连接之前调用
                       */
-int event_center_init(int max_conn, int timeout, char *host, int port,
+int event_center_init(int timeout, char *host, int port,
                       callback_t on_accept,
                       callback_t on_request,
                       callback_t on_response,
@@ -33,6 +33,8 @@ int event_center_init(int max_conn, int timeout, char *host, int port,
                       );
 
 int event_loop();
+
+conn_t *connect_create(char *addr, int port);
 
 void worker_return(task_t *tsk);
 

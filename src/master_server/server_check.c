@@ -1,6 +1,5 @@
 #include <openssl/conf.h>
 #include "global.h"
-#include "inet_event.h"
 #include "tdss_config.h"
 #include "master.h"
 
@@ -12,7 +11,7 @@ extern master_server_conf_t ms_conf;
 
 
 
-int __server_check_loop(inet_task_t *it);
+int __server_check_loop(conn_t *it);
 
 void session_free(session_t *ss)
 {
@@ -122,7 +121,7 @@ int __server_report(session_t *ss)
 
 
 
-int __server_recv(inet_task_t *it)
+int __server_recv(conn_t *it)
 {
     session_t *ss = (session_t *)it->data;
     char line[MAX_LINE] = {0};
@@ -152,12 +151,12 @@ int __server_recv(inet_task_t *it)
 }
 
 
-int __server_send(inet_task_t *it)
+int __server_send(conn_t *it)
 {
     session_t *ss = (session_t *)it->data;
     char *pstr = NULL;
     int plen = 0, ssize = 0;
-    //inet_task_t *pit = ss->parent;
+    //conn_t *pit = ss->parent;
 
 //    log_info("### parent task:%x cur task:%x", pit->id, it->id);
 
@@ -208,10 +207,10 @@ int __server_send(inet_task_t *it)
 
 
 
-int __server_finish(inet_task_t *it)
+int __server_finish(conn_t *it)
 {
     session_t *ss = (session_t *)it->data;
-    inet_task_t *pit = ss->parent;
+    conn_t *pit = ss->parent;
 
     switch(ss->state)
     {
@@ -318,9 +317,9 @@ int __server_next(int type, ip4_addr_t *addr)
 }
 
 
-int __server_check_loop(inet_task_t *it)
+int __server_check_loop(conn_t *it)
 {
-    inet_task_t *nit = NULL;
+    conn_t *nit = NULL;
     session_t *nss = NULL, *ss = (session_t *)it->data;
     ip4_addr_t sip;
 

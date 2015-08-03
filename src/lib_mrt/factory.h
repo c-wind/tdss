@@ -14,6 +14,11 @@
 #define WORKER_START 1
 #define WORKER_OVER 2
 
+//来自外部的连接都是被动连接
+//对发发起的连接是主动连接
+#define CONN_PASSIVE 0
+#define CONN_ACTIVE 1
+
 //event type -------------------------
 
 #define TASK_CONNECT 0
@@ -47,11 +52,11 @@
         snprintf(cb.name, sizeof(cb.name), "%s", #f); \
     }while(0)
 
-#define conn_fatal(conn, fmt, ...) logger_write(MRT_FATAL, "FATAL", "%s %x %s fd:%d "fmt, __func__, conn->id, conn->addr_str, conn->fd, ##__VA_ARGS__)
-#define conn_error(conn, fmt, ...) logger_write(MRT_ERROR, "ERROR", "%s %x %s fd:%d "fmt, __func__, conn->id, conn->addr_str, conn->fd, ##__VA_ARGS__)
-#define conn_warning(conn, fmt, ...) logger_write(MRT_WARNING, "WARNING", "%s %x %s fd:%d "fmt, __func__, conn->id, conn->addr_str, conn->fd, ##__VA_ARGS__)
-#define conn_info(conn, fmt, ...) logger_write(MRT_INFO, "INFO", "%s %x %s fd:%d "fmt, __func__, conn->id, conn->addr_str, conn->fd, ##__VA_ARGS__)
-#define conn_debug(conn, fmt, ...) logger_write(MRT_DEBUG, "DEBUG", "%s %x %s fd:%d "fmt, __func__, conn->id, conn->addr_str, conn->fd, ##__VA_ARGS__)
+#define conn_fatal(fmt, ...) logger_write(MRT_FATAL, "FATAL", "%s %x %s fd:%d "fmt, __func__, conn->id, conn->addr_str, conn->fd, ##__VA_ARGS__)
+#define conn_error(fmt, ...) logger_write(MRT_ERROR, "ERROR", "%s %x %s fd:%d "fmt, __func__, conn->id, conn->addr_str, conn->fd, ##__VA_ARGS__)
+#define conn_warning(fmt, ...) logger_write(MRT_WARNING, "WARNING", "%s %x %s fd:%d "fmt, __func__, conn->id, conn->addr_str, conn->fd, ##__VA_ARGS__)
+#define conn_info(fmt, ...) logger_write(MRT_INFO, "INFO", "%s %x %s fd:%d "fmt, __func__, conn->id, conn->addr_str, conn->fd, ##__VA_ARGS__)
+#define conn_debug(fmt, ...) logger_write(MRT_DEBUG, "DEBUG", "%s %x %s fd:%d "fmt, __func__, conn->id, conn->addr_str, conn->fd, ##__VA_ARGS__)
 
 typedef struct
 {
@@ -64,6 +69,7 @@ typedef struct sockaddr_in addr_t;
 typedef struct {
     int               id;
     int               fd;
+    int               type; //CONN_ACTIVE,CONN_PASSIVE用来区别主动连接还是被动连接
     int               stat;
     int               wait;       //需要监听的事件
     uint32_t          event;      //已有事件
@@ -72,7 +78,7 @@ typedef struct {
 
     timer_event_t     te;
 
-    void            *dat;
+    void              *dat;
 
     char              addr_str[MAX_IP];
     list_head_t       recv_bufs;
